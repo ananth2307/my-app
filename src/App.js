@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "./assets/css/common.scss";
@@ -7,21 +7,27 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import routes from "./app/routes";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
+import Container from "./features/common/Container";
+import ContainerLoader from "./features/common/ContainerLoader";
 
 function App() {
   return (
     <Provider store={store}>
-      <Router>
-        <Routes>
-          {routes.map((route) => (
-            <Route
-              key={route.key}
-              path={route.path}
-              element={route.component}
-            />
-          ))}
-        </Routes>
-      </Router>
+      <Suspense fallback={<ContainerLoader />}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Container />}>
+              {routes.map((route) => (
+                <Route
+                  key={route.key}
+                  path={route.path}
+                  element={route.component}
+                />
+              ))}
+            </Route>
+          </Routes>
+        </Router>
+      </Suspense>
     </Provider>
   );
 }
