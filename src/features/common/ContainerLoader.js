@@ -1,20 +1,10 @@
 import React, { useState } from "react";
 import images from "../../assets/images";
-import { useLocation, useNavigate, Outlet } from "react-router-dom";
-import { pageTitleMapper } from "./utilities/constants";
-import { get } from "lodash";
 
 const Container = () => {
   const [showSettingsChild, setShowSettingsChild] = useState(false);
   const [showAdminChild, setShowAdminChild] = useState(false);
   const [showDevopsMetricsChild, setShowDevopsMetricsChild] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const onNavigate = (e, url) => {
-    e.preventDefault();
-    navigate(url);
-  };
 
   return (
     <div class="wrapper_jr">
@@ -27,11 +17,7 @@ const Container = () => {
           </div>
           <div class="nav">
             <ul>
-              <li
-                class={`dropdown-btn ${
-                  location.pathname.includes("observability") && "active"
-                }`}
-              >
+              <li class={`dropdown-btn`}>
                 {" "}
                 <a
                   hlight="/Observability"
@@ -65,11 +51,7 @@ const Container = () => {
                   </div>
                 </div>
               </li>
-              <li
-                class={`dropdown-btn ${
-                  location.pathname.includes("gnc") && "active"
-                }`}
-              >
+              <li class={`dropdown-btn`}>
                 <a
                   href="/gnc"
                   hlight="/Governance"
@@ -83,11 +65,7 @@ const Container = () => {
                   <a href="/bitbucketTrend">Bitbucket</a>
                 </div>
               </li>
-              <li
-                class={`dropdown-btn ${
-                  location.pathname.includes("efficiency") && "active"
-                }`}
-              >
+              <li class={`dropdown-btn`}>
                 <a
                   hlight="/Efficiency"
                   class="hovertip"
@@ -103,11 +81,7 @@ const Container = () => {
                   <a href="/auditLog">Audit Log</a>
                 </div>
               </li>
-              <li
-                class={`dropdown-btn ${
-                  location.pathname.includes("configuration") && "active"
-                }`}
-              >
+              <li class={`dropdown-btn`}>
                 {" "}
                 <a
                   hlight="/Configuration"
@@ -131,22 +105,8 @@ const Container = () => {
                     onMouseOver={() => setShowSettingsChild(true)}
                     onMouseLeave={() => setShowSettingsChild(false)}
                   >
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(e, "/configuration/settings/tools")
-                      }
-                    >
-                      Tools
-                    </a>
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(e, "/configuration/settings/groups")
-                      }
-                    >
-                      Groups
-                    </a>
+                    <a href="#">Tools</a>
+                    <a href="#">Groups</a>
                   </div>
                   <a
                     flag="admin"
@@ -163,61 +123,11 @@ const Container = () => {
                     onMouseOver={() => setShowAdminChild(true)}
                     onMouseLeave={() => setShowAdminChild(false)}
                   >
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(
-                          e,
-                          "/configuration/administration/ldapConfig"
-                        )
-                      }
-                    >
-                      LDAP Configuration
-                    </a>
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(
-                          e,
-                          "/configuration/administration/smtpConfig"
-                        )
-                      }
-                    >
-                      SMTP Configuration
-                    </a>
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(
-                          e,
-                          "/configuration/administration/licenseConfig"
-                        )
-                      }
-                    >
-                      License Configuration
-                    </a>
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(
-                          e,
-                          "/configuration/administration/userManagement"
-                        )
-                      }
-                    >
-                      User Management
-                    </a>
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        onNavigate(
-                          e,
-                          "/configuration/administration/loggingConfig"
-                        )
-                      }
-                    >
-                      Logging Configuration
-                    </a>
+                    <a href="#">LDAP Configuration</a>
+                    <a href="#">SMTP Configuration</a>
+                    <a href="#">License Configuration</a>
+                    <a href="#">User Management</a>
+                    <a href="#">Logging Configuration</a>
                   </div>
                 </div>
               </li>
@@ -230,8 +140,8 @@ const Container = () => {
           <div class="top_Header">
             <div class="topheader">
               <div class="topheader-left">
-                <h3 id="topheader_text">{get(pageTitleMapper, `${location.pathname}.module`, '')} </h3>
-                <h4 id="Page_header">{get(pageTitleMapper, `${location.pathname}.pageTitle`, '')}</h4>
+                <h3 id="topheader_text">Code8 Observability - </h3>
+                <h4 id="Page_header">People Metrics</h4>
               </div>
               <div class="topheader-right">
                 <div class="notify-block">
@@ -262,9 +172,12 @@ const Container = () => {
               </div>
             </div>
           </div>
-          <div class="wrapper">
-            <Outlet />
-          </div>
+          <div class="wrapper"></div>
+        </div>
+      </div>
+      <div class="loader_overlay">
+        <div class="page_loader">
+          <img class="page_loading" src={images.loader} alt="Loader" />
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.getItem("isLoggedIn") === "true" && navigate("/flowMetrics");
+    localStorage.getItem("isLoggedIn") === "true" && navigate("observability/flowMetrics");
   }, [])
 
   const onLogin = async (e) => {

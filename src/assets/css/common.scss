@@ -1,4 +1,4 @@
-    @import "custom.scss";
+    @import "./custom.scss";
 
     body {
         margin: 0 auto;
@@ -8,6 +8,7 @@
         font-size: var(--font16);
         color: var(--text);
         overflow-x: hidden;
+        background-color: var(--lightbg);
     }
 
     .loadwrap {
