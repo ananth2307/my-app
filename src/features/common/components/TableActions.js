@@ -2,13 +2,13 @@ import React from "react";
 
 const TableActions = () => {
     return (
-        <div class="filternav toolnav">
-        <div class="pagecount">
-          <div class="frmgroup">
+        <div className="filternav toolnav">
+        <div className="pagecount">
+          <div className="frmgroup">
             <label>Rows per page</label>
-            <div class="dropdown bootstrap-select">
-              <select class="selectpicker" id="tableRow_count" title="10">
-                <option class="bs-title-option" value=""></option>
+            <div className="dropdown bootstrap-select">
+              <select className="selectpicker" id="tableRow_count" title="10">
+                <option className="bs-title-option" value=""></option>
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="30">30</option>
@@ -18,7 +18,7 @@ const TableActions = () => {
               <button
                 type="button"
                 tabindex="-1"
-                class="btn dropdown-toggle bs-placeholder btn-light"
+                className="btn dropdown-toggle bs-placeholder btn-light"
                 data-bs-toggle="dropdown"
                 role="combobox"
                 aria-owns="bs-select-1"
@@ -27,20 +27,20 @@ const TableActions = () => {
                 title="10"
                 data-id="tableRow_count"
               >
-                <div class="filter-option">
-                  <div class="filter-option-inner">
-                    <div class="filter-option-inner-inner">10</div>
+                <div className="filter-option">
+                  <div className="filter-option-inner">
+                    <div className="filter-option-inner-inner">10</div>
                   </div>{" "}
                 </div>
               </button>
-              <div class="dropdown-menu ">
+              <div className="dropdown-menu ">
                 <div
-                  class="inner show"
+                  className="inner show"
                   role="listbox"
                   id="bs-select-1"
                   tabindex="-1"
                 >
-                  <ul class="dropdown-menu inner show" role="presentation"></ul>
+                  <ul className="dropdown-menu inner show" role="presentation"></ul>
                 </div>
               </div>
             </div>

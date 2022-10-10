@@ -34,19 +34,19 @@ const SignIn = () => {
   };
 
   return (
-    <div class="wrapper p-0">
-      <div class="loginwrap">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-4 loginleft">
-              <div class="logo">
+    <div className="wrapper p-0">
+      <div className="loginwrap">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-lg-4 loginleft">
+              <div className="logo">
                 <img src={images.logo} alt="DevOpsLab" />
               </div>
-              <div class="cmpanel">
+              <div className="cmpanel">
                 <div id="erpanel">Invalid user credentials</div>
               </div>
               <form id="login_form">
-                <div class="frmgroup" data-validate="Username">
+                <div className="frmgroup" data-validate="Username">
                   <input
                     type="text"
                     placeholder="Username"
@@ -56,7 +56,7 @@ const SignIn = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div class="frmgroup" data-validate="Password">
+                <div className="frmgroup" data-validate="Password">
                   <input
                     type="password"
                     placeholder="Password"
@@ -67,23 +67,23 @@ const SignIn = () => {
                   />
                 </div>
 
-                <div class="form-check">
+                <div className="form-check">
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     checked=""
                     type="checkbox"
                     id="remember_me"
                     value="Remember Me"
                   />
-                  <label class="form-check-label" for="remember_me">
+                  <label className="form-check-label" for="remember_me">
                     Remember Me
                   </label>
                 </div>
                 <input type="hidden" value="" name="src" />
-                <div class="btnftr">
+                <div className="btnftr">
                   <button
                     type="submit"
-                    class="solid-btn"
+                    className="solid-btn"
                     id="loginBtn"
                     onClick={onLogin}
                   >
@@ -96,7 +96,7 @@ const SignIn = () => {
               </form>
             </div>
           </div>
-          <div class="col-lg-8 loginbg">
+          <div className="col-lg-8 loginbg">
             <img src={images.loginBanner} alt="DevOpsLab" />
           </div>
         </div>

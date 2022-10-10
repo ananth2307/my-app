@@ -1,7 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { constants } from "../utitlities/constants";
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: "http://103.114.208.38:7775" }),
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: `${constants.BASE_URL}`,
+    prepareHeaders: (headers) => {
+      headers.set("Authorization", "Bearer test");
+      return headers;
+    },
+  }),
   tagTypes: ["Task"],
   reducerPath: 'baseApi',
   endpoints: (build) => ({

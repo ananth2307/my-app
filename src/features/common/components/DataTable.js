@@ -1,20 +1,20 @@
 import React from "react";
 import images from "../../../assets/images";
 
-const DataTable = ({ headers , data }) => {
+const DataTable = ({ headers , rows }) => {
     return (
-        <table class="table-hover">
+        <table className="table-hover">
           <thead>
-            <tr class="thead">
-              {headers?.map(header => <th className={`${header.className && header.className}`}>{header.text}</th>)}
+            <tr className="thead">
+              {headers?.map(header => <th key={`${header.text}${header.key}`} className={`${header.className && header.className}`}>{header.text}</th>)}
             </tr>
           </thead>
           <tbody id="toolLists">
-            <tr>
-              <td>Nexus</td>
-              <td>Package</td>
-              <td>http://103.114.208.38:9005/nexus</td>
-              <td class="text-center tdico">
+            {rows?.map((row, index) => (<tr key={`tr${index}`}>
+              <td>{row.toolName}</td>
+              <td>{row.type}</td>
+              <td>{row.url}</td>
+              <td className="text-center tdico">
                 <a
                   href="#"
                   onclick="callRoleConfig('24');"
@@ -23,7 +23,7 @@ const DataTable = ({ headers , data }) => {
                   <img src={images.settings} alt="setting" />{" "}
                 </a>
               </td>
-              <td class="text-center tdico">
+              <td className="text-center tdico">
                 <a href="/entitlement/report?toolName=Nexus" title="Download">
                   <img
                     src={images.download}
@@ -31,20 +31,20 @@ const DataTable = ({ headers , data }) => {
                   />
                 </a>
               </td>
-              <td class="text-center">
-                <label class="toggle-control">
+              <td className="text-center">
+                <label className="toggle-control">
                   <input
                     type="checkbox"
-                    class="switchInput"
+                    className="switchInput"
                     id="switchInput_0"
                     onchange="changeToolStatus('24', '0');"
                     href="javascript:void(0);"
                   />
-                  <span class="control"></span>
+                  <span className="control"></span>
                 </label>
               </td>
-              <td class="table_icon">
-                <table class="action">
+              <td className="table_icon">
+                <table className="action">
                   <tbody>
                     <tr>
                       <td>
@@ -66,7 +66,7 @@ const DataTable = ({ headers , data }) => {
                         <a
                           onclick="beforedelete('24')"
                           title="Delete"
-                          class="delete_cmdb"
+                          className="delete_cmdb"
                           data-bs-toggle="modal"
                           data-bs-target="#deletepopup"
                         >
@@ -80,7 +80,7 @@ const DataTable = ({ headers , data }) => {
                   </tbody>
                 </table>
               </td>
-            </tr>
+            </tr>))}
           </tbody>
         </table>
     )

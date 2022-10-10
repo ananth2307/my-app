@@ -1,12 +1,12 @@
 import React from "react";
 
-const Button = ({ onClick }) => {
+const Button = ({ onClick, text }) => {
     return (
         <button
-          class="solid-btn"
+          className="solid-btn"
           onclick={(e) => onClick(e)}
         >
-          Add New Tool
+          {text}
         </button>
     )
 }

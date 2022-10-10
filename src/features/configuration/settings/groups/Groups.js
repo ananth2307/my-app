@@ -2,6 +2,7 @@ import React from "react";
 import TableActions from "../../../common/components/TableActions";
 import Button from "../../../common/components/Button";
 import DataTable from "../../../common/components/DataTable";
+import { configurationApi } from "../../../../app/services/configurationApi";
 
 const tableHeaders = [
   {
@@ -9,44 +10,22 @@ const tableHeaders = [
     text: "Tool Name",
   },
   {
-    key: 1,
-    text: "Type",
-  },
-  {
-    key: 1,
-    text: "URL",
-  },
-  {
-    key: 1,
-    text: "Configuration",
-    className: "text-center"
-  },
-  {
-    key: 1,
-    text: "Entitlement Report",
-    className: "text-center"
-  },
-  {
-    key: 1,
-    text: "Status",
-    className: "text-center"
-  },
-  {
-    key: 1,
+    key: 2,
     text: "Action",
     className: "text-center"
   },
 ]
 
 const Groups = () => {
+  const { data = [], isLoading, isFetching, isError } = configurationApi.useGetToolsListQuery()
   return (
     <>
-      <div class="btnwrap">
-        <Button />
+      <div className="btnwrap">
+        <Button text="ADD GROUP" />
       </div>
       <TableActions />
-      <div class="grid-table">
-        <DataTable headers={tableHeaders} />
+      <div className="grid-table">
+        <DataTable headers={tableHeaders} data={} />
       </div>
     </>
   );

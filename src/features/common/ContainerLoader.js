@@ -7,26 +7,26 @@ const Container = () => {
   const [showDevopsMetricsChild, setShowDevopsMetricsChild] = useState(false);
 
   return (
-    <div class="wrapper_jr">
+    <div className="wrapper_jr">
       <header>
-        <div class="headerwrap">
-          <div class="header-logo">
+        <div className="headerwrap">
+          <div className="header-logo">
             <a hlight="index.html">
               <img src={images.logoSmall} alt="DevOpsLab" />
             </a>
           </div>
-          <div class="nav">
+          <div className="nav">
             <ul>
               <li class={`dropdown-btn`}>
                 {" "}
                 <a
                   hlight="/Observability"
-                  class="hovertip"
+                  className="hovertip"
                   data-tip="Code8 Observability"
                 >
                   <img src={images.observability} alt="Code8 Observability" />
                 </a>
-                <div class="dropdown-container">
+                <div className="dropdown-container">
                   <a href="/flowMetrics">Flow Metrics</a>
                   <a href="/peopleMetrics">People Metrics</a>
                   <a href="/productivityMetrics">Productivity Metrics</a>
@@ -55,12 +55,12 @@ const Container = () => {
                 <a
                   href="/gnc"
                   hlight="/Governance"
-                  class="hovertipgnc"
+                  className="hovertipgnc"
                   data-tip="Governance and Compliance"
                 >
                   <img src={images.gnc} alt="Governance and Compliance" />
                 </a>
-                <div class="dropdown-container">
+                <div className="dropdown-container">
                   <a href="/bt">Jenkins</a>
                   <a href="/bitbucketTrend">Bitbucket</a>
                 </div>
@@ -68,12 +68,12 @@ const Container = () => {
               <li class={`dropdown-btn`}>
                 <a
                   hlight="/Efficiency"
-                  class="hovertip"
+                  className="hovertip"
                   data-tip="Code8 Efficiency"
                 >
                   <img src={images.efficiency} alt="Code8 Efficiency" />
                 </a>
-                <div class="dropdown-container">
+                <div className="dropdown-container">
                   <a href="/appConfig">App Config</a>
                   <a href="/accessManagement">Access Management</a>
                   <a href="/myRequest">My Request</a>
@@ -85,12 +85,12 @@ const Container = () => {
                 {" "}
                 <a
                   hlight="/Configuration"
-                  class="hovertip"
+                  className="hovertip"
                   data-tip="Code8 Configuration"
                 >
                   <img src={images.configuration} alt="Code8 Configuration" />
                 </a>
-                <div class="dropdown-container">
+                <div className="dropdown-container">
                   <a
                     flag="settings"
                     onMouseOver={() => setShowSettingsChild(true)}
@@ -135,36 +135,36 @@ const Container = () => {
           </div>
         </div>
       </header>
-      <div class="mainwrap content">
-        <div class="topwrap">
-          <div class="top_Header">
-            <div class="topheader">
-              <div class="topheader-left">
+      <div className="mainwrap content">
+        <div className="topwrap">
+          <div className="top_Header">
+            <div className="topheader">
+              <div className="topheader-left">
                 <h3 id="topheader_text">Code8 Observability - </h3>
                 <h4 id="Page_header">People Metrics</h4>
               </div>
-              <div class="topheader-right">
-                <div class="notify-block">
+              <div className="topheader-right">
+                <div className="notify-block">
                   <a href="">
                     <img src={images.notification} />
                   </a>
                 </div>
-                <div class="userwrap">
-                  <div class="logindes">
+                <div className="userwrap">
+                  <div className="logindes">
                     <h4>
-                      <a class="">kevin</a>
+                      <a className="">kevin</a>
                     </h4>
                     <h6>
-                      <a class="userRole">Operation</a>
+                      <a className="userRole">Operation</a>
                     </h6>
                   </div>
-                  <div class="loginico">
+                  <div className="loginico">
                     <a href="">
                       <img src={images.user} />
                     </a>
                   </div>
                 </div>
-                <div class="logout">
+                <div className="logout">
                   <a href="/logout">
                     <img src={images.logout} />
                   </a>
@@ -172,12 +172,12 @@ const Container = () => {
               </div>
             </div>
           </div>
-          <div class="wrapper"></div>
+          <div className="wrapper"></div>
         </div>
       </div>
-      <div class="loader_overlay">
-        <div class="page_loader">
-          <img class="page_loading" src={images.loader} alt="Loader" />
+      <div className="loader_overlay">
+        <div className="page_loader">
+          <img className="page_loading" src={images.loader} alt="Loader" />
         </div>
       </div>
     </div>
