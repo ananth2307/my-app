@@ -10,6 +10,7 @@ const Container = () => {
   const [showDevopsMetricsChild, setShowDevopsMetricsChild] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const pathName = get(location, 'pathname', '');
 
   const onNavigate = (e, url) => {
     e.preventDefault();
@@ -29,10 +30,9 @@ const Container = () => {
             <ul>
               <li
                 class={`dropdown-btn ${
-                  location.pathname.includes("observability") && "active"
+                  pathName.includes("observability") && "active"
                 }`}
               >
-                {" "}
                 <a
                   hlight="/Observability"
                   className="hovertip"
@@ -67,7 +67,7 @@ const Container = () => {
               </li>
               <li
                 class={`dropdown-btn ${
-                  location.pathname.includes("gnc") && "active"
+                  pathName.includes("gnc") && "active"
                 }`}
               >
                 <a
@@ -85,7 +85,7 @@ const Container = () => {
               </li>
               <li
                 class={`dropdown-btn ${
-                  location.pathname.includes("efficiency") && "active"
+                  pathName.includes("efficiency") && "active"
                 }`}
               >
                 <a
@@ -105,7 +105,7 @@ const Container = () => {
               </li>
               <li
                 class={`dropdown-btn ${
-                  location.pathname.includes("configuration") && "active"
+                  pathName.includes("configuration") && "active"
                 }`}
               >
                 {" "}
@@ -230,8 +230,12 @@ const Container = () => {
           <div className="top_Header">
             <div className="topheader">
               <div className="topheader-left">
-                <h3 id="topheader_text">{get(pageTitleMapper, `${location.pathname}.module`, '')} </h3>
-                <h4 id="Page_header">{get(pageTitleMapper, `${location.pathname}.pageTitle`, '')}</h4>
+                <h3 id="topheader_text">
+                  {get(pageTitleMapper, `${pathName}.module`, "")}{" "}
+                </h3>
+                <h4 id="Page_header">
+                  {get(pageTitleMapper, `${pathName}.pageTitle`, "")}
+                </h4>
               </div>
               <div className="topheader-right">
                 <div className="notify-block">

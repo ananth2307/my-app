@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import images from "../../assets/images";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { api } from "../../app/services/baseApiSetup";
 
 const SignIn = () => {
-
   const [loginForm, setLoginForm] = useState({});
   const [login] = api.useLoginMutation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.getItem("isLoggedIn") === "true" && navigate("observability/flowMetrics");
-  }, [])
+    localStorage.getItem("isLoggedIn") === "true" &&
+      navigate("observability/flowMetrics");
+  }, []);
 
   const onLogin = async (e) => {
     e.preventDefault();
@@ -21,7 +21,7 @@ const SignIn = () => {
       const data = await login(payload);
       console.log("redis suc", data);
       localStorage.setItem("isLoggedIn", "true");
-      navigate("/flowMetrics");
+      navigate("observability/flowMetrics");
     } catch (err) {
       console.log("Login Err", err);
     }
@@ -95,9 +95,9 @@ const SignIn = () => {
                 </div>
               </form>
             </div>
-          </div>
-          <div className="col-lg-8 loginbg">
-            <img src={images.loginBanner} alt="DevOpsLab" />
+            <div className="col-lg-8 loginbg">
+              <img src={images.loginBanner} alt="DevOpsLab" />
+            </div>
           </div>
         </div>
       </div>

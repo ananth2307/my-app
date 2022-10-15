@@ -20,7 +20,7 @@ const LicenseConfig = React.lazy(() => import('../features/configuration/admin/l
 const UserManagement = React.lazy(() => import('../features/configuration/admin/userManagement/UserManagement'));
 const LoggingConfig = React.lazy(() => import('../features/configuration/admin/loggingConfig/LoggingConfig'));
 
-const routes = [
+export const authRoutes = [
   {
     name: "SignIn",
     path: "/logout",
@@ -33,7 +33,16 @@ const routes = [
     component: <SignIn />,
     key: 0,
   },
+]
+
+export const routes = [
   //CODE8 Observability
+  {
+    name: "FlowMetrics",
+    path: "observability",
+    component: <FlowMetrics />,
+    key: 1,
+  },
   {
     name: "FlowMetrics",
     path: "observability/flowMetrics",
@@ -152,4 +161,3 @@ const routes = [
     key: "4.2.5",
   },
 ];
-export default routes;

@@ -25,7 +25,7 @@ const Groups = () => {
       </div>
       <TableActions />
       <div className="grid-table">
-        <DataTable headers={tableHeaders} data={} />
+        <DataTable headers={tableHeaders} data={data} />
       </div>
     </>
   );
