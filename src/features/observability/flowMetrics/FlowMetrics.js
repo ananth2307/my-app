@@ -1,8 +1,9 @@
 import React from "react";
+import Filter from "../Filter";
 
 const FlowMetrics = () => {
   return (
-    <h1>Flow</h1>
+    <Filter />
   );
 };
 export default FlowMetrics;

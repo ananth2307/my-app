@@ -16,6 +16,7 @@ import deleteIcon from './config-settings-tools/delete.svg';
 import download from './config-settings-tools/download.png';
 import edit from './config-settings-tools/edit.svg';
 import settings from './config-settings-tools/settings.png';
+import downCaret from './down-caret.svg';
 
 const images = {
     checkboxTick,
@@ -35,6 +36,7 @@ const images = {
     download,
     edit,
     settings,
+    downCaret
 }
 
 export default images;
