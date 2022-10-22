@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import images from "../../assets/images";
+import {
+  logoSmall,
+  observability,
+  gnc,
+  efficiency,
+  configuration,
+  notification,
+  user,
+  logout,
+} from "../../../assets/images/index";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
-import { pageTitleMapper } from "./utilities/constants";
+import { pageTitleMapper } from "../utilities/constants";
 import { get } from "lodash";
 
 const Container = () => {
@@ -10,7 +19,7 @@ const Container = () => {
   const [showDevopsMetricsChild, setShowDevopsMetricsChild] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const pathName = get(location, 'pathname', '');
+  const pathName = get(location, "pathname", "");
 
   const onNavigate = (e, url) => {
     e.preventDefault();
@@ -23,13 +32,13 @@ const Container = () => {
         <div className="headerwrap">
           <div className="header-logo">
             <a hlight="index.html">
-              <img src={images.logoSmall} alt="DevOpsLab" />
+              <img src={logoSmall} alt="DevOpsLab" />
             </a>
           </div>
           <div className="nav">
             <ul>
               <li
-                class={`dropdown-btn ${
+                className={`dropdown-btn ${
                   pathName.includes("observability") && "active"
                 }`}
               >
@@ -38,13 +47,39 @@ const Container = () => {
                   className="hovertip"
                   data-tip="Code8 Observability"
                 >
-                  <img src={images.observability} alt="Code8 Observability" />
+                  <img src={observability} alt="Code8 Observability" />
                 </a>
                 <div className="dropdown-container">
-                  <a href="/flowMetrics">Flow Metrics</a>
-                  <a href="/peopleMetrics">People Metrics</a>
-                  <a href="/productivityMetrics">Productivity Metrics</a>
-                  <a href="/devopsMetrics">DevOps Metrics</a>
+                  <a
+                    href="/flowMetrics"
+                    onClick={(e) => onNavigate(e, "/observability/flowMetrics")}
+                  >
+                    Flow Metrics
+                  </a>
+                  <a
+                    href="/peopleMetrics"
+                    onClick={(e) =>
+                      onNavigate(e, "/observability/peopleMetrics")
+                    }
+                  >
+                    People Metrics
+                  </a>
+                  <a
+                    href="/productivityMetrics"
+                    onClick={(e) =>
+                      onNavigate(e, "/observability/productivityMetrics")
+                    }
+                  >
+                    Productivity Metrics
+                  </a>
+                  <a
+                    href="/devopsMetrics"
+                    onClick={(e) =>
+                      onNavigate(e, "/observability/devopsMetrics")
+                    }
+                  >
+                    DevOps Metrics
+                  </a>
                   <a
                     flag="ops"
                     onMouseOver={() => setShowDevopsMetricsChild(true)}
@@ -53,7 +88,7 @@ const Container = () => {
                     Ops Metrics
                   </a>
                   <div
-                    class={`dropdown-container_child ops ${
+                    className={`dropdown-container_child ops ${
                       showDevopsMetricsChild && "active"
                     }`}
                     id="inchange"
@@ -66,7 +101,7 @@ const Container = () => {
                 </div>
               </li>
               <li
-                class={`dropdown-btn ${
+                className={`dropdown-btn ${
                   pathName.includes("gnc") && "active"
                 }`}
               >
@@ -76,7 +111,7 @@ const Container = () => {
                   className="hovertipgnc"
                   data-tip="Governance and Compliance"
                 >
-                  <img src={images.gnc} alt="Governance and Compliance" />
+                  <img src={gnc} alt="Governance and Compliance" />
                 </a>
                 <div className="dropdown-container">
                   <a href="/bt">Jenkins</a>
@@ -84,7 +119,7 @@ const Container = () => {
                 </div>
               </li>
               <li
-                class={`dropdown-btn ${
+                className={`dropdown-btn ${
                   pathName.includes("efficiency") && "active"
                 }`}
               >
@@ -93,7 +128,7 @@ const Container = () => {
                   className="hovertip"
                   data-tip="Code8 Efficiency"
                 >
-                  <img src={images.efficiency} alt="Code8 Efficiency" />
+                  <img src={efficiency} alt="Code8 Efficiency" />
                 </a>
                 <div className="dropdown-container">
                   <a href="/appConfig">App Config</a>
@@ -104,7 +139,7 @@ const Container = () => {
                 </div>
               </li>
               <li
-                class={`dropdown-btn ${
+                className={`dropdown-btn ${
                   pathName.includes("configuration") && "active"
                 }`}
               >
@@ -114,7 +149,7 @@ const Container = () => {
                   className="hovertip"
                   data-tip="Code8 Configuration"
                 >
-                  <img src={images.configuration} alt="Code8 Configuration" />
+                  <img src={configuration} alt="Code8 Configuration" />
                 </a>
                 <div className="dropdown-container">
                   <a
@@ -240,7 +275,7 @@ const Container = () => {
               <div className="topheader-right">
                 <div className="notify-block">
                   <a href="">
-                    <img src={images.notification} />
+                    <img src={notification} />
                   </a>
                 </div>
                 <div className="userwrap">
@@ -254,13 +289,13 @@ const Container = () => {
                   </div>
                   <div className="loginico">
                     <a href="">
-                      <img src={images.user} />
+                      <img src={user} />
                     </a>
                   </div>
                 </div>
                 <div className="logout">
                   <a href="/logout">
-                    <img src={images.logout} />
+                    <img src={logout} />
                   </a>
                 </div>
               </div>

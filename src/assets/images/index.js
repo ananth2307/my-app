@@ -18,7 +18,7 @@ import edit from './config-settings-tools/edit.svg';
 import settings from './config-settings-tools/settings.png';
 import downCaret from './down-caret.svg';
 
-const images = {
+export {
     checkboxTick,
     logo,
     loginBanner,
@@ -38,5 +38,3 @@ const images = {
     settings,
     downCaret
 }
-
-export default images;

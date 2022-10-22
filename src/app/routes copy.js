@@ -43,38 +43,37 @@ export const routes = [
     component: <FlowMetrics />,
     key: 1,
     childrens: [
-      
+      {
+        name: "FlowMetrics",
+        path: "observability/flowMetrics",
+        component: <FlowMetrics />,
+        key: 1.1,
+      },
+      {
+        name: "PeopleMetrics",
+        path: "observability/peopleMetrics",
+        component: <PeopleMetrics />,
+        key: 1.2,
+      },
+      {
+        name: "ProductivityMetrics",
+        path: "observability/productivityMetrics",
+        component: <ProductivityMetrics />,
+        key: 1.3,
+      },
+      {
+        name: "DevopsMetrics",
+        path: "observability/devopsMetrics",
+        component: <DevopsMetrics />,
+        key: 1.4,
+      },
+      {
+        name: "OpsMetrics",
+        path: "observability/opsMetrics",
+        component: <OpsMetrics />,
+        key: 1.5,
+      },
     ],
-  },
-  {
-    name: "FlowMetrics",
-    path: "observability/flowMetrics",
-    component: <FlowMetrics />,
-    key: 1.1,
-  },
-  {
-    name: "PeopleMetrics",
-    path: "observability/peopleMetrics",
-    component: <PeopleMetrics />,
-    key: 1.2,
-  },
-  {
-    name: "ProductivityMetrics",
-    path: "observability/productivityMetrics",
-    component: <ProductivityMetrics />,
-    key: 1.3,
-  },
-  {
-    name: "DevopsMetrics",
-    path: "observability/devopsMetrics",
-    component: <DevopsMetrics />,
-    key: 1.4,
-  },
-  {
-    name: "OpsMetrics",
-    path: "observability/opsMetrics",
-    component: <OpsMetrics />,
-    key: 1.5,
   },
   //CODE8 Governance and Compliance
   {

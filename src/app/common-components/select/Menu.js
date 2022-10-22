@@ -11,7 +11,7 @@ const Menu = (props) => {
   };
   return (
     <div className="menu-container">
-      <div class="search">
+      <div className="search">
         <input
           type="text"
           value={searchText}

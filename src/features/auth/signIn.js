@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import images from "../../assets/images";
+import { logo, loginBanner } from "../../assets/images";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { api } from "../../app/services/baseApiSetup";
@@ -40,7 +40,7 @@ const SignIn = () => {
           <div className="row">
             <div className="col-lg-4 loginleft">
               <div className="logo">
-                <img src={images.logo} alt="DevOpsLab" />
+                <img src={logo} alt="DevOpsLab" />
               </div>
               <div className="cmpanel">
                 <div id="erpanel">Invalid user credentials</div>
@@ -96,7 +96,7 @@ const SignIn = () => {
               </form>
             </div>
             <div className="col-lg-8 loginbg">
-              <img src={images.loginBanner} alt="DevOpsLab" />
+              <img src={loginBanner} alt="DevOpsLab" />
             </div>
           </div>
         </div>

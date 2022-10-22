@@ -1,13 +1,14 @@
 import React, { Suspense } from "react";
-import "bootstrap/dist/css/bootstrap.css";
+import "../node_modules/bootstrap/dist/css/bootstrap.css"
 import "./assets/css/common.scss";
 import "./assets/css/internal.scss";
+import "./assets/css/bootstrap_extended.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { authRoutes, routes } from "./app/routes";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
-import Container from "./features/common/Container";
-import ContainerLoader from "./features/common/ContainerLoader";
+import Container from "./features/common/components/Container";
+import ContainerLoader from "./features/common/components/ContainerLoader";
 
 function App() {
   return (
