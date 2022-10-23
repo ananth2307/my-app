@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
 import { api } from "./baseApiSetup";
-import { constants } from "../utitlities/constants";
+import { constants } from "../utilities/constants";
 const MODULE_BASE_URL = "/api/v1";
 
 export const configurationApi = api.injectEndpoints({

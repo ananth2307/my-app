@@ -1,16 +1,22 @@
 import React, { Suspense } from "react";
-import "../node_modules/bootstrap/dist/css/bootstrap.css"
+import "../node_modules/bootstrap/dist/css/bootstrap.css";
 import "./assets/css/common.scss";
 import "./assets/css/internal.scss";
 import "./assets/css/bootstrap_extended.scss";
+import "./assets/css/common-overrides.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { authRoutes, routes } from "./app/routes";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
-import Container from "./features/common/components/Container";
-import ContainerLoader from "./features/common/components/ContainerLoader";
+import Container from "./app/common-components/Container";
+import ContainerLoader from "./app/common-components/ContainerLoader";
 
 function App() {
+  const renderRoutes = (allRoutes) => {
+    return allRoutes.map((route) => (
+      route.childNavs ? renderRoutes(route.childNavs) : <Route key={route.key} path={route.path} element={route.component} />
+    ));
+  };
   return (
     <Provider store={store}>
       <Suspense fallback={<ContainerLoader />}>
@@ -24,13 +30,7 @@ function App() {
               />
             ))}
             <Route path="/" element={<Container />}>
-              {routes.map((route) => (
-                <Route
-                  key={route.key}
-                  path={route.path}
-                  element={route.component}
-                />
-              ))}
+              {renderRoutes(routes)}
             </Route>
           </Routes>
         </Router>

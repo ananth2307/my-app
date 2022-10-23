@@ -1,7 +1,7 @@
 import React from "react";
-import TableActions from "../../../common/components/TableActions";
-import Button from "../../../common/components/Button";
-import DataTable from "../../../common/components/DataTable";
+import TableActions from "../../../../app/common-components/TableActions";
+import Button from "../../../../app/common-components/Button";
+import DataTable from "../../../../app/common-components/DataTable";
 import { configurationApi } from "../../../../app/services/configurationApi";
 
 const tableHeaders = [

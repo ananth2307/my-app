@@ -1,5 +1,5 @@
 import React from "react";
-import { settings, download, edit, deleteIcon } from "../../../assets/images";
+import { settings, download, edit, deleteIcon } from "../../assets/images";
 
 const DataTable = ({ headers, rows }) => {
   return (
