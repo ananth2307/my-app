@@ -1,12 +1,17 @@
 import React from "react";
+//Flow Metrics
 import FlowDistribution from "../flowMetrics/FlowDistribution";
 import FlowVelocity from "../flowMetrics/FlowVelocity";
+
+//People Metrics
+import IssueMetrics from "../peopleMetrics/IssueMetrics";
+
 //Flow Metrics
 export const FlowMetricChartContainers = [
   {
     key: 1,
     title: "FLOW DISTRIBUTION",
-    component: <FlowDistribution />,
+    chart: (props) => <FlowDistribution {...props} />,
     navContainerClass: "flowdisnav",
     navs: [
       {
@@ -38,7 +43,7 @@ export const FlowMetricChartContainers = [
   {
     key: 2,
     title: "FLOW VELOCITY & TIME",
-    component: <FlowVelocity />,
+    chart: (props) => <FlowVelocity {...props} />,
     navContainerClass: "velonav",
     axisLegend: <div className="axis_legend">No. of Days</div>,
     navs: [
@@ -127,7 +132,9 @@ export const PeopleMetricChartContainers = [
   {
     key: 1,
     title: "ISSUE METRICS",
-    component: <FlowDistribution />,
+    chart: (props) => <IssueMetrics {...props} />,
+    id: "issue_metrics",
+    chartContainerRef: "issueMetricsChart",
     navs: [
       {
         text: "Low",
@@ -154,7 +161,7 @@ export const PeopleMetricChartContainers = [
   {
     key: 2,
     title: "LEVEL OF COLLABORATION BY COMMENTS",
-    component: <FlowDistribution />,
+    chart: (props) => <FlowDistribution {...props} />,
     navs: [
       {
         text: "Features",
@@ -185,7 +192,7 @@ export const PeopleMetricChartContainers = [
   {
     key: 3,
     title: "TOP ASSIGNEES",
-    component: <FlowDistribution />,
+    chart: (props) => <FlowDistribution {...props} />,
     navs: [
       {
         text: "",
@@ -196,7 +203,7 @@ export const PeopleMetricChartContainers = [
   {
     key: 4,
     title: "PROJECT CHAMPIONS",
-    component: <FlowDistribution />,
+    chart: (props) => <FlowDistribution {...props} />,
     navs: [
       {
         text: "",
@@ -207,7 +214,7 @@ export const PeopleMetricChartContainers = [
   {
     key: 5,
     title: "",
-    component: <FlowDistribution />,
+    chart: (props) => <FlowDistribution {...props} />,
     navs: [
       {
         text: "",

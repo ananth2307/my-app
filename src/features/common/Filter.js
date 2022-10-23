@@ -1,6 +1,6 @@
 import React from "react";
-import CustomSelect from "../../../app/common-components/select";
-import CustomDateRangePicker from "../../../app/common-components/DateRangePicker/DateRangePicker";
+import CustomSelect from "../../app/common-components/select";
+import CustomDateRangePicker from "../../app/common-components/DateRangePicker/DateRangePicker";
 
 const Filter = () => {
   const options = [

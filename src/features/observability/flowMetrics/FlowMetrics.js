@@ -1,5 +1,5 @@
 import React from "react";
-import Filter from "../common/Filter";
+import Filter from "../../common/Filter";
 import ChartContainer from "../common/ChartContainer";
 import { FlowMetricChartContainers } from "../common/constants";
 

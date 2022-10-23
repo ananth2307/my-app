@@ -1,18 +1,18 @@
 import React from "react";
-import Filter from "../common/Filter";
+import Filter from "../../common/Filter";
 import ChartContainer from "../common/ChartContainer";
 import { PeopleMetricChartContainers } from "../common/constants";
 
-const PeopleMetrics = () => {
+const PeopleMetrics = (props) => {
   return (
     <>
       <Filter />
       <div className="dashboardwrap colswrap all-works">
         <div className="row">
-          {PeopleMetricChartContainers?.map((type) => {
+          {PeopleMetricChartContainers?.map((chartType, index) => {
             return (
-              <ChartContainer key={type} {...type}>
-                {type.component}
+              <ChartContainer key={chartType} index={index} {...chartType}>
+                {/* {chartType.component} */}
               </ChartContainer>
             );
           })}
