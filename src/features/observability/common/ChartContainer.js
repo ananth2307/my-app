@@ -17,8 +17,9 @@ const ChartContainer = (props) => {
                 ))}
               </ul>
             </div>
+            {console.log("redis", props)}
             {props?.axisLegend}
-            {props?.chart({...props, chartContainerRefs})}
+            {props?.chart?.({...props, chartContainerRefs})}
           </div>
         </div>
       </div>

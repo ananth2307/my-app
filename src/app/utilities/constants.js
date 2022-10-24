@@ -29,6 +29,36 @@ export const pageTitleMapper = {
       module: "Code8 Observability - ",
       pageTitle: "Change Management",
     },
+    //GNC
+    "/gnc/jenkins": {
+      module: "Governance and Compliance - ",
+      pageTitle: "Jenkins",
+    },
+    "/gnc/bitbucket": {
+      module: "Governance and Compliance - ",
+      pageTitle: "Bitbucket",
+    },
+    //Efficiency
+    "/efficiency/appConfig": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "App Config",
+    },
+    "/efficiency/accessManagement": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "Access Management",
+    },
+    "/efficiency/myRequest": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "My Request",
+    },
+    "/efficiency/myApproval": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "My Approval",
+    },
+    "/efficiency/auditLog": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "Audit Log",
+    },
     //Configuration
     "/configuration/settings/tools": {
       module: "Code8 Configuration - ",
@@ -37,6 +67,26 @@ export const pageTitleMapper = {
     "/configuration/settings/groups": {
       module: "Code8 Configuration -",
       pageTitle: "Groups",
+    },
+    "/configuration/administration/ldapConfig": {
+      module: "Code8 Configuration -",
+      pageTitle: "LDAP Configuration",
+    },
+    "/configuration/administration/smtpConfig": {
+      module: "Code8 Configuration -",
+      pageTitle: "SMTP Configuration",
+    },
+    "/configuration/administration/licenseConfig": {
+      module: "Code8 Configuration -",
+      pageTitle: "License Configuration",
+    },
+    "/configuration/administration/userManagement": {
+      module: "Code8 Configuration -",
+      pageTitle: "User Management",
+    },
+    "/configuration/administration/loggingConfig": {
+      module: "Code8 Configuration -",
+      pageTitle: "Logging Configuration",
     },
   };
   

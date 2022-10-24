@@ -118,7 +118,7 @@ export const routes = [
       {
         text: "Ops Metrics",
         name: "OpsMetrics",
-        path: "observability/opsMetrics",
+        path: "observability/opsMetrics/incidentManagement",
         customDropContainerClass: "ops",
         component: <OpsMetrics />,
         key: "1.5",
@@ -126,15 +126,15 @@ export const routes = [
           {
             text: "Incident Management",
             name: "IncidentManagement",
-            path: "observability/incidentManagement",
-            component: <DevopsMetrics />,
+            path: "observability/opsMetrics/incidentManagement",
+            component: <OpsMetrics />,
             key: "1.5.1",
           },
           {
             text: "Change Management",
             name: "ChangeManagement",
-            path: "observability/ChangeManagement",
-            component: <DevopsMetrics />,
+            path: "observability/opsMetrics/changeManagement",
+            component: <OpsMetrics />,
             key: "1.5.1",
           },
         ],
@@ -168,7 +168,7 @@ export const routes = [
   },
   //CODE8 Efficiency
   {
-    name: "CODE8 Efficiency",
+    name: "Code8 Efficiency",
     path: "efficiency",
     component: <AppConfig />,
     key: "3",
@@ -213,7 +213,7 @@ export const routes = [
   },
   //CODE8 Configuration
   {
-    name: "CODE8 Configuration",
+    name: "Code8 Configuration",
     path: "configuration",
     component: <Tools />,
     key: "4",
