@@ -9,6 +9,10 @@ const Menu = (props) => {
     setSearchText(e.target.value);
     // props.onSearch(searchText);
   };
+  const handleChange = (e) => {
+    setSearchText(e.target.value);
+    props.selectProps.filterOptionsBySearch(e.target.value)
+  }
   return (
     <div className="menu-container">
       <div className="search">
@@ -16,7 +20,7 @@ const Menu = (props) => {
           type="text"
           value={searchText}
           placeholder="Search"
-          onChange={filterOptions}
+          onChange={handleChange}
         />
       </div>
       {availableLength !== 0 && (

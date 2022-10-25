@@ -1,25 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import Option from "./Option";
 import "./select.styles.scss";
 import Control from "./Control";
-import IndicatorContainer from "./IndicatorContainer";
-import IndicatorSeparator from "./IndicatorSeperator";
 import ValueContainer from "./ValueContainer";
 import Menu from "./Menu";
 import MenuList from "./MenuList";
 import DropdownIndicator from "./DropdownIndicator";
-import CreatableSelect from 'react-select/creatable';
 
 const CustomSelect = (props) => {
-  const [options, setOptions] = useState(props.options.length ? props.options : []);
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  useEffect(() => {
+    setFilteredOptions(props.options.length ? props.options : []);
+  }, []);
   const getCustomComponents = () => {
     let components = {};
     if (props.isCheckboxSelect) {
       components = {
         Control,
-        IndicatorContainer,
-        IndicatorSeparator,
+        IndicatorSeparator: () => null,
         ValueContainer,
         Menu,
         MenuList,
@@ -29,18 +28,21 @@ const CustomSelect = (props) => {
     }
     return components;
   };
-  const onSearch = (data) => {
-    console.log('onSearch', data)
+  const getFilteredOptions = (searchText) => {
+    setFilteredOptions(props?.options?.filter(option => option.label.toLowerCase().includes(searchText.toLowerCase())))
   }
   return (
     <Select
       {...props}
-      components={getCustomComponents()}
-      className="custom-select"
-      isClearable={false}
+      components={getCustomComponents()} //Overrided reac-select components to match our theme style
+      className="custom-select" //wrapper class name to have css parent selector for scoped styling
+      isClearable={false} 
       // noOptionsMessage={props.noOptionsMessage ? props.noOptionsMessage : "No results"}
       openMenuOnClick={true}
-      backspaceRemovesValue={false}
+      backspaceRemovesValue={false} //keep this false for search input to get enabled otherwise keyboard events are overrided by react-select
+      isSearchable={true}
+      options={filteredOptions}
+      filterOptionsBySearch={getFilteredOptions}
     />
   );
 };

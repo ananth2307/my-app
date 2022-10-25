@@ -200,7 +200,7 @@ function process_issuemetrics(issuedata = data1) {
 
 
 }
-process_issuemetrics()
+// process_issuemetrics()
 
 const IssueMetrics = (props) => {
     const width = get(props, 'chartContainerRefs.current[props.index].offsetWidth', 415);
