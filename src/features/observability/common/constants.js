@@ -1,10 +1,13 @@
 import React from "react";
 //Flow Metrics
-import FlowDistribution from "../flowMetrics/FlowDistribution";
-import FlowVelocity from "../flowMetrics/FlowVelocity";
+const FlowDistribution =  React.lazy(() => import("../flowMetrics/FlowDistribution"));
+const FlowVelocity = React.lazy(() => import("../flowMetrics/FlowVelocity"));
+const FlowEfficiency = React.lazy(() => import("../flowMetrics/FlowEfficiency"));
+const FlowPredictability = React.lazy(() => import("../flowMetrics/FlowPredictability"));
+const FlowLoad = React.lazy(() => import("../flowMetrics/FlowLoad"));
 
 //People Metrics
-import IssueMetrics from "../peopleMetrics/IssueMetrics";
+const IssueMetrics = React.lazy(() => import("../peopleMetrics/IssueMetrics"));
 
 //Flow Metrics
 export const FlowMetricChartContainers = [
@@ -13,6 +16,7 @@ export const FlowMetricChartContainers = [
     title: "FLOW DISTRIBUTION",
     chart: (props) => <FlowDistribution {...props} />,
     navContainerClass: "flowdisnav",
+    axisLegend: <div class="x_axis_legend">No. of Issues</div>,
     navs: [
       {
         text: "Features",
@@ -60,6 +64,7 @@ export const FlowMetricChartContainers = [
   {
     key: 3,
     title: "FLOW EFFICIENCY",
+    chart: (props) => <FlowEfficiency {...props} />,
     navContainerClass: "floweffnav",
     navs: [
       {
@@ -80,6 +85,7 @@ export const FlowMetricChartContainers = [
   {
     key: 4,
     title: "FLOW PREDICTABILITY",
+    chart: (props) => <FlowPredictability {...props} />,
     navContainerClass: "floweffnav",
     customClass: "col-lg-4 col-md-6 order-md-4 order-lg-5 filtercol",
     navs: [
@@ -96,6 +102,7 @@ export const FlowMetricChartContainers = [
   {
     key: 5,
     title: "FLOW LOAD (ACTIVE SPRINT)",
+    chart: (props) => <FlowLoad {...props} />,
     customClass: "col-lg-8 col-md-12 order-md-5 order-lg-4 filtercol",
     navContainerClass: "",
     navs: [

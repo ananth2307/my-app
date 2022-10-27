@@ -3,7 +3,7 @@ const CustomOption = ({ innerProps, label, isSelected }) => {
   return (
     <div {...innerProps} className={`option ${isSelected && "selected" }`}>
         <label htmlFor={innerProps.id} >
-            <input type="checkbox" checked={isSelected} id={innerProps.id}onChange={() => null} />
+            <input type="checkbox" checked={isSelected} id={innerProps.id} onChange={() => null} />
             {label}
         </label>
     </div>

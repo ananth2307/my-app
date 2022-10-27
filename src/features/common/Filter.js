@@ -13,7 +13,7 @@ const Filter = () => {
     <div className="actnav dashactnav">
       <div className="actright">
         <div className="frmgroup dateinput">
-          <CustomDateRangePicker />
+          <CustomDateRangePicker selectedDate={(selectedDate) => console.log("redis2", new Date(selectedDate.startDate).getTime())} />
         </div>
         <div className="frmgroup">
           <CustomSelect
@@ -24,6 +24,8 @@ const Filter = () => {
             placeholder="Select Application"
             isSearchable={true}
             closeMenuOnSelect={false}
+            onChange={(opt) => console.log("redis2", opt)}
+            
           />
         </div>
         <div className="frmgroup">
