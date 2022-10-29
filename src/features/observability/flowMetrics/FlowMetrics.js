@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Filter from "../../common/Filter";
 import ChartContainer from "../common/ChartContainer";
 import { FlowMetricChartContainers } from "../common/constants";
 
 const FlowMetrics = () => {
+  const [state, setState] = useState({});
   return (
     <>
       <Filter />

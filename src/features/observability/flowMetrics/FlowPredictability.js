@@ -77,12 +77,10 @@ const FlowPredictability = (props) => {
 
       for (var t = 0; t < data.length; t++) {
         data[t].value3 = 8 + (12 * data[t].value) / v1;
-        console.log(data[t].value3);
       }
 
       for (var t = 0; t < data.length; t++) {
         data[t].value4 = 8 + (12 * data[t].value2) / v1;
-        console.log(data[t].value4);
       }
 
       const cxBase = (60 * width) / 390;

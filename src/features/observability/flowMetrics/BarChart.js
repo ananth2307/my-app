@@ -90,8 +90,6 @@ function BarChart({data}) {
         .attr("fill", "#000")
         .attr("font-weight", "400"); //   .call(d3.axisBottom(x));
 
-      console.log(yaxis);
-
       svg
         .select(".y.axis")
         .selectAll(".tick")

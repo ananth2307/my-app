@@ -26,7 +26,6 @@ const Container = () => {
   const handleChildMenuState = (path, value) => {
     const resetMenuState = mapValues({ ...childMenuState }, () => false);
     setChildMenuState({ ...resetMenuState, [path]: value });
-    console.log("redis", childMenuState);
   };
 
   return (

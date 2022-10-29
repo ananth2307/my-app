@@ -11,8 +11,8 @@ import DropdownIndicator from "./DropdownIndicator";
 const CustomSelect = (props) => {
   const [filteredOptions, setFilteredOptions] = useState([]);
   useEffect(() => {
-    setFilteredOptions(props.options.length ? props.options : []);
-  }, []);
+    setFilteredOptions(props?.options.length ? props.options : []);
+  }, [props.options]);
   const getCustomComponents = () => {
     let components = {};
     if (props.isCheckboxSelect) {

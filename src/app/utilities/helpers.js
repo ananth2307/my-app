@@ -1,4 +1,10 @@
 import * as d3 from "d3";
+import { map } from "lodash";
+
+export const getSelectedOptionsValue = (options) => {
+  return map(options, "value");
+};
+
 export const filterOptions = (optionsProps, searchText, setState) => {
   setState(
     optionsProps?.filter((option) => option.label?.includes(searchText))
@@ -10,7 +16,7 @@ export const truncate = (input, leng) => {
     return input.substring(0, leng) + "...";
   }
   return input;
-}
+};
 
 export const responsivefy = (svg) => {
   // container will be the DOM element

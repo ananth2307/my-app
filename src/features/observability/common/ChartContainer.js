@@ -25,10 +25,10 @@ const ChartContainer = (props) => {
                 ))}
               </ul>
             </div>
-            <div class="flowdistribution svg-container" id="flowdistribution">
+            <div className={props.chartContainerClass}>
               {props?.chart?.({ ...props, chartContainerRefs })}
             </div>
-            <div class="chart-legend-container"></div>
+            <div className="chart-legend-container"></div>
             {props?.axisLegend}
           </div>
         </div>

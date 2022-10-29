@@ -17,6 +17,7 @@ export const FlowMetricChartContainers = [
     chart: (props) => <FlowDistribution {...props} />,
     navContainerClass: "flowdisnav",
     axisLegend: <div class="x_axis_legend">No. of Issues</div>,
+    chartContainerClass: "flowdistribution svg-container",
     navs: [
       {
         text: "Features",
@@ -49,6 +50,7 @@ export const FlowMetricChartContainers = [
     title: "FLOW VELOCITY & TIME",
     chart: (props) => <FlowVelocity {...props} />,
     navContainerClass: "velonav",
+    chartContainerClass: "lollipop",
     axisLegend: <div className="axis_legend">No. of Days</div>,
     navs: [
       {
@@ -66,6 +68,7 @@ export const FlowMetricChartContainers = [
     title: "FLOW EFFICIENCY",
     chart: (props) => <FlowEfficiency {...props} />,
     navContainerClass: "floweffnav",
+    chartContainerClass: "donut",
     navs: [
       {
         text: "Active Time",
@@ -87,6 +90,7 @@ export const FlowMetricChartContainers = [
     title: "FLOW PREDICTABILITY",
     chart: (props) => <FlowPredictability {...props} />,
     navContainerClass: "floweffnav",
+    chartContainerClass: "predict",
     customClass: "col-lg-4 col-md-6 order-md-4 order-lg-5 filtercol",
     navs: [
       {
@@ -105,6 +109,7 @@ export const FlowMetricChartContainers = [
     chart: (props) => <FlowLoad {...props} />,
     customClass: "col-lg-8 col-md-12 order-md-5 order-lg-4 filtercol",
     navContainerClass: "",
+    chartContainerClass: "infin",
     navs: [
       {
         text: "Features",

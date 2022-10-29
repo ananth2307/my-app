@@ -243,13 +243,8 @@ const FlowLoad = (props) => {
           .style("text-anchor", "middle")
           .style("font-size", 22)
           .text(function (d) {
-            console.log(d);
             return dataset.tasksize;
           });
-
-        console.log("aabb");
-        console.log(maxwidtha);
-        console.log(width);
 
         svg
           .append("text")

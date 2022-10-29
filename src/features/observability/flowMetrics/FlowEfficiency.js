@@ -96,9 +96,6 @@ const FlowEfficiency = (props) => {
         //array of colors for the pie (in the same order as the dataset)
         var color = d3.scaleOrdinal().range(["#B08AEC", "#EBDC7A", "#eaeaea"]);
 
-        console.log("added");
-        console.log(data.details);
-
         vist.data([data.details]); //associate our data with the document
         //.attr('width', 200) //set the width and height of our visualization (these will be attributes of the <svg> tag
         //.attr('height', 100);

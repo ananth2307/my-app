@@ -92,9 +92,6 @@ function process_issuemetrics(issuedata = data1) {
     }
     var height = 0.8*width; //this is the double because are showing just the half of the pie
 
-    console.log("issue");
-    console.log(width);
-
     var radius = width / 2 - width/4;
     var labelr = radius + 30; // radius for label anchor
     //array of colors for the pie (in the same order as the dataset)
@@ -123,7 +120,6 @@ function process_issuemetrics(issuedata = data1) {
 
         var obj = data[t];
         obj.perc = obj.value*100/count;
-        console.log(obj.perc);
         if(obj.perc == 'NaN') { obj.perc = 0 }
         /*if(obj.perc > 40)
             obj.perc = 40;
@@ -205,7 +201,6 @@ function process_issuemetrics(issuedata = data1) {
 const IssueMetrics = (props) => {
     const width = get(props, 'chartContainerRefs.current[props.index].offsetWidth', 415);
     const radius = width / 2 - width/4;
-    console.log("redis", props, width, props.chartContainerRefs?.current[props.index])
   return (
     <></>
   );

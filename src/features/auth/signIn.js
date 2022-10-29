@@ -9,19 +9,18 @@ const SignIn = () => {
   const [login] = api.useLoginMutation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    localStorage.getItem("isLoggedIn") === "true" &&
-      navigate("observability/flowMetrics");
-  }, []);
+  // useEffect(() => {
+  //   localStorage.getItem("isLoggedIn") === "true" &&
+  //     navigate("observability/flowMetrics");
+  // }, []);
 
   const onLogin = async (e) => {
     e.preventDefault();
     const payload = `userName=${loginForm.userName}&userPassword=${loginForm.userPassword}&src=`;
     try {
       const data = await login(payload);
-      console.log("redis suc", data);
       localStorage.setItem("isLoggedIn", "true");
-      navigate("observability/flowMetrics");
+      navigate("/observability/flowMetrics");
     } catch (err) {
       console.log("Login Err", err);
     }
