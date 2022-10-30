@@ -194,6 +194,7 @@ const FlowDistribution = (props) => {
     },
     [data]
   );
+  console.log("redis fd", props.flowMetricsData);
   return (
     <svg
       ref={ref}

@@ -4,7 +4,7 @@ const Button = ({ onClick, text, className }) => {
     return (
         <button
           className={className ? className : `solid-btn`}
-          onclick={(e) => onClick(e)}
+          onClick={(e) => onClick(e)}
         >
           {text}
         </button>

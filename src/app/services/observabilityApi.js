@@ -33,6 +33,49 @@ export const observabilityApi = api.injectEndpoints({
         return {label: sprint, value: sprint}
       }),
     }),
+    //Flow Metrics Page start
+    getFlowDistribution: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowDistribution/main`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getFlowVelocity: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowVelocity/main`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getFlowPredictability: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/ddflowpredicatablitymain`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getFlowEfficiency: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getActiveSprints: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/issueMetrics/activeSprints`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getFlowLoad: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/flowLoadMain`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
   }),
   overrideExisting: true,
 });

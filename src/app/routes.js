@@ -8,7 +8,7 @@ import {
 
 const SignIn = React.lazy(() => import("../features/auth/SignIn"));
 const FlowMetrics = React.lazy(() =>
-  import("../features/observability/flowMetrics/FlowMetrics")
+  import("../features/observability/flowMetrics/FlowMetricsLanding")
 );
 const PeopleMetrics = React.lazy(() =>
   import("../features/observability/peopleMetrics/PeopleMetrics")

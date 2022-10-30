@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { map } from "lodash";
 
-export const getSelectedOptionsValue = (options) => {
+export const getSelectedOptionsValue = (options=[]) => {
   return map(options, "value");
 };
 

@@ -4,6 +4,8 @@ export const constants = {
     BASE_URL: 'http://localhost:7111'
 }
 
+export const DATE_FORMAT = "MM/DD/YYYY";
+
 export const pageTitleMapper = {
     //Observability
     "/observability/flowMetrics": {
