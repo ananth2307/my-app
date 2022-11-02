@@ -156,8 +156,23 @@ const chartData = [
 
 const FlowLoad = (props) => {
   const ref = useD3(
-    (svg) => {
-      svg.html("");
+    (svg1) => {
+      svg1.html("");
+      function truncate(str, n) {
+        return str.length > n ? str.substr(0, n - 1) + "..." : str;
+      }
+
+      var wrap = function () {
+        var self = d3.select(this),
+          textLength = self.node().getComputedTextLength(),
+          text = self.text();
+        while (textLength > 50 && text.length > 0) {
+          text = text.slice(0, -1);
+          self.text(text + "...");
+          textLength = self.node().getComputedTextLength();
+        }
+      };
+
       var colorCircle = function (name) {
         let colors = [
           "#167ad6",
@@ -180,7 +195,6 @@ const FlowLoad = (props) => {
       };
 
       var datasetfull = chartData;
-
       var tasksum = 0;
       var maxwidtha = 0;
 
@@ -214,11 +228,14 @@ const FlowLoad = (props) => {
 
         var bubble = d3.pack().size([diameter, diameter]).padding(12);
 
-        svg
+        var svg = svg1
+          .append("svg")
           .attr("style", "overflow:visible")
           .attr("width", diameter)
           .attr("height", diameter + 100)
           .attr("class", "bubble");
+
+        //svg.attr("transform", "translate(" + 10 + "," + 40 + ")");
 
         svg
           .append("text")
@@ -243,8 +260,13 @@ const FlowLoad = (props) => {
           .style("text-anchor", "middle")
           .style("font-size", 22)
           .text(function (d) {
+            console.log(d);
             return dataset.tasksize;
           });
+
+        console.log("aabb");
+        console.log(maxwidtha);
+        console.log(width);
 
         svg
           .append("text")
@@ -299,12 +321,37 @@ const FlowLoad = (props) => {
           .text(function (d, i) {
             return dataset.name;
           });
+
+        //svg.selectAll('circle').data(vNodes).enter().append('text').text("abcdd");
+
+        /*
+                  vNodes
+                  .append("text")
+      
+                  .style("fill", "#000000")
+                  .attr("fill", "white")
+                  .attr('class', 'labels')
+                  .attr("dy", ".2em")
+      
+                  .style('text-anchor', 'middle')
+                  .style('font-size', 10)
+                  .text(function(d) {
+                      console.log("q");
+                      console.log(d);
+                      return "Abc";
+                  });
+      
+          */
+        // $(".innercirc").on("click", function () {
+        //   var called = $(this).siblings(".labelc").children("title").text();
+        //   getFlowLoaddrill1(called);
+        // });
       }
     },
     [chartData]
   );
   return (
-    <svg
+    <div
       ref={ref}
       style={{
         height: 500,
@@ -312,7 +359,7 @@ const FlowLoad = (props) => {
         marginRight: "0px",
         marginLeft: "0px",
       }}
-    ></svg>
+    ></div>
   );
 };
 
