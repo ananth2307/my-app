@@ -7,6 +7,7 @@ import ValueContainer from "./ValueContainer";
 import Menu from "./Menu";
 import MenuList from "./MenuList";
 import DropdownIndicator from "./DropdownIndicator";
+import CreatableSelect from"react-select/creatable";
 
 const CustomSelect = (props) => {
   const [filteredOptions, setFilteredOptions] = useState([]);
