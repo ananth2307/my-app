@@ -1,45 +1,64 @@
 import { useD3 } from "../../../hooks/useD3";
 import React from "react";
 import * as d3 from "d3";
+import { get, isEmpty, truncate } from "lodash";
 
-function FlowVelocity() {
-  const chartData = [
-    {
-      month: "Oct",
-      days: 30,
-      issues: 130000,
-      year: 2021,
-      monthno: "10",
-    },
-    {
-      month: "Nov",
-      days: 10.846153846153847,
-      issues: 100,
-      year: 2021,
-      monthno: "10",
-    },
-    {
-      month: "Dec",
-      days: 15,
-      issues: 1,
-      year: 2021,
-      monthno: "10",
-    },
-    {
-      month: "Jan",
-      days: 10.5,
-      issues: 13,
-      year: 2022,
-      monthno: "10",
-    },
-    {
-      month: "Feb",
-      days: 8.3,
-      issues: 53,
-      year: 2022,
-      monthno: "10",
-    },
-  ];
+function FlowVelocity(props) {
+  let chartData = []
+  if(!isEmpty(props?.flowMetricsData?.flowVelocity)){
+  // eslint-disable-next-line array-callback-return
+  props?.flowMetricsData?.flowVelocity.filter((items) => {
+    if(items.month && items.daysToComplete!=undefined &&items.issuesCompleted!=undefined){
+      var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    let tempData ={
+      month:mS[items.month-1],
+      days:items.daysToComplete/items.issuesCompleted,
+      issues:items.issuesCompleted,
+      monthno:items.month.toString()
+    }
+    chartData.push(tempData)
+    }
+  })
+}
+
+  // const chartData1 = [
+  //   {
+  //     month: "Oct",
+  //     days: 30,
+  //     issues: 130000,
+  //     year: 2021,
+  //     monthno: "10",
+  //   },
+  //   {
+  //     month: "Nov",
+  //     days: 10.846153846153847,
+  //     issues: 100,
+  //     year: 2021,
+  //     monthno: "10",
+  //   },
+  //   {
+  //     month: "Dec",
+  //     days: 15,
+  //     issues: 1,
+  //     year: 2021,
+  //     monthno: "10",
+  //   },
+  //   {
+  //     month: "Jan",
+  //     days: 10.5,
+  //     issues: 13,
+  //     year: 2022,
+  //     monthno: "10",
+  //   },
+  //   {
+  //     month: "Feb",
+  //     days: 8.3,
+  //     issues: 53,
+  //     year: 2022,
+  //     monthno: "10",
+  //   },
+  // ];
+  // if(chartData.length > 0){
   const ref = useD3(
     (svg1) => {
       svg1.html("");
@@ -70,7 +89,6 @@ function FlowVelocity() {
         tissues = 0,
         daysmax = 0,
         issuesmax = 0;
-
       for (var t = 0; t < json_data.length; t++) {
         tdays = tdays + json_data[t].days;
         tissues = tissues + json_data[t].issues;
@@ -83,6 +101,7 @@ function FlowVelocity() {
           issuesmax = json_data[t].issues;
         }
       }
+    
 
       // console.log("ab");
       // console.log(tdays);
@@ -123,6 +142,7 @@ function FlowVelocity() {
 
       // console.log(daysmax);
       // Add Y axis
+      console.log(daysmax)
       var y = d3
         .scaleLinear()
         .domain([0, daysmax + 10])
@@ -188,8 +208,10 @@ function FlowVelocity() {
     },
     [chartData]
   );
+  // }
 
   return (
+    chartData.length > 0 &&
     <div
       ref={ref}
       style={{
