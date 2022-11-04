@@ -1,43 +1,23 @@
 import { useD3 } from "../../../hooks/useD3";
-import React from "react";
+import React, { memo } from "react";
 import * as d3 from "d3";
 
-function FlowVelocity() {
+function FlowVelocity(props) {
+  console.log("redis", props.flowMetricsData);
   const chartData = [
     {
       month: "Oct",
-      days: 30,
-      issues: 130000,
-      year: 2021,
+      days: 6.857142857142857,
+      issues: 7,
+      year: 2022,
       monthno: "10",
     },
     {
       month: "Nov",
-      days: 10.846153846153847,
-      issues: 100,
-      year: 2021,
-      monthno: "10",
-    },
-    {
-      month: "Dec",
-      days: 15,
-      issues: 1,
-      year: 2021,
-      monthno: "10",
-    },
-    {
-      month: "Jan",
-      days: 10.5,
-      issues: 13,
+      days: 9,
+      issues: 2,
       year: 2022,
-      monthno: "10",
-    },
-    {
-      month: "Feb",
-      days: 8.3,
-      issues: 53,
-      year: 2022,
-      monthno: "10",
+      monthno: "11",
     },
   ];
   const ref = useD3(
@@ -83,9 +63,6 @@ function FlowVelocity() {
           issuesmax = json_data[t].issues;
         }
       }
-
-      // console.log("ab");
-      // console.log(tdays);
 
       for (var t = 0; t < json_data.length; t++) {
         json_data[t].daysx = (json_data[t].days / tdays) * 100;
@@ -149,7 +126,7 @@ function FlowVelocity() {
         })
         .attr("y2", y(0))
         .attr("stroke", "#4E9BE1")
-        .style("stroke-width", "8px")
+        .style("stroke-width", "8px");
 
       // Circles
       svg
@@ -167,7 +144,7 @@ function FlowVelocity() {
           return d.issuesx;
         })
         .style("fill", "#F28B8C")
-        .attr("stroke", "#F28B8C")
+        .attr("stroke", "#F28B8C");
 
       svg
         .append("g")
@@ -184,7 +161,7 @@ function FlowVelocity() {
         }) //positions text towards the left of the center of the circle
         .attr("dy", function (d) {
           return y(d.days) - d.issuesx + 5;
-        })
+        });
     },
     [chartData]
   );
@@ -202,4 +179,4 @@ function FlowVelocity() {
   );
 }
 
-export default FlowVelocity;
+export default memo(FlowVelocity);

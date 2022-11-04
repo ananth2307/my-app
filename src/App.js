@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import 'bootstrap/dist/css/bootstrap.css';
 import "./assets/css/common.scss";
 import "./assets/css/internal.scss";
 import "./assets/css/bootstrap_extended.scss";
