@@ -211,7 +211,6 @@ function FlowVelocity(props) {
   // }
 
   return (
-    chartData.length > 0 &&
     <div
       ref={ref}
       style={{
