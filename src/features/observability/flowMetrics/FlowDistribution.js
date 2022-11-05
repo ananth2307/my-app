@@ -58,10 +58,10 @@ const FlowDistribution = (props) => {
   const ref = useD3(
     (svg) => {
       if (data && data.length) {
-        const wrap = function() {
+        const wrap = function () {
           let self = d3.select(this),
             text = self.text();
-            self.text(truncate(text, { length: 9, omission: '...'}));
+          self.text(truncate(text, { length: 9, omission: "..." }));
         };
         let divwidth = 415,
           divheight = 500;
@@ -125,6 +125,10 @@ const FlowDistribution = (props) => {
           .append("rect")
           .attr("rx", 6)
           .attr("ry", 6)
+          .on("click", () => {
+            console.log("redis y axis clicked", props)
+            props.toggleOffCanvas();
+          })
           .attr("y", function (d) {
             return y(d.data.sprint);
           }) //.attr("x", function(d) { return x(d.data.State); })
@@ -147,7 +151,7 @@ const FlowDistribution = (props) => {
           .attr("x", -35)
           .attr("fill", "#000")
           .attr("font-weight", "400")
-          .attr("text-overflow", "ellipsis")
+          .attr("text-overflow", "ellipsis");
 
         svg
           .select(".y.axis")
@@ -170,6 +174,9 @@ const FlowDistribution = (props) => {
           .attr("font-weight", "100")
           .attr("text-anchor", "start");
       }
+      svg.selectAll(".y.axis .tick").on("click", () => {
+        console.log("redis tick clicked");
+      });
     },
     [data]
   );

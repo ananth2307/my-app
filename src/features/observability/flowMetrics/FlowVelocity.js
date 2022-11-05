@@ -1,9 +1,10 @@
 import { useD3 } from "../../../hooks/useD3";
-import React from "react";
+import React, { memo } from "react";
 import * as d3 from "d3";
 import { get, isEmpty, truncate } from "lodash";
 
 function FlowVelocity(props) {
+<<<<<<< HEAD
   let chartData = []
   if(!isEmpty(props?.flowMetricsData?.flowVelocity)){
   // eslint-disable-next-line array-callback-return
@@ -58,6 +59,25 @@ function FlowVelocity(props) {
   //     monthno: "10",
   //   },
   // ];
+=======
+  console.log("redis", props.flowMetricsData);
+  const chartData = [
+    {
+      month: "Oct",
+      days: 6.857142857142857,
+      issues: 7,
+      year: 2022,
+      monthno: "10",
+    },
+    {
+      month: "Nov",
+      days: 9,
+      issues: 2,
+      year: 2022,
+      monthno: "11",
+    },
+  ];
+>>>>>>> fc75a7849d550536bb5a00195be9c3058a95b9f8
   const ref = useD3(
     (svg1) => {
       svg1.html("");
@@ -101,9 +121,6 @@ function FlowVelocity(props) {
         }
       }
     
-
-      // console.log("ab");
-      // console.log(tdays);
 
       for (var t = 0; t < json_data.length; t++) {
         json_data[t].daysx = (json_data[t].days / tdays) * 100;
@@ -167,7 +184,7 @@ function FlowVelocity(props) {
         })
         .attr("y2", y(0))
         .attr("stroke", "#4E9BE1")
-        .style("stroke-width", "8px")
+        .style("stroke-width", "8px");
 
       // Circles
       svg
@@ -185,7 +202,7 @@ function FlowVelocity(props) {
           return d.issuesx;
         })
         .style("fill", "#F28B8C")
-        .attr("stroke", "#F28B8C")
+        .attr("stroke", "#F28B8C");
 
       svg
         .append("g")
@@ -202,7 +219,7 @@ function FlowVelocity(props) {
         }) //positions text towards the left of the center of the circle
         .attr("dy", function (d) {
           return y(d.days) - d.issuesx + 5;
-        })
+        });
     },
     [chartData]
   );
@@ -221,4 +238,4 @@ function FlowVelocity(props) {
   );
 }
 
-export default FlowVelocity;
+export default memo(FlowVelocity);
