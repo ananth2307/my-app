@@ -4,7 +4,6 @@ import * as d3 from "d3";
 import { get, isEmpty, truncate } from "lodash";
 
 function FlowVelocity(props) {
-<<<<<<< HEAD
   let chartData = []
   if(!isEmpty(props?.flowMetricsData?.flowVelocity)){
   // eslint-disable-next-line array-callback-return
@@ -59,25 +58,25 @@ function FlowVelocity(props) {
   //     monthno: "10",
   //   },
   // ];
-=======
-  console.log("redis", props.flowMetricsData);
-  const chartData = [
-    {
-      month: "Oct",
-      days: 6.857142857142857,
-      issues: 7,
-      year: 2022,
-      monthno: "10",
-    },
-    {
-      month: "Nov",
-      days: 9,
-      issues: 2,
-      year: 2022,
-      monthno: "11",
-    },
-  ];
->>>>>>> fc75a7849d550536bb5a00195be9c3058a95b9f8
+
+  // console.log("redis", props.flowMetricsData);
+  // const chartData = [
+  //   {
+  //     month: "Oct",
+  //     days: 6.857142857142857,
+  //     issues: 7,
+  //     year: 2022,
+  //     monthno: "10",
+  //   },
+  //   {
+  //     month: "Nov",
+  //     days: 9,
+  //     issues: 2,
+  //     year: 2022,
+  //     monthno: "11",
+  //   },
+  // ];
+
   const ref = useD3(
     (svg1) => {
       svg1.html("");
