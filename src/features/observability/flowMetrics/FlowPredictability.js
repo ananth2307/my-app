@@ -2,26 +2,36 @@ import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate, responsivefy } from "../../../app/utilities/helpers";
+import { isEmpty } from "lodash";
 
-const chartData = [
-  {
-    label: "ACPK Sprint 10.1_2022",
-    value: 2,
-    value2: 4,
-  },
-  {
-    label: "ACPK Sprint 9.1_2022",
-    value: 7,
-    value2: 19,
-  },
-  {
-    label: "ACPK Sprint 10.2_2022",
-    value: 4,
-    value2: 8,
-  },
-];
+// const chartData = [
+//   {
+//     label: "ACPK Sprint 10.1_2022",
+//     value: 2,
+//     value2: 4,
+//   },
+//   {
+//     label: "ACPK Sprint 9.1_2022",
+//     value: 7,
+//     value2: 19,
+//   },
+//   {
+//     label: "ACPK Sprint 10.2_2022",
+//     value: 4,
+//     value2: 8,
+//   },
+// ];
 
 const FlowPredictability = (props) => {
+  let chartData = [];
+  !isEmpty(props?.flowMetricsData?.flowPredictability.sprint) &&
+  props?.flowMetricsData?.flowPredictability.sprint.map((items)=>{
+    chartData.push({
+      label:items.sprintName,
+      value: items.actual,
+      value2:items.planned
+    })
+  })
   const ref = useD3(
     (svg) => {
       svg.html("");

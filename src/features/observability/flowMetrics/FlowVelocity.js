@@ -58,7 +58,6 @@ function FlowVelocity(props) {
   //     monthno: "10",
   //   },
   // ];
-  // if(chartData.length > 0){
   const ref = useD3(
     (svg1) => {
       svg1.html("");
@@ -142,7 +141,6 @@ function FlowVelocity(props) {
 
       // console.log(daysmax);
       // Add Y axis
-      console.log(daysmax)
       var y = d3
         .scaleLinear()
         .domain([0, daysmax + 10])
@@ -211,7 +209,6 @@ function FlowVelocity(props) {
   // }
 
   return (
-    chartData.length > 0 &&
     <div
       ref={ref}
       style={{
