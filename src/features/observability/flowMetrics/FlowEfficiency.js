@@ -2,39 +2,64 @@ import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate } from "../../../app/utilities/helpers";
+import { isEmpty } from "lodash";
 
-const chartData = [
-  {
-    middle: "28%",
-    name: "ACPK Sprint 10.1_2022",
-    details: [
-      {
-        label: "Active Time",
-        value: 77,
-      },
-      {
-        label: "Wait Time",
-        value: 195,
-      },
-    ],
-  },
-  {
-    middle: "25%",
-    name: "ACPK Sprint 10.2_2022",
-    details: [
-      {
-        label: "Active Time",
-        value: 93,
-      },
-      {
-        label: "Wait Time",
-        value: 275,
-      },
-    ],
-  },
-];
+// const chartData1 = [
+//   {
+//     middle: "28%",
+//     name: "ACPK Sprint 10.1_2022",
+//     details: [
+//       {
+//         label: "Active Time",
+//         value: 77,
+//       },
+//       {
+//         label: "Wait Time",
+//         value: 195,
+//       },
+//     ],
+//   },
+//   {
+//     middle: "25%",
+//     name: "ACPK Sprint 10.2_2022",
+//     details: [
+//       {
+//         label: "Active Time",
+//         value: 93,
+//       },
+//       {
+//         label: "Wait Time",
+//         value: 275,
+//       },
+//     ],
+//   },
+// ];
 
 const FlowEfficiency = (props) => {
+  let chartData = [];
+  if (!isEmpty(props?.flowMetricsData?.flowEfficiency)) {
+    for (let [key, value] of Object.entries(
+      props?.flowMetricsData?.flowEfficiency
+    )) {
+      if (value.efficiency === "NaN") {
+        value.efficiency = 0;
+      }
+      chartData.push({
+        middle: Math.round(value.efficiency) + "%",
+        name: key,
+        details: [
+          {
+            label: "Active Time",
+            value: Math.round(value.activeTime),
+          },
+          {
+            label: "Wait Time",
+            value: Math.round(value.waitTime),
+          },
+        ],
+      });
+    }
+  }
   const ref = useD3(
     (svg) => {
       svg.html("");
@@ -55,7 +80,6 @@ const FlowEfficiency = (props) => {
 
       for (var ij = 0; ij < maindata.length; ij++) {
         if (ij <= 2) {
-
           vist = svg
             .append("svg") //create the SVG element inside the <body>
             .attr("width", divwidth / 3 + 10) //set the width and height of our visualization (these will be attributes of the <svg> tag
