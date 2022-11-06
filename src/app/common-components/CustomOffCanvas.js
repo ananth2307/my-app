@@ -7,7 +7,7 @@ import { setIsOffCanvasOpen } from "../commonSlice";
 const CustomOffCanvas = (props) => {
   
   const dispatch = useDispatch();
-  const isOffCanvasOpen = useSelector((state) => state.common.isOffCanvasOpen)
+  const isOffCanvasOpen = useSelector((state) => state.common?.offcanvasState?.isDrilldownOpen)
 
   return (
     <Offcanvas

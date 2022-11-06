@@ -3,12 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 const commonSlice = createSlice({
   name: "common",
   initialState: {
-    isOffCanvasOpen: false,
+    offcanvasState: {
+      isDrilldownOpen: false,
+      title: "",
+      dropDownMenuOptions: [],
+    },
   },
   reducers: {
     setIsOffCanvasOpen: {
       reducer(state, action) {
-        state.isOffCanvasOpen = action.payload;
+        state.offcanvasState = action.payload;
       },
     },
   },

@@ -3,9 +3,12 @@ import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { metricTypesMapping } from "../../common/constants";
 import { getMetricTypeMappedCount } from "../../common/helpers";
-import { get, isEmpty, truncate } from "lodash";
+import { isEmpty, map, truncate } from "lodash";
+import { useDispatch } from "react-redux";
+import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
 const FlowDistribution = (props) => {
+  const dispatch = useDispatch();
   let data = [];
   !isEmpty(props?.flowMetricsData?.flowDistribution) &&
     props?.flowMetricsData?.flowDistribution.map((sprint) => {
@@ -54,6 +57,14 @@ const FlowDistribution = (props) => {
       });
       data.push(tmpdata);
     });
+
+  const openDrillDown = () => {
+    dispatch(setIsOffCanvasOpen({
+      isDrilldownOpen: true,
+      title: "FLOW DISTRIBUTION",
+      dropDownMenuOptions: data.map(dt => ({label: dt.sprint, value: data.sprint})),
+    }));
+  };
 
   const ref = useD3(
     (svg) => {
@@ -126,7 +137,7 @@ const FlowDistribution = (props) => {
           .attr("rx", 6)
           .attr("ry", 6)
           .on("click", () => {
-            props.toggleOffCanvas();
+            openDrillDown();
           })
           .attr("y", function (d) {
             return y(d.data.sprint);
@@ -174,7 +185,7 @@ const FlowDistribution = (props) => {
           .attr("text-anchor", "start");
       }
       svg.selectAll(".y.axis .tick").on("click", () => {
-        props.toggleOffCanvas();
+        openDrillDown();
       });
     },
     [data]
@@ -189,7 +200,7 @@ const FlowDistribution = (props) => {
           preserveAspectRatio: "xMinYMid",
           width: "100%",
           height: "251",
-          overflow: "scroll"
+          overflow: "scroll",
         }}
       ></svg>
     </>
