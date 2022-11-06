@@ -126,7 +126,6 @@ const FlowDistribution = (props) => {
           .attr("rx", 6)
           .attr("ry", 6)
           .on("click", () => {
-            console.log("redis y axis clicked", props)
             props.toggleOffCanvas();
           })
           .attr("y", function (d) {
@@ -175,7 +174,7 @@ const FlowDistribution = (props) => {
           .attr("text-anchor", "start");
       }
       svg.selectAll(".y.axis .tick").on("click", () => {
-        console.log("redis tick clicked");
+        props.toggleOffCanvas();
       });
     },
     [data]
@@ -186,10 +185,11 @@ const FlowDistribution = (props) => {
       <svg
         ref={ref}
         style={{
-          height: 500,
+          viewBox: "0 0 300 150",
+          preserveAspectRatio: "xMinYMid",
           width: "100%",
-          marginRight: "0px",
-          marginLeft: "0px",
+          height: "251",
+          overflow: "scroll"
         }}
       ></svg>
     </>

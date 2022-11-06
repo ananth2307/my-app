@@ -71,8 +71,8 @@ const FlowEfficiency = (props) => {
       svg
         .attr("width", width) //set the width and height of our visualization (these will be attributes of the <svg> tag
         .attr("height", height)
-        .append("svg:g"); //make a group to hold our pie chart
-      //            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')'); //move the center of the pie chart from 0, 0 to radius, radius
+        .append("svg:g") //make a group to hold our pie chart
+                 .attr('transform', 'translate(' + 0 + ', -' + 100 + ')'); //move the center of the pie chart from 0, 0 to radius, radius
 
       var divwidth = 415;
 
@@ -81,6 +81,7 @@ const FlowEfficiency = (props) => {
       for (var ij = 0; ij < maindata.length; ij++) {
         if (ij <= 2) {
           vist = svg
+            .select("g")
             .append("svg") //create the SVG element inside the <body>
             .attr("width", divwidth / 3 + 10) //set the width and height of our visualization (these will be attributes of the <svg> tag
             .attr("height", 250)
@@ -89,6 +90,7 @@ const FlowEfficiency = (props) => {
             .attr("transform", "translate(" + (ij + 1) * 80 + "," + 150 + ")");
         } else {
           vist = svg
+            .select("g")
             .append("svg") //create the SVG element inside the <body>
             .attr("width", divwidth / 3 + 10) //set the width and height of our visualization (these will be attributes of the <svg> tag
             .attr("height", 250)
@@ -208,7 +210,7 @@ const FlowEfficiency = (props) => {
     <svg
       ref={ref}
       style={{
-        height: 500,
+        height: 219,
         width: "100%",
         marginRight: "0px",
         marginLeft: "0px",
