@@ -210,7 +210,7 @@ const FlowEfficiency = (props) => {
     <svg
       ref={ref}
       style={{
-        height: 219,
+        height: "100%",
         width: "100%",
         marginRight: "0px",
         marginLeft: "0px",

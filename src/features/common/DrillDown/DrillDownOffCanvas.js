@@ -2,6 +2,8 @@ import React from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
+import {dDDefaultLevelOne} from "./constants";
+import DdDefaultLevelOne from "./DdDefaultLevelOne";
 
 const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState)
@@ -14,53 +16,14 @@ const DrillDownOffCanvas = (props) => {
             <Dropdown 
               options={offcanvasState?.dropDownMenuOptions ? offcanvasState.dropDownMenuOptions : []}
               hideSelectedOptions={false}
-              isCheckboxSelect={true}
-              placeholder="Select Application"
-              isSearchable={true}
-              closeMenuOnSelect={false}
-              onChange={(selectedApplications) =>
-                props.getFlowDistributionBySprint()
-              }
+              placeholder="Select Sprint"
+              closeMenuOnSelect={true}
+              defaultValue={offcanvasState.selectedValue}
             />
           </div>
         </div>
         <div class="flowbox-row distribute-wrap flowacti-block">
-          <div id="fb1" flag="distribute" class="flowbox dark-blueline">
-            <h4>Features</h4>
-            <h2 class="fdcount" id="Features_distri">
-              0
-            </h2>
-          </div>
-          <div id="fb2" flag="distribute" class="flowbox blueline active">
-            <h4>Defects</h4>
-            <h2 class="fdcount" id="Bug_distri">
-              2
-            </h2>
-          </div>
-          <div id="fb3" flag="distribute" class="flowbox pinkline">
-            <h4>Risks</h4>
-            <h2 class="fdcount" id="Risk_distri">
-              2
-            </h2>
-          </div>
-          <div id="fb4" flag="distribute" class="flowbox purpleline">
-            <h4>Enablers</h4>
-            <h2 class="fdcount" id="Enablers_distri">
-              1
-            </h2>
-          </div>
-          <div id="fb5" flag="distribute" class="flowbox yellowline">
-            <h4>Debt</h4>
-            <h2 class="fdcount" id="Debt_distri">
-              1
-            </h2>
-          </div>
-          <div id="fb6" flag="distribute" class="flowbox orangeline">
-            <h4>Prod-Fix</h4>
-            <h2 class="fdcount" id="prodFix_distri">
-              1
-            </h2>
-          </div>
+          {dDDefaultLevelOne.map(level => <DdDefaultLevelOne level={level} />)}
         </div>
         <div class="flow-descriptions-block">
           <div class="stories-list">

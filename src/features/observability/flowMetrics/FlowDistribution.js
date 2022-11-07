@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { metricTypesMapping } from "../../common/constants";
 import { getMetricTypeMappedCount } from "../../common/helpers";
-import { isEmpty, map, truncate } from "lodash";
+import { get, isEmpty, map, truncate } from "lodash";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
@@ -58,12 +58,22 @@ const FlowDistribution = (props) => {
       data.push(tmpdata);
     });
 
-  const openDrillDown = () => {
-    dispatch(setIsOffCanvasOpen({
-      isDrilldownOpen: true,
-      title: "FLOW DISTRIBUTION",
-      dropDownMenuOptions: data.map(dt => ({label: dt.sprint, value: data.sprint})),
-    }));
+  const openDrillDown = (selectedSprint) => {
+    console.log("redis selected", selectedSprint);
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: "FLOW DISTRIBUTION",
+        selectedValue: {
+          label: selectedSprint,
+          value: selectedSprint
+        },
+        dropDownMenuOptions: data.map((dt) => ({
+          label: dt.sprint,
+          value: data.sprint,
+        })),
+      })
+    );
   };
 
   const ref = useD3(
@@ -136,8 +146,8 @@ const FlowDistribution = (props) => {
           .append("rect")
           .attr("rx", 6)
           .attr("ry", 6)
-          .on("click", () => {
-            openDrillDown();
+          .on("click", (e, data) => {
+            openDrillDown(get(data, 'data.sprint', ''));
           })
           .attr("y", function (d) {
             return y(d.data.sprint);
@@ -184,8 +194,8 @@ const FlowDistribution = (props) => {
           .attr("font-weight", "100")
           .attr("text-anchor", "start");
       }
-      svg.selectAll(".y.axis .tick").on("click", () => {
-        openDrillDown();
+      svg.selectAll(".y.axis .tick").on("click", (e, sprint) => {
+        openDrillDown(sprint);
       });
     },
     [data]
