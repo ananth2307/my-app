@@ -96,7 +96,7 @@ const FlowMetrics = () => {
           {FlowMetricChartContainers?.map((type) => {
             return (
               <>
-                {console.log("redis", state.isShowDrillDown)}
+                {/* {console.log("redis", state.isShowDrillDown)} */}
                 <ChartContainer
                   key={type}
                   {...type}
