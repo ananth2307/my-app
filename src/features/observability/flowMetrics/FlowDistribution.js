@@ -2,8 +2,11 @@ import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { metricTypesMapping } from "../../common/constants";
-import { getMetricTypeMappedCount } from "../../common/helpers";
-import { get, isEmpty, map, truncate } from "lodash";
+import {
+  getMetricTypeMappedCount,
+  getMetricMatchingStatus,
+} from "../../common/helpers";
+import { cloneDeep, get, isEmpty, map, truncate } from "lodash";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
@@ -58,20 +61,59 @@ const FlowDistribution = (props) => {
       data.push(tmpdata);
     });
 
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData)
+    delete tmpSummaryData.sprintName
+    let rtData = {
+      issueId: Object.keys(tmpSummaryData)[0],
+      summary: Object.values(tmpSummaryData)[0],
+    }
+    return rtData;
+  };
+
+  const getSelectedData = (selectedSprint) => {
+    const selectedSprintData = props.flowMetricsData?.flowDistribution?.filter(
+      (dt) => dt.sprintName === selectedSprint
+    )[0];
+    let selectedData = {};
+    selectedSprintData.list.map((data, index) => {
+      Object.keys(metricTypesMapping).map((key) => {
+        selectedData[key] = selectedData[key] ? selectedData[key] : {}
+        const { isMatching, matchedKey } = getMetricMatchingStatus(
+          data,
+          metricTypesMapping[key]
+        );
+        if (isMatching) {
+          selectedData[key] = {
+            count: selectedData[key].count
+              ? selectedData[key].count + data[matchedKey]
+              : data[matchedKey],
+            summaryList: selectedData[key].summaryList
+              ? selectedData[key].summaryList.push(
+                  formatSummary(data[`${matchedKey}summary`])
+                )
+              : [formatSummary(data[`${matchedKey}summary`])],
+          };
+        }
+      });
+    });
+    return selectedData;
+  };
+
   const openDrillDown = (selectedSprint) => {
-    console.log("redis selected", selectedSprint);
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
-        title: "FLOW DISTRIBUTION",
+        title: props.title,
         selectedValue: {
           label: selectedSprint,
-          value: selectedSprint
+          value: selectedSprint,
         },
         dropDownMenuOptions: data.map((dt) => ({
           label: dt.sprint,
           value: data.sprint,
         })),
+        selectedData: getSelectedData(selectedSprint),
       })
     );
   };
@@ -147,7 +189,7 @@ const FlowDistribution = (props) => {
           .attr("rx", 6)
           .attr("ry", 6)
           .on("click", (e, data) => {
-            openDrillDown(get(data, 'data.sprint', ''));
+            openDrillDown(get(data, "data.sprint", ""));
           })
           .attr("y", function (d) {
             return y(d.data.sprint);
