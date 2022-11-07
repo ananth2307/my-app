@@ -2,159 +2,269 @@ import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate, responsivefy } from "../../../app/utilities/helpers";
+import { isEmpty } from "lodash";
+import { metricTypesMapping } from "../../common/constants";
+import { statusOrder } from "../../common/helpers";
 
-const chartData = [
-  {
-    name: "Done",
-    children: [
-      {
-        name: "Features",
-        tasksize: 1,
-        parent: "Done",
-      },
-      {
-        name: "Defects",
-        tasksize: 2,
-        parent: "Done",
-      },
-      {
-        name: "Risks",
-        tasksize: 2,
-        parent: "Done",
-      },
-      {
-        name: "Enablers",
-        tasksize: 1,
-        parent: "Done",
-      },
-      {
-        name: "Debt",
-        tasksize: 1,
-        parent: "Done",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 1,
-        parent: "Done",
-      },
-    ],
-    tasksize: 8,
-    items: "13",
-  },
-  {
-    name: "In-Dev",
-    children: [
-      {
-        name: "Features",
-        tasksize: 2,
-        parent: "In-Dev",
-      },
-      {
-        name: "Defects",
-        tasksize: 2,
-        parent: "In-Dev",
-      },
-      {
-        name: "Risks",
-        tasksize: 0,
-        parent: "In-Dev",
-      },
-      {
-        name: "Enablers",
-        tasksize: 3,
-        parent: "In-Dev",
-      },
-      {
-        name: "Debt",
-        tasksize: 0,
-        parent: "In-Dev",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 0,
-        parent: "In-Dev",
-      },
-    ],
-    tasksize: 7,
-    items: "13",
-  },
-  {
-    name: "READY-VERIFICATION",
-    children: [
-      {
-        name: "Features",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Defects",
-        tasksize: 4,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Risks",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Enablers",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Debt",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 1,
-        parent: "READY-VERIFICATION",
-      },
-    ],
-    tasksize: 5,
-    items: "13",
-  },
-  {
-    name: "IN-DEFINE",
-    children: [
-      {
-        name: "Features",
-        tasksize: 1,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Defects",
-        tasksize: 3,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Risks",
-        tasksize: 0,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Enablers",
-        tasksize: 1,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Debt",
-        tasksize: 0,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 0,
-        parent: "IN-DEFINE",
-      },
-    ],
-    tasksize: 5,
-    items: "13",
-  },
-];
+// const chartData1 = [
+//   {
+//     name: "Done",
+//     children: [
+//       {
+//         name: "Features",
+//         tasksize: 1,
+//         parent: "Done",
+//       },
+//       {
+//         name: "Defects",
+//         tasksize: 2,
+//         parent: "Done",
+//       },
+//       {
+//         name: "Risks",
+//         tasksize: 2,
+//         parent: "Done",
+//       },
+//       {
+//         name: "Enablers",
+//         tasksize: 1,
+//         parent: "Done",
+//       },
+//       {
+//         name: "Debt",
+//         tasksize: 1,
+//         parent: "Done",
+//       },
+//       {
+//         name: "Prod-Fix",
+//         tasksize: 1,
+//         parent: "Done",
+//       },
+//     ],
+//     tasksize: 8,
+//     items: "13",
+//   },
+//   {
+//     name: "In-Dev",
+//     children: [
+//       {
+//         name: "Features",
+//         tasksize: 2,
+//         parent: "In-Dev",
+//       },
+//       {
+//         name: "Defects",
+//         tasksize: 2,
+//         parent: "In-Dev",
+//       },
+//       {
+//         name: "Risks",
+//         tasksize: 0,
+//         parent: "In-Dev",
+//       },
+//       {
+//         name: "Enablers",
+//         tasksize: 3,
+//         parent: "In-Dev",
+//       },
+//       {
+//         name: "Debt",
+//         tasksize: 0,
+//         parent: "In-Dev",
+//       },
+//       {
+//         name: "Prod-Fix",
+//         tasksize: 0,
+//         parent: "In-Dev",
+//       },
+//     ],
+//     tasksize: 7,
+//     items: "13",
+//   },
+//   {
+//     name: "READY-VERIFICATION",
+//     children: [
+//       {
+//         name: "Features",
+//         tasksize: 0,
+//         parent: "READY-VERIFICATION",
+//       },
+//       {
+//         name: "Defects",
+//         tasksize: 4,
+//         parent: "READY-VERIFICATION",
+//       },
+//       {
+//         name: "Risks",
+//         tasksize: 0,
+//         parent: "READY-VERIFICATION",
+//       },
+//       {
+//         name: "Enablers",
+//         tasksize: 0,
+//         parent: "READY-VERIFICATION",
+//       },
+//       {
+//         name: "Debt",
+//         tasksize: 0,
+//         parent: "READY-VERIFICATION",
+//       },
+//       {
+//         name: "Prod-Fix",
+//         tasksize: 1,
+//         parent: "READY-VERIFICATION",
+//       },
+//     ],
+//     tasksize: 5,
+//     items: "13",
+//   },
+//   {
+//     name: "IN-DEFINE",
+//     children: [
+//       {
+//         name: "Features",
+//         tasksize: 1,
+//         parent: "IN-DEFINE",
+//       },
+//       {
+//         name: "Defects",
+//         tasksize: 3,
+//         parent: "IN-DEFINE",
+//       },
+//       {
+//         name: "Risks",
+//         tasksize: 0,
+//         parent: "IN-DEFINE",
+//       },
+//       {
+//         name: "Enablers",
+//         tasksize: 1,
+//         parent: "IN-DEFINE",
+//       },
+//       {
+//         name: "Debt",
+//         tasksize: 0,
+//         parent: "IN-DEFINE",
+//       },
+//       {
+//         name: "Prod-Fix",
+//         tasksize: 0,
+//         parent: "IN-DEFINE",
+//       },
+//     ],
+//     tasksize: 5,
+//     items: "13",
+//   },
+// ];
 
 const FlowLoad = (props) => {
+  let chartData = [];
+  let getchild = [];
+  let data = props?.flowMetricsData?.flowLoad;
+  if (!isEmpty(data)) {
+    let featureslist = [];
+    let enablerslist = [];
+    let defects = [];
+    let risk = [];
+    let debt = [];
+    let prodFix = [];
+    let types_data;
+    let totalCount = [];
+    for (let i = 0; i < data.length; i++) {
+      getchild = [];
+      featureslist = [];
+      enablerslist = [];
+      defects = [];
+      risk = [];
+      debt = [];
+      prodFix = [];
+      for (let j = 0; j < data[i].list.length; j++) {
+        const cr = "Change Request";
+        const st = "Sub task";
+        types_data = {
+          Task: data[i].list[j].Task,
+          Debt: data[i].list[j].Debt,
+          Bug: data[i].list[j].Bug,
+          Enablers: data[i].list[j].Enablers,
+          ChangeRequest: data[i].list[j][cr],
+          Story: data[i].list[j].Story,
+          Risk: data[i].list[j].Risk,
+          Subtask: data[i].list[j][st],
+          prodFix: data[i].list[j].prodFix,
+          Epic: data[i].list[j].Epic,
+        };
+        for (let [key, value] of Object.entries(types_data)) {
+          if (value === undefined) value = 0;
+          if ( metricTypesMapping.features.includes(key)) {
+            featureslist.push(value);
+          } else if (metricTypesMapping.enablers.includes(key)) {
+            enablerslist.push(value);
+          } else if (metricTypesMapping.risk.includes(key)) {
+            risk.push(value);
+          } else if (metricTypesMapping.defects.includes(key)) {
+            defects.push(value);
+          } else if (metricTypesMapping.debt.includes(key)) {
+            debt.push(value);
+          } else if (metricTypesMapping.prodFix.includes(key)) {
+            prodFix.push(value);
+          }
+        }
+      }
+      getchild.push(
+        {
+          name: "Features",
+          tasksize: featureslist.reduce((a, b) => a + b, 0),
+          parent: data[i].status,
+        },
+        {
+          name: "Defects",
+          tasksize: defects.reduce((a, b) => a + b, 0),
+          parent: data[i].status,
+        },
+        {
+          name: "Risks",
+          tasksize: risk.reduce((a, b) => a + b, 0),
+          parent: data[i].status,
+        },
+        {
+          name: "Enablers",
+          tasksize: enablerslist.reduce((a, b) => a + b, 0),
+          parent: data[i].status,
+        },
+        {
+          name: "Debt",
+          tasksize: debt.reduce((a, b) => a + b, 0),
+          parent: data[i].status,
+        },
+        {
+          name: "Prod-Fix",
+          tasksize: prodFix.reduce((a, b) => a + b, 0),
+          parent: data[i].status,
+        }
+      );
+      totalCount = [];
+      for (let k = 0; k < getchild.length; k++) {
+        totalCount.push(getchild[k].tasksize);
+      }
+      chartData.push({
+        name: data[i].status,
+        children: getchild,
+        tasksize: totalCount.reduce((a, b) => a + b, 0),
+        items: "13",
+      });
+    }
+    let sortingArr = [
+      "Backlog",
+      "IN-DEFINE",
+      "In-Dev",
+      "READY-VERIFICATION",
+      "SIT IN-VERIFICATION",
+      "SIT-VERIFICATION FAILED",
+      "Testing",
+      "Done",
+    ];
+    chartData = statusOrder(chartData, sortingArr, "name");
+  }
   const ref = useD3(
     (svg1) => {
       svg1.html("");
@@ -262,7 +372,6 @@ const FlowLoad = (props) => {
           .text(function (d) {
             return dataset.tasksize;
           });
-
         svg
           .append("text")
           .style("fill", "#000000")

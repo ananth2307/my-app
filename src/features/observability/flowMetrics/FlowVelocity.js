@@ -2,41 +2,24 @@ import { useD3 } from "../../../hooks/useD3";
 import React, { memo } from "react";
 import * as d3 from "d3";
 import { get, isEmpty, truncate } from "lodash";
+import { getMonth } from "../../common/constants";
 
 function FlowVelocity(props) {
-  let chartData = [];
-  if (!isEmpty(props?.flowMetricsData?.flowVelocity)) {
-    // eslint-disable-next-line array-callback-return
-    props?.flowMetricsData?.flowVelocity.filter((items) => {
-      if (
-        items.month &&
-        items.daysToComplete != undefined &&
-        items.issuesCompleted != undefined
-      ) {
-        var mS = [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "June",
-          "July",
-          "Aug",
-          "Sept",
-          "Oct",
-          "Nov",
-          "Dec",
-        ];
-        let tempData = {
-          month: mS[items.month - 1],
-          days: items.daysToComplete / items.issuesCompleted,
-          issues: items.issuesCompleted,
-          monthno: items.month.toString(),
-        };
-        chartData.push(tempData);
-      }
-    });
-  }
+  let chartData = []
+  if(!isEmpty(props?.flowMetricsData?.flowVelocity)){
+  // eslint-disable-next-line array-callback-return
+  props?.flowMetricsData?.flowVelocity.filter((items) => {
+    if(items.month !== undefined && items.daysToComplete!==undefined &&items.issuesCompleted!==undefined){
+    let tempData ={
+      month:getMonth[items.month-1],
+      days:items.daysToComplete/items.issuesCompleted,
+      issues:items.issuesCompleted,
+      monthno:items.month.toString()
+    }
+    chartData.push(tempData)
+    }
+  })
+}
 
   const ref = useD3(
     (svg1) => {
