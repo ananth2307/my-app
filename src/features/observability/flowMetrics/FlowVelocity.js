@@ -21,72 +21,13 @@ function FlowVelocity(props) {
   })
 }
 
-  // const chartData1 = [
-  //   {
-  //     month: "Oct",
-  //     days: 30,
-  //     issues: 130000,
-  //     year: 2021,
-  //     monthno: "10",
-  //   },
-  //   {
-  //     month: "Nov",
-  //     days: 10.846153846153847,
-  //     issues: 100,
-  //     year: 2021,
-  //     monthno: "10",
-  //   },
-  //   {
-  //     month: "Dec",
-  //     days: 15,
-  //     issues: 1,
-  //     year: 2021,
-  //     monthno: "10",
-  //   },
-  //   {
-  //     month: "Jan",
-  //     days: 10.5,
-  //     issues: 13,
-  //     year: 2022,
-  //     monthno: "10",
-  //   },
-  //   {
-  //     month: "Feb",
-  //     days: 8.3,
-  //     issues: 53,
-  //     year: 2022,
-  //     monthno: "10",
-  //   },
-  // ];
-
-  // console.log("redis", props.flowMetricsData);
-  // const chartData = [
-  //   {
-  //     month: "Oct",
-  //     days: 6.857142857142857,
-  //     issues: 7,
-  //     year: 2022,
-  //     monthno: "10",
-  //   },
-  //   {
-  //     month: "Nov",
-  //     days: 9,
-  //     issues: 2,
-  //     year: 2022,
-  //     monthno: "11",
-  //   },
-  // ];
-
   const ref = useD3(
     (svg1) => {
       svg1.html("");
       // set the dimensions and margins of the graph
       const margin = { top: 50, right: 30, bottom: 20, left: 40 },
-        width = 415 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
-
-      var awidth = width + margin.left + margin.right;
-      var aheight = height + margin.top + margin.bottom;
+        width = 438 - margin.left - margin.right,
+        height = 257 - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
       var svg = svg1
@@ -96,12 +37,7 @@ function FlowVelocity(props) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      //    json_data = [{ month: "Jan", days: 33, issues: 3 }, { month: "Feb", days: 2, issues: 65 }, { month: "Mar", days: 60, issues: 26 }, { month: "Apr", days: 35, issues: 30 }, { month: "May", days: 45, issues: 25 }];
-
       let json_data = chartData;
-
-      // console.log(json_data);
-      // Parse the Data
 
       var tdays = 0,
         tissues = 0,
@@ -119,7 +55,6 @@ function FlowVelocity(props) {
           issuesmax = json_data[t].issues;
         }
       }
-    
 
       for (var t = 0; t < json_data.length; t++) {
         json_data[t].daysx = (json_data[t].days / tdays) * 100;
@@ -134,8 +69,6 @@ function FlowVelocity(props) {
 
         if (json_data[t].issuesx < 10) json_data[t].issuesx = 10;
       }
-
-      // console.log(json_data);
 
       // X axis
       var x = d3
@@ -155,7 +88,6 @@ function FlowVelocity(props) {
         .selectAll("text")
         .style("text-anchor", "middle");
 
-      // console.log(daysmax);
       // Add Y axis
       var y = d3
         .scaleLinear()
@@ -227,12 +159,6 @@ function FlowVelocity(props) {
   return (
     <div
       ref={ref}
-      style={{
-        height: 500,
-        width: "100%",
-        marginRight: "0px",
-        marginLeft: "0px",
-      }}
     ></div>
   );
 }

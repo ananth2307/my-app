@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { get } from "lodash";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 import { DrillDownOffCanvas } from "../../common";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
 let isAlreadyCalledFromMount = false;
 
@@ -25,7 +24,6 @@ const FlowMetrics = () => {
     isShowDrillDown: false,
   });
   const { observability } = useSelector((state) => state);
-  const dispatch = useDispatch();
 
   const { data: appList = [] } = observabilityApi.useGetAppListQuery({
     refetchOnMountOrArgChange: 10,
@@ -96,12 +94,10 @@ const FlowMetrics = () => {
           {FlowMetricChartContainers?.map((type) => {
             return (
               <>
-                {/* {console.log("redis", state.isShowDrillDown)} */}
                 <ChartContainer
                   key={type}
                   {...type}
                   flowMetricsData={state.flowMetricsData}
-                  toggleOffCanvas={() => dispatch(setIsOffCanvasOpen(true))}
                 >
                   {type.component}
                 </ChartContainer>

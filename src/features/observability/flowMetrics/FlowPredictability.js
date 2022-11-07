@@ -209,7 +209,7 @@ const FlowPredictability = (props) => {
     <svg
       ref={ref}
       style={{
-        height: 500,
+        height: 208,
         width: "100%",
         marginRight: "0px",
         marginLeft: "0px",
