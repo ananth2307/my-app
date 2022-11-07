@@ -3,6 +3,8 @@ import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate, responsivefy } from "../../../app/utilities/helpers";
 import { isEmpty } from "lodash";
+import { metricTypesMapping } from "../../common/constants";
+import { statusOrder } from "../../common/helpers";
 
 // const chartData1 = [
 //   {
@@ -156,19 +158,19 @@ import { isEmpty } from "lodash";
 // ];
 
 const FlowLoad = (props) => {
-  var chartData = [];
-  var getchild = [];
-  var data = props?.flowMetricsData?.flowLoad;
+  let chartData = [];
+  let getchild = [];
+  let data = props?.flowMetricsData?.flowLoad;
   if (!isEmpty(data)) {
-    var featureslist = [];
-    var enablerslist = [];
-    var defects = [];
-    var risk = [];
-    var debt = [];
-    var prodFix = [];
-    var types_data;
-    var totelcount = [];
-    for (var i = 0; i < data.length; i++) {
+    let featureslist = [];
+    let enablerslist = [];
+    let defects = [];
+    let risk = [];
+    let debt = [];
+    let prodFix = [];
+    let types_data;
+    let totalCount = [];
+    for (let i = 0; i < data.length; i++) {
       getchild = [];
       featureslist = [];
       enablerslist = [];
@@ -176,7 +178,7 @@ const FlowLoad = (props) => {
       risk = [];
       debt = [];
       prodFix = [];
-      for (var j = 0; j < data[i].list.length; j++) {
+      for (let j = 0; j < data[i].list.length; j++) {
         const cr = "Change Request";
         const st = "Sub task";
         types_data = {
@@ -193,22 +195,17 @@ const FlowLoad = (props) => {
         };
         for (let [key, value] of Object.entries(types_data)) {
           if (value === undefined) value = 0;
-          if (
-            key === "Task" ||
-            key === "Subtask" ||
-            key === "Epic" ||
-            key === "Story"
-          ) {
+          if ( metricTypesMapping.features.includes(key)) {
             featureslist.push(value);
-          } else if (key === "ChangeRequest" || key === "Enablers") {
+          } else if (metricTypesMapping.enablers.includes(key)) {
             enablerslist.push(value);
-          } else if (key === "Risk") {
+          } else if (metricTypesMapping.risk.includes(key)) {
             risk.push(value);
-          } else if (key === "Bug") {
+          } else if (metricTypesMapping.defects.includes(key)) {
             defects.push(value);
-          } else if (key === "Debt") {
+          } else if (metricTypesMapping.debt.includes(key)) {
             debt.push(value);
-          } else if (key === "prodFix") {
+          } else if (metricTypesMapping.prodFix.includes(key)) {
             prodFix.push(value);
           }
         }
@@ -245,18 +242,18 @@ const FlowLoad = (props) => {
           parent: data[i].status,
         }
       );
-      totelcount = [];
-      for (var k = 0; k < getchild.length; k++) {
-        totelcount.push(getchild[k].tasksize);
+      totalCount = [];
+      for (let k = 0; k < getchild.length; k++) {
+        totalCount.push(getchild[k].tasksize);
       }
       chartData.push({
         name: data[i].status,
         children: getchild,
-        tasksize: totelcount.reduce((a, b) => a + b, 0),
+        tasksize: totalCount.reduce((a, b) => a + b, 0),
         items: "13",
       });
     }
-    var sortingArr = [
+    let sortingArr = [
       "Backlog",
       "IN-DEFINE",
       "In-Dev",
@@ -266,20 +263,7 @@ const FlowLoad = (props) => {
       "Testing",
       "Done",
     ];
-
-    chartData = mapOrder(chartData, sortingArr, "name");
-  }
-  function mapOrder(array, order, key) {
-    array.sort(function (a, b) {
-      var A = a[key],
-        B = b[key];
-      if (order.indexOf(A) > order.indexOf(B)) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
-    return array;
+    chartData = statusOrder(chartData, sortingArr, "name");
   }
   const ref = useD3(
     (svg1) => {
