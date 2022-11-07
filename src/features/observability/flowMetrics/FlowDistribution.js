@@ -3,9 +3,12 @@ import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { metricTypesMapping } from "../../common/constants";
 import { getMetricTypeMappedCount } from "../../common/helpers";
-import { get, isEmpty, truncate } from "lodash";
+import { get, isEmpty, map, truncate } from "lodash";
+import { useDispatch } from "react-redux";
+import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
 const FlowDistribution = (props) => {
+  const dispatch = useDispatch();
   let data = [];
   !isEmpty(props?.flowMetricsData?.flowDistribution) &&
     props?.flowMetricsData?.flowDistribution.map((sprint) => {
@@ -54,6 +57,24 @@ const FlowDistribution = (props) => {
       });
       data.push(tmpdata);
     });
+
+  const openDrillDown = (selectedSprint) => {
+    console.log("redis selected", selectedSprint);
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: "FLOW DISTRIBUTION",
+        selectedValue: {
+          label: selectedSprint,
+          value: selectedSprint
+        },
+        dropDownMenuOptions: data.map((dt) => ({
+          label: dt.sprint,
+          value: data.sprint,
+        })),
+      })
+    );
+  };
 
   const ref = useD3(
     (svg) => {
@@ -125,9 +146,8 @@ const FlowDistribution = (props) => {
           .append("rect")
           .attr("rx", 6)
           .attr("ry", 6)
-          .on("click", () => {
-            console.log("redis y axis clicked", props)
-            props.toggleOffCanvas();
+          .on("click", (e, data) => {
+            openDrillDown(get(data, 'data.sprint', ''));
           })
           .attr("y", function (d) {
             return y(d.data.sprint);
@@ -174,8 +194,8 @@ const FlowDistribution = (props) => {
           .attr("font-weight", "100")
           .attr("text-anchor", "start");
       }
-      svg.selectAll(".y.axis .tick").on("click", () => {
-        console.log("redis tick clicked");
+      svg.selectAll(".y.axis .tick").on("click", (e, sprint) => {
+        openDrillDown(sprint);
       });
     },
     [data]
@@ -186,10 +206,11 @@ const FlowDistribution = (props) => {
       <svg
         ref={ref}
         style={{
-          height: 500,
+          viewBox: "0 0 300 150",
+          preserveAspectRatio: "xMinYMid",
           width: "100%",
-          marginRight: "0px",
-          marginLeft: "0px",
+          height: "251",
+          overflow: "scroll",
         }}
       ></svg>
     </>

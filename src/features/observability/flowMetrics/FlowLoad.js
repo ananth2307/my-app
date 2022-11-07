@@ -388,11 +388,6 @@ const FlowLoad = (props) => {
           .text(function (d) {
             return dataset.tasksize;
           });
-
-        // console.log("aabb");
-        // console.log(maxwidtha);
-        // console.log(width);
-
         svg
           .append("text")
           .style("fill", "#000000")
@@ -446,31 +441,6 @@ const FlowLoad = (props) => {
           .text(function (d, i) {
             return dataset.name;
           });
-
-        //svg.selectAll('circle').data(vNodes).enter().append('text').text("abcdd");
-
-        /*
-                  vNodes
-                  .append("text")
-      
-                  .style("fill", "#000000")
-                  .attr("fill", "white")
-                  .attr('class', 'labels')
-                  .attr("dy", ".2em")
-      
-                  .style('text-anchor', 'middle')
-                  .style('font-size', 10)
-                  .text(function(d) {
-                      console.log("q");
-                      console.log(d);
-                      return "Abc";
-                  });
-      
-          */
-        // $(".innercirc").on("click", function () {
-        //   var called = $(this).siblings(".labelc").children("title").text();
-        //   getFlowLoaddrill1(called);
-        // });
       }
     },
     [chartData]
@@ -478,12 +448,6 @@ const FlowLoad = (props) => {
   return (
     <div
       ref={ref}
-      style={{
-        height: 500,
-        width: "100%",
-        marginRight: "0px",
-        marginLeft: "0px",
-      }}
     ></div>
   );
 };
