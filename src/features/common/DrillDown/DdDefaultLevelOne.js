@@ -20,6 +20,7 @@ const DdDefaultLevelOne = (props) => {
           : ""
       }`}
       onClick={onSelectLvlOne}
+      key={props.level.name}
     >
       <h4>{props?.level?.title}</h4>
       <h2 class="fdcount">{get(offcanvasState, `selectedData.${props.level.name}.count`, 0)}</h2>

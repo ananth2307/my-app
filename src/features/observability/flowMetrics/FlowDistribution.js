@@ -64,10 +64,13 @@ const FlowDistribution = (props) => {
   const formatSummary = (summaryData) => {
     let tmpSummaryData = cloneDeep(summaryData)
     delete tmpSummaryData.sprintName
-    let rtData = {
-      issueId: Object.keys(tmpSummaryData)[0],
-      summary: Object.values(tmpSummaryData)[0],
-    }
+    let rtData = [];
+    Object.keys(tmpSummaryData).map(key => {
+      rtData.push({
+        issueId: key,
+        summary: tmpSummaryData[key]
+      })
+    })
     return rtData;
   };
 
@@ -90,10 +93,12 @@ const FlowDistribution = (props) => {
               : data[matchedKey],
             summaryList: selectedData[key].summaryList
               ? selectedData[key].summaryList.push(
-                  formatSummary(data[`${matchedKey}summary`])
+                  ...formatSummary(data[`${matchedKey}summary`])
                 )
-              : [formatSummary(data[`${matchedKey}summary`])],
+              : [...formatSummary(data[`${matchedKey}summary`])],
           };
+          console.log("redis12", selectedData[key].summaryList, formatSummary(data[`${matchedKey}summary`]))
+          // console.log("redis", data, matchedKey, key)
         }
       });
     });
