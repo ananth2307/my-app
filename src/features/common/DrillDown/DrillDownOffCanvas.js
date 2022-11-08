@@ -8,6 +8,7 @@ import DdDefaultSummary from "./DdDefaultSummary";
 
 const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
+  console.log("offcanvasState",offcanvasState)
   return (
     <CustomOffCanvas className="custom-off-canvas">
       <div class="flowblock custom_scroll">
@@ -33,7 +34,7 @@ const DrillDownOffCanvas = (props) => {
           ))}
         </div>
         <div class="flow-descriptions-block">
-          <DdDefaultSummary />
+          <DdDefaultSummary title={offcanvasState.title} />
         </div>
       </div>
     </CustomOffCanvas>
