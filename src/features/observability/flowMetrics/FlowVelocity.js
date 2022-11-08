@@ -3,9 +3,13 @@ import React, { memo } from "react";
 import * as d3 from "d3";
 import { get, isEmpty, truncate } from "lodash";
 import { getMonth } from "../../common/constants";
+import { useDispatch } from "react-redux";
+import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { data } from "jquery";
 
 function FlowVelocity(props) {
-  let chartData = []
+  const dispatch = useDispatch()
+  let chartData = [];
   if(!isEmpty(props?.flowMetricsData?.flowVelocity)){
   // eslint-disable-next-line array-callback-return
   props?.flowMetricsData?.flowVelocity.filter((items) => {
@@ -18,7 +22,24 @@ function FlowVelocity(props) {
     }
     chartData.push(tempData)
     }
-  })
+  });
+}
+const openDrilllDown = (selectedSprint) =>{
+  console.log("redis selected", selectedSprint);
+  dispatch(
+    setIsOffCanvasOpen({
+      isDrilldownOpen:true,
+      title:"FLOW VELOCITY",
+      selectedValue:{
+        label: selectedSprint,
+        value: selectedSprint
+      },
+      dropDownOptions:chartData.map((item)=>({
+         label:item.month,
+         value:item.month
+      })),
+    })
+  )
 }
 
   const ref = useD3(
@@ -133,7 +154,11 @@ function FlowVelocity(props) {
           return d.issuesx;
         })
         .style("fill", "#F28B8C")
-        .attr("stroke", "#F28B8C");
+        .attr("stroke", "#F28B8C")
+        .on("click",(e,data)=>{
+          console.log(data.month)
+          openDrilllDown(get(data,'month',''))
+        })
 
       svg
         .append("g")
