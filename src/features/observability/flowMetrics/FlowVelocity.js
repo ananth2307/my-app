@@ -8,87 +8,149 @@ import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 function FlowVelocity(props) {
-  const dispatch = useDispatch()
-  const {flowVelocity} = props.flowMetricsData
+  const dispatch = useDispatch();
+  const { flowVelocity } = props.flowMetricsData;
   let chartData = [];
   // console.log("props",flowVelocity)
-  if(!isEmpty(flowVelocity)){
-  // eslint-disable-next-line array-callback-return
-  flowVelocity.filter((items) => {
-    if(items.month !== undefined && items.daysToComplete!==undefined &&items.issuesCompleted!==undefined){
-    let tempData ={
-      month:getMonth[items.month-1],
-      days:items.daysToComplete/items.issuesCompleted,
-      issues:items.issuesCompleted,
-      monthno:items.month.toString()
-    }
-    chartData.push(tempData)
-    }
-  });
-}
-const formatSummary = (summaryData) => {
-  let tmpSummaryData = cloneDeep(summaryData)
-  let rtData = tmpSummaryData.map((items) =>{
-    return {
-      issueId: items.issueId,
-      summary:items.summary,
-      daysToComplete:items.completedDays
-    }
-  })
-  return rtData;
-};
-const getSelectedData = (selectedMonth,selectedMonthno)=>{
-  var  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  let s_month;
-  let selectedData = {}
-  flowVelocity.map((data)=>{
-    if(data.list !== undefined){
-      data.list.map((item)=>{
-        if(item.hasOwnProperty("month")){
-        s_month = item.month.split("-")[0];
-        }
-          if(months[Number(selectedMonthno)-1] === s_month){
-          Object.keys(metricTypesMapping).map((key) => {
-            selectedData[key] = selectedData[key] ? selectedData[key] : {}
-            const { isMatching, matchedKey } = getMetricMatchingStatus(
-              item,
-              metricTypesMapping[key],
-            );
-            if(isMatching){
-              selectedData[key] = {
-                count: selectedData[key].count ? selectedData[key].count + item[matchedKey]
-                : item[matchedKey],
-                summaryList: selectedData[key].summaryList
-              ? selectedData[key].summaryList.push(
-                  ...formatSummary(item[`${matchedKey}summary`])
-                )
-              : [...formatSummary(item[`${matchedKey}summary`])]
+  if (!isEmpty(flowVelocity)) {
+    // eslint-disable-next-line array-callback-return
+    flowVelocity.filter((items) => {
+      if (
+        items.month !== undefined &&
+        items.daysToComplete !== undefined &&
+        items.issuesCompleted !== undefined
+      ) {
+        let tempData = {
+          month: getMonth[items.month - 1],
+          days: items.daysToComplete / items.issuesCompleted,
+          issues: items.issuesCompleted,
+          monthno: items.month.toString(),
+        };
+        chartData.push(tempData);
+      }
+    });
+  }
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData);
+    let rtData = tmpSummaryData.map((items) => {
+      return {
+        issueId: items.issueId,
+        summary: items.summary,
+        daysToComplete: items.completedDays,
+      };
+    });
+    return rtData;
+  };
+  const getSelectedData = (selectedMonth, selectedMonthno) => {
+    var months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    let s_month;
+    let selectedData = {};
+    flowVelocity.map((data) => {
+      if (data.list !== undefined) {
+        data.list.map((item) => {
+          if (item.hasOwnProperty("month")) {
+            s_month = item.month.split("-")[0];
+          }
+          if (months[Number(selectedMonthno) - 1] === s_month) {
+            Object.keys(metricTypesMapping).map((key) => {
+              selectedData[key] = selectedData[key] ? selectedData[key] : {};
+              const { isMatching, matchedKey } = getMetricMatchingStatus(
+                item,
+                metricTypesMapping[key]
+              );
+              if (isMatching) {
+                selectedData[key] = {
+                  count: selectedData[key].count
+                    ? selectedData[key].count + item[matchedKey]
+                    : item[matchedKey],
+                  summaryList: selectedData[key].summaryList
+                    ? selectedData[key].summaryList.push(
+                        ...formatSummary(item[`${matchedKey}summary`])
+                      )
+                    : [...formatSummary(item[`${matchedKey}summary`])],
+                };
               }
-            }
-        })
+            });
+          }
+        });
       }
-      }
-  )}
-  })
-  return selectedData
-}
-const openDrilllDown = (selectedMonth,selectedMonthno) =>{
-  dispatch(
-    setIsOffCanvasOpen({
-      isDrilldownOpen:true,
-      title:"FLOW VELOCITY",
-      selectedValue:{
-        label: selectedMonth,
-        value: selectedMonthno
-      },
-      dropDownMenuOptions:chartData.map((item)=>({
-         label:item.month,
-         value:item.monthno
-      })),
-      selectedData:getSelectedData(selectedMonth,selectedMonthno)
-    })
-  )
-}
+    });
+    selectedData.rightSummaryHeader = (
+      selectedDataFromComp,
+      selectedLevelOneFromComp
+    ) => {
+      let avgDays = 0;
+      !isEmpty(selectedDataFromComp[selectedLevelOneFromComp]) &&
+      selectedDataFromComp[selectedLevelOneFromComp]?.summaryList.map((items) => {
+          avgDays += items.daysToComplete;
+        });
+      return (
+        <div class="col-md-6">
+          <span class="avg_lable">
+            Average Days to Complete :{" "}
+            <span class="avg_day_summary">{selectedDataFromComp[selectedLevelOneFromComp]?.summaryList
+              ? Math.round(
+                  avgDays / selectedDataFromComp[selectedLevelOneFromComp]?.summaryList.length
+                )
+              : 0}</span> d
+          </span>
+        </div>
+      );
+    };
+    selectedData.customSummaryHeader = () => (
+      <>
+        <div class="fw-5">Sl.No</div>
+        <div class="fw-10">Issue Id</div>
+        <div class="fw-20">Days to Complete</div>
+        <div class="fw-70">Summary</div>
+      </>
+    );
+    selectedData.customSummaryList = (singleSummary) => {
+      console.log("redis", singleSummary);
+      return (
+        <li>
+          <div class="fw-10">{singleSummary.issueId}</div>
+          <div class="fw-20">
+            <div class="daytags">
+              <span>{singleSummary.daysToComplete}</span> d
+            </div>
+          </div>
+          <div class="fw-70">{singleSummary.summary}</div>
+        </li>
+      );
+    };
+    return selectedData;
+  };
+  const openDrilllDown = (selectedMonth, selectedMonthno) => {
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+        selectedValue: {
+          label: selectedMonth,
+          value: selectedMonthno,
+        },
+        dropDownMenuOptions: chartData.map((item) => ({
+          label: item.month,
+          value: item.monthno,
+        })),
+        selectedData: getSelectedData(selectedMonth, selectedMonthno),
+      })
+    );
+  };
 
   const ref = useD3(
     (svg1) => {
@@ -203,9 +265,9 @@ const openDrilllDown = (selectedMonth,selectedMonthno) =>{
         })
         .style("fill", "#F28B8C")
         .attr("stroke", "#F28B8C")
-        .on("click",(e,data)=>{
-          openDrilllDown(get(data,'month',''),get(data,'monthno',''))
-        })
+        .on("click", (e, data) => {
+          openDrilllDown(get(data, "month", ""), get(data, "monthno", ""));
+        });
 
       svg
         .append("g")
@@ -228,11 +290,7 @@ const openDrilllDown = (selectedMonth,selectedMonthno) =>{
   );
   // }
 
-  return (
-    <div
-      ref={ref}
-    ></div>
-  );
+  return <div ref={ref}></div>;
 }
 
 export default memo(FlowVelocity);

@@ -12,7 +12,7 @@ const PeopleMetrics = (props) => {
           {PeopleMetricChartContainers?.map((chartType, index) => {
             return (
               <ChartContainer key={chartType} index={index} {...chartType}>
-                {/* {chartType.component} */}
+                {chartType.component}
               </ChartContainer>
             );
           })}
