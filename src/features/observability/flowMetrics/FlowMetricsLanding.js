@@ -56,14 +56,24 @@ const FlowMetrics = () => {
         toDt: get(observability, "filterData.selectedDate.endDate"),
       };
 
+      let flowMetricsPromiseData = await Promise.all([
+        getFlowDistribution(payload),
+        getFlowVelocity(payload),
+        getFlowEfficiency(payload),
+        getFlowLoad(payload),
+        getFlowPredictability(payload),
+        getActiveSprints(payload),
+      ]);
+
       const flowMetricsData = {
-        flowDistribution: (await getFlowDistribution(payload)).data,
-        flowVelocity: (await getFlowVelocity(payload)).data,
-        flowEfficiency: (await getFlowEfficiency(payload)).data,
-        flowLoad: (await getFlowLoad(payload)).data,
-        flowPredictability: (await getFlowPredictability(payload)).data,
-        activeSprints: (await getActiveSprints(payload)).data,
+        flowDistribution: get(flowMetricsPromiseData, '[0].data', []),
+        flowVelocity: get(flowMetricsPromiseData, '[1].data', []),
+        flowEfficiency: get(flowMetricsPromiseData, '[2].data', []),
+        flowLoad: get(flowMetricsPromiseData, '[3].data', []),
+        flowPredictability: get(flowMetricsPromiseData, '[4].data', []),
+        activeSprints: get(flowMetricsPromiseData, '[5].data', []),
       };
+
       setState((state) => ({
         ...state,
         flowMetricsData: { ...state.flowMetricsData, ...flowMetricsData },
@@ -87,7 +97,7 @@ const FlowMetrics = () => {
 
   return (
     <>
-      <DrillDownOffCanvas />
+      <DrillDownOffCanvas flowMetricsData={state.flowMetricsData} />
       <Filter getFlowMetrics={getFlowMetrics} />
       <div className="dashboardwrap colswrap all-works">
         <div className="row">

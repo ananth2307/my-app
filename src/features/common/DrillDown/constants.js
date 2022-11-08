@@ -5,27 +5,27 @@ export const dDDefaultLevelOne = [
     title: "Features",
   },
   {
-    name: "features",
+    name: "defects",
     className: "blueline",
     title: "Defects",
   },
   {
-    name: "features",
+    name: "risk",
     className: "pinkline",
     title: "Risks",
   },
   {
-    name: "features",
+    name: "enablers",
     className: "purpleline",
     title: "Enablers",
   },
   {
-    name: "features",
+    name: "debt",
     className: "orangeline",
     title: "Debt",
   },
   {
-    name: "features",
+    name: "prodFix",
     className: "yellowline",
     title: "Prod-Fix",
   },

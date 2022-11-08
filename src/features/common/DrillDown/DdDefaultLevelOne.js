@@ -1,12 +1,29 @@
-import React from "react";
+import { get } from "lodash";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedLevelOne } from "../../../app/commonSlice";
 
 const DdDefaultLevelOne = (props) => {
+  const dispatch = useDispatch();
+  const offcanvasState = useSelector((state) => state.common?.offcanvasState);
+  const drillDownSelectionState = useSelector(
+    (state) => state?.common?.drillDownSelectionState
+  );
+  const onSelectLvlOne = () => {
+    dispatch(setSelectedLevelOne(props.level.name));
+  };
   return (
-    <div id="fb1" flag="distribute" className={`flowbox dark-blueline ${props.level.className}`}>
+    <div
+      className={`flowbox dark-blueline ${props.level.className} ${
+        drillDownSelectionState?.selectedLevelOne === props?.level?.name
+          ? "active"
+          : ""
+      }`}
+      onClick={onSelectLvlOne}
+      key={props.level.name}
+    >
       <h4>{props?.level?.title}</h4>
-      <h2 class="fdcount">
-        {props.count ? props.count : 0}
-      </h2>
+      <h2 class="fdcount">{get(offcanvasState, `selectedData.${props.level.name}.count`, 0)}</h2>
     </div>
   );
 };
