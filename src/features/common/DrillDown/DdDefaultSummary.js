@@ -31,7 +31,7 @@ const DdDefaultSummary = (props) => {
         )}
       </div>
       {!isEmpty(selectedData[selectedLevelOne]) &&
-        selectedData[selectedLevelOne]?.summaryList && (
+        selectedData[selectedLevelOne]?.summaryList.length > 0 && (
           <ol className="summary_part">
             {selectedData[selectedLevelOne]?.summaryList?.map((summaryData) => {
               return selectedData.customSummaryList ? (

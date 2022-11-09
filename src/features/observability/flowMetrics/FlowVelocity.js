@@ -117,7 +117,6 @@ function FlowVelocity(props) {
         <div class="fw-70">Summary</div>
       </>
     );
-    console.log("selec==>",selectedData)
     selectedData.customSummaryList = (singleSummary) => {
       console.log("redis", singleSummary);
       return (
