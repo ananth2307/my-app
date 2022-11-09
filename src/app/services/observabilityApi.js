@@ -62,6 +62,13 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getFlowEfficiencyDrill: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main/drilldown`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
     getActiveSprints: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/issueMetrics/activeSprints`,

@@ -2,7 +2,12 @@ import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate } from "../../../app/utilities/helpers";
-import { isEmpty } from "lodash";
+import { cloneDeep, get,isEmpty } from "lodash";
+import { getMonth, metricTypesMapping } from "../../common/constants";
+import { useDispatch } from "react-redux";
+import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { getMetricMatchingStatus } from "../../common/helpers";
+import { observabilityApi } from "../../../app/services/observabilityApi";
 
 // const chartData1 = [
 //   {
@@ -36,10 +41,13 @@ import { isEmpty } from "lodash";
 // ];
 
 const FlowEfficiency = (props) => {
+  const dispatch = useDispatch()
+  const [getFlowEffciencyDrill] = observabilityApi.useGetFlowEfficiencyDrillMutation()
   let chartData = [];
-  if (!isEmpty(props?.flowMetricsData?.flowEfficiency)) {
+  let flowEffData = props?.flowMetricsData?.flowEfficiency;
+  if (!isEmpty(flowEffData)) {
     for (let [key, value] of Object.entries(
-      props?.flowMetricsData?.flowEfficiency
+      flowEffData
     )) {
       if (value.efficiency === "NaN") {
         value.efficiency = 0;
@@ -59,6 +67,31 @@ const FlowEfficiency = (props) => {
         ],
       });
     }
+  }
+  const getSelectedData = (selectedSprint) =>{
+    let selectedData = {}
+    for(let [key,value] of Object.entries(flowEffData)){
+      
+    }
+  }
+  const openDrilllDown = async (selectedSprint) =>{
+    const drillDownData = await getFlowEffciencyDrill({selectedSprintData:selectedSprint})
+    console.log(drillDownData)
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen:true,
+        title:"FLOW EFFICIENCY",
+        selectedValue:{
+          label: selectedSprint,
+          value: selectedSprint
+        },
+        dropDownMenuOptions:Object.keys(flowEffData).map((item)=>({
+           label:item,
+           value:item
+        })),
+        selectedData:getSelectedData(selectedSprint)
+      })
+    )
   }
   const ref = useD3(
     (svg) => {
@@ -187,7 +220,10 @@ const FlowEfficiency = (props) => {
           .text(middle_text + " ")
           .attr("dy", "0.3rem")
           .attr("class", "label")
-          .attr("text-anchor", "middle");
+          .attr("text-anchor", "middle")
+          .on("click", ()=>(
+            openDrilllDown(get(data,'name',''))
+          ));
 
         arcs
           .append("svg:text")
@@ -195,6 +231,9 @@ const FlowEfficiency = (props) => {
           .attr("dy", "55")
           .attr("class", "namelabel")
           .attr("text-anchor", "middle")
+          .on("click",  (d, i) => (
+            openDrilllDown(get(data,'name',''))
+          ))
           .attr("sprint", sprint);
         arcs
           .select(".namelabel")

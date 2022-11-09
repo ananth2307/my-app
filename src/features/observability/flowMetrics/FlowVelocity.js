@@ -37,7 +37,7 @@ const formatSummary = (summaryData) => {
   })
   return rtData;
 };
-const getSelectedData = (selectedMonth,selectedMonthno)=>{
+const getSelectedData = (selectedMonthno)=>{
   var  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   let s_month;
   let selectedData = {}
