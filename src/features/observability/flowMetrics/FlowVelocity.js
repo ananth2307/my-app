@@ -42,7 +42,7 @@ function FlowVelocity(props) {
     return rtData;
   };
   const getSelectedData = (selectedMonth, selectedMonthno) => {
-    var months = [
+    let months = [
       "January",
       "February",
       "March",

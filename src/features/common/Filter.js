@@ -67,21 +67,24 @@ const Filter = (props) => {
       startDt: get(observability, "filterData.selectedDate.startDate"),
       toDt: get(observability, "filterData.selectedDate.endDate"),
     });
-
-    const { data: sprintList } = await getSprintList({
-      appCodes: getSelectedOptionsValue(
-        get(observability, "filterData.selectedApplications", [])
-      ),
-      projects: [],
-      sprintName: [],
-      startDt: get(observability, "filterData.selectedDate.startDate"),
-      toDt: get(observability, "filterData.selectedDate.endDate"),
-    });
+    let sprintList = []
+    if (props.isShowSprintList) {
+      const { data } = await getSprintList({
+        appCodes: getSelectedOptionsValue(
+          get(observability, "filterData.selectedApplications", [])
+        ),
+        projects: [],
+        sprintName: [],
+        startDt: get(observability, "filterData.selectedDate.startDate"),
+        toDt: get(observability, "filterData.selectedDate.endDate"),
+      });
+      sprintList = data;
+    }
     //maintaining projList in local state, dont see a reason to put this in redux
     setState((state) => ({
       ...state,
       projList: projList ? [...projList] : [],
-      sprintList: sprintList ? [...sprintList] : []
+      sprintList: sprintList ? [...sprintList] : [],
     }));
   };
 
@@ -90,20 +93,22 @@ const Filter = (props) => {
     dispatch(
       setFilterData(get(observability, "filterData"), { selectedProjects })
     );
-    const { data: sprintList } = await getSprintList({
-      appCodes: getSelectedOptionsValue(
-        get(observability, "filterData.selectedApplications", [])
-      ),
-      projects: getSelectedOptionsValue(selectedProjects),
-      sprintName: [],
-      startDt: get(observability, "filterData.selectedDate.startDate"),
-      toDt: get(observability, "filterData.selectedDate.endDate"),
-    });
-    //maintaining sprintList in local state, dont see a reason to put this in redux
-    setState((state) => ({
-      ...state,
-      sprintList: sprintList ? [...sprintList] : sprintList,
-    }));
+    if (props.isShowSprintList) {
+      const { data: sprintList } = await getSprintList({
+        appCodes: getSelectedOptionsValue(
+          get(observability, "filterData.selectedApplications", [])
+        ),
+        projects: getSelectedOptionsValue(selectedProjects),
+        sprintName: [],
+        startDt: get(observability, "filterData.selectedDate.startDate"),
+        toDt: get(observability, "filterData.selectedDate.endDate"),
+      });
+      //maintaining sprintList in local state, dont see a reason to put this in redux
+      setState((state) => ({
+        ...state,
+        sprintList: sprintList ? [...sprintList] : sprintList,
+      }));
+    }
   };
 
   const handleSelectedSprintChange = async (selectedSprints = []) => {
@@ -154,20 +159,22 @@ const Filter = (props) => {
             }
           />
         </div>
-        <div className="frmgroup">
-          <CustomSelect
-            options={state?.sprintList ? state.sprintList : []}
-            isMulti={true}
-            hideSelectedOptions={false}
-            isCheckboxSelect={true}
-            placeholder="Select Sprint"
-            isSearchable={true}
-            closeMenuOnSelect={false}
-            onChange={(selectedSprints) =>
-              handleSelectedSprintChange(selectedSprints)
-            }
-          />
-        </div>
+        {props.isShowSprintList && (
+          <div className="frmgroup">
+            <CustomSelect
+              options={state?.sprintList ? state.sprintList : []}
+              isMulti={true}
+              hideSelectedOptions={false}
+              isCheckboxSelect={true}
+              placeholder="Select Sprint"
+              isSearchable={true}
+              closeMenuOnSelect={false}
+              onChange={(selectedSprints) =>
+                handleSelectedSprintChange(selectedSprints)
+              }
+            />
+          </div>
+        )}
       </div>
       <div className="dashfltr">
         <div className="filtrbtn">
@@ -176,7 +183,7 @@ const Filter = (props) => {
             text="Filter"
             onClick={(e) => {
               e.preventDefault();
-              props.getFlowMetrics();
+              props.getFIlteredData();
             }}
           />
         </div>
