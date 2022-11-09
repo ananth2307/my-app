@@ -1,4 +1,5 @@
-import React from "react";
+import { useDispatch } from "react-redux";
+import React  from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
@@ -6,9 +7,14 @@ import { dDDefaultLevelOne } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
 
+
 const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
-  console.log("offcanvasState",offcanvasState)
+  const chartClass ={
+    FLOWDISTRIBUTION:"distribute-wrap flowacti-block",
+    FLOWVELOCITY:'velocitywrap-wrap flowacti-block',
+    FLOWEFFICIENCY:'efficiency-wrap floweffi-block'
+  } 
   return (
     <CustomOffCanvas className="custom-off-canvas">
       <div class="flowblock custom_scroll">
@@ -28,13 +34,13 @@ const DrillDownOffCanvas = (props) => {
             />
           </div>
         </div>
-        <div class="flowbox-row distribute-wrap flowacti-block">
+        <div class={`flowbox-row ${chartClass[offcanvasState.title.replaceAll(" ",'')]}`}>
           {dDDefaultLevelOne.map((level) => (
             <DdDefaultLevelOne level={level} {...props}/>
           ))}
         </div>
         <div class="flow-descriptions-block">
-          <DdDefaultSummary title={offcanvasState.title} />
+          <DdDefaultSummary />
         </div>
       </div>
     </CustomOffCanvas>

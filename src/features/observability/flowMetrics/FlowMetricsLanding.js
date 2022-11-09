@@ -98,7 +98,7 @@ const FlowMetrics = () => {
   return (
     <>
       <DrillDownOffCanvas flowMetricsData={state.flowMetricsData} />
-      <Filter getFlowMetrics={getFlowMetrics} />
+      <Filter getFIlteredData={getFlowMetrics} isShowSprintList={true} />
       <div className="dashboardwrap colswrap all-works">
         <div className="row">
           {FlowMetricChartContainers?.map((type) => {

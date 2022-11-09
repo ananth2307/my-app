@@ -8,6 +8,7 @@ const FlowLoad = React.lazy(() => import("../flowMetrics/FlowLoad"));
 
 //People Metrics
 const IssueMetrics = React.lazy(() => import("../peopleMetrics/IssueMetrics"));
+const LevelOfCollabaration = React.lazy(() => import("../peopleMetrics/LevelOfCollabaration"));
 
 //Flow Metrics
 export const FlowMetricChartContainers = [
@@ -173,7 +174,7 @@ export const PeopleMetricChartContainers = [
   {
     key: 2,
     title: "LEVEL OF COLLABORATION BY COMMENTS",
-    chart: (props) => <FlowDistribution {...props} />,
+    chart: (props) => <LevelOfCollabaration {...props} />,
     navs: [
       {
         text: "Features",
