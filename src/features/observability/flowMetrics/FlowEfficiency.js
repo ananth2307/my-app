@@ -4,7 +4,7 @@ import { useD3 } from "../../../hooks/useD3";
 import { truncate } from "../../../app/utilities/helpers";
 import { cloneDeep, get, isEmpty } from "lodash";
 import { getMonth, metricTypesMapping } from "../../common/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { observabilityApi } from "../../../app/services/observabilityApi";
@@ -67,6 +67,23 @@ const FlowEfficiency = (props) => {
       });
     }
   }
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData);
+    let tempData = []
+    tmpSummaryData.map((items) => {
+       Object.keys(items).map((key)=>{
+        console.log("key",items)
+        tempData.push({
+          issueId:items[key].jiraKey,
+          activeTime:items[key].activeTime.toFixed(1),
+          waitTime:items[key].waitTime.toFixed(1),
+          summary:items[key].summary
+        })
+       })
+      
+      })
+    return tempData;
+  };
   const getSelectedData = (drillDownData) => {
     let selectedData = {};
     Object.keys(metricTypesMapping).map((key) => {
@@ -83,7 +100,7 @@ const FlowEfficiency = (props) => {
         };
       }
     });
-    selectedData.onClickCanvas = true;
+    selectedData.DdLevelOneBoxClick = true;
     selectedData.customSummaryHeader = () => (
       <>
         <div class="fw-5">Sl.No</div>
@@ -94,49 +111,27 @@ const FlowEfficiency = (props) => {
       </>
     );
     selectedData.customBoxHeaders = (singleSummary) => {
-      if (!isEmpty(singleSummary)) {
         return (
           <>
             <div class="flownum-labels efficiencyPercent">
               <div class="flowlabel">efficiency</div>
               <div class="flownum">
-                {singleSummary.Efficiency.toFixed(1)}
+                {!isEmpty(singleSummary) ? singleSummary.Efficiency.toFixed(1) : 0}
                 <span>%</span>
               </div>
             </div>
             <div class="flownum-ftr">
               <div class="numbox">
                 <div class="numlabel">active time</div>
-                <div class="numdes">{singleSummary.activeTime.toFixed(1)}h</div>
+                <div class="numdes">{!isEmpty(singleSummary) ? singleSummary.activeTime.toFixed(1) : 0}h</div>
               </div>
               <div class="numbox">
                 <div class="numlabel">waiting time</div>
-                <div class="numdes">{singleSummary.waitTime.toFixed(1)}h</div>
+                <div class="numdes">{!isEmpty(singleSummary) ? singleSummary.waitTime.toFixed(1):0}h</div>
               </div>
             </div>
           </>
         );
-      }
-      return (
-        <>
-          <div class="flownum-labels efficiencyPercent">
-            <div class="flowlabel">efficiency</div>
-            <div class="flownum">
-              0<span>%</span>
-            </div>
-          </div>
-          <div class="flownum-ftr">
-            <div class="numbox">
-              <div class="numlabel">active time</div>
-              <div class="numdes">0.0h</div>
-            </div>
-            <div class="numbox">
-              <div class="numlabel">waiting time</div>
-              <div class="numdes">0.0h</div>
-            </div>
-          </div>
-        </>
-      );
     };
 
     selectedData.customSummaryList = (singleSummary) => {
@@ -157,7 +152,21 @@ const FlowEfficiency = (props) => {
         </>
       );
     };
-
+    selectedData.customSummaryListCall =  async(selectedProp,offcanvasState) => {
+      const summaryData = await getFlowEffciencyDrill({
+        selectedSprintData:get(offcanvasState,'selectedValue.value',''),
+        issueType:selectedProp
+       })
+       const formatedData = summaryData.data.length > 0 ? formatSummary(summaryData.data) : []
+       console.log("offcanvas",offcanvasState)
+       let tempCopy = {...offcanvasState}
+       let arrCopy = {...offcanvasState.selectedData}
+       let tempValuCopy = {...offcanvasState.selectedData[selectedProp]}
+       if(formatedData.length > 0) tempValuCopy.summaryList = formatedData
+       arrCopy[selectedProp]=tempValuCopy
+      tempCopy.selectedData = arrCopy
+      dispatch(setIsOffCanvasOpen(tempCopy))
+    };
     return selectedData;
   };
   const openDrilllDown = async (selectedSprint) => {

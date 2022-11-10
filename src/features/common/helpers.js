@@ -24,6 +24,8 @@ export const getMetricMatchingStatus = (type, mapping) => {
     isMatching: false,
     matchedKey: ''
   }
+  if(typeof(type) === 'object')
+  {
   Object.keys(type).map((key) => {
     if (mapping.includes(key)) {
       status = {
@@ -32,5 +34,13 @@ export const getMetricMatchingStatus = (type, mapping) => {
       };
     }
   });
-  return status;
+}else{
+  if(mapping.includes(type)){
+    status = {
+      isMatching: true,
+      matchedKey: type
+    };
+  }
 }
+  return status;
+};
