@@ -11,7 +11,6 @@ function FlowVelocity(props) {
   const dispatch = useDispatch();
   const { flowVelocity } = props.flowMetricsData;
   let chartData = [];
-  // console.log("props",flowVelocity)
   if (!isEmpty(flowVelocity)) {
     // eslint-disable-next-line array-callback-return
     flowVelocity.filter((items) => {

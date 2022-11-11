@@ -2,7 +2,12 @@ import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate } from "../../../app/utilities/helpers";
-import { isEmpty } from "lodash";
+import { cloneDeep, get, isEmpty } from "lodash";
+import { getMonth, metricTypesMapping } from "../../common/constants";
+import { useDispatch,useSelector } from "react-redux";
+import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { getMetricMatchingStatus } from "../../common/helpers";
+import { observabilityApi } from "../../../app/services/observabilityApi";
 
 // const chartData1 = [
 //   {
@@ -36,11 +41,13 @@ import { isEmpty } from "lodash";
 // ];
 
 const FlowEfficiency = (props) => {
+  const dispatch = useDispatch();
+  const [getFlowEffciencyDrill] =
+    observabilityApi.useGetFlowEfficiencyDrillMutation();
   let chartData = [];
-  if (!isEmpty(props?.flowMetricsData?.flowEfficiency)) {
-    for (let [key, value] of Object.entries(
-      props?.flowMetricsData?.flowEfficiency
-    )) {
+  let flowEffData = props?.flowMetricsData?.flowEfficiency;
+  if (!isEmpty(flowEffData)) {
+    for (let [key, value] of Object.entries(flowEffData)) {
       if (value.efficiency === "NaN") {
         value.efficiency = 0;
       }
@@ -60,6 +67,128 @@ const FlowEfficiency = (props) => {
       });
     }
   }
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData);
+    let tempData = []
+    tmpSummaryData.map((items) => {
+       Object.keys(items).map((key)=>{
+        console.log("key",items)
+        tempData.push({
+          issueId:items[key].jiraKey,
+          activeTime:items[key].activeTime.toFixed(1),
+          waitTime:items[key].waitTime.toFixed(1),
+          summary:items[key].summary
+        })
+       })
+      
+      })
+    return tempData;
+  };
+  const getSelectedData = (drillDownData) => {
+    let selectedData = {};
+    Object.keys(metricTypesMapping).map((key) => {
+      selectedData[key] = selectedData[key] ? selectedData[key] : {};
+      const { isMatching, matchedKey } = getMetricMatchingStatus(
+        drillDownData,
+        metricTypesMapping[key]
+      );
+      if (isMatching) {
+        selectedData[key] = {
+          Efficiency: drillDownData[matchedKey].efficiency,
+          activeTime: drillDownData[matchedKey].activeTime,
+          waitTime: drillDownData[matchedKey].waitTime,
+        };
+      }
+    });
+    selectedData.DdLevelOneBoxClick = true;
+    selectedData.customSummaryHeader = () => (
+      <>
+        <div class="fw-5">Sl.No</div>
+        <div class="fw-10">Issue Id</div>
+        <div class="fw-50">Summary</div>
+        <div class="fw-10">Active time</div>{" "}
+        <div class="fw-10">Waiting time</div>
+      </>
+    );
+    selectedData.customBoxHeaders = (singleSummary) => {
+        return (
+          <>
+            <div class="flownum-labels efficiencyPercent">
+              <div class="flowlabel">efficiency</div>
+              <div class="flownum">
+                {!isEmpty(singleSummary) ? singleSummary.Efficiency.toFixed(1) : 0}
+                <span>%</span>
+              </div>
+            </div>
+            <div class="flownum-ftr">
+              <div class="numbox">
+                <div class="numlabel">active time</div>
+                <div class="numdes">{!isEmpty(singleSummary) ? singleSummary.activeTime.toFixed(1) : 0}h</div>
+              </div>
+              <div class="numbox">
+                <div class="numlabel">waiting time</div>
+                <div class="numdes">{!isEmpty(singleSummary) ? singleSummary.waitTime.toFixed(1):0}h</div>
+              </div>
+            </div>
+          </>
+        );
+    };
+
+    selectedData.customSummaryList = (singleSummary) => {
+      return (
+        <>
+          <li>
+            <div class="fw-10">{singleSummary.issueId}</div>
+            <div class="fw-50 pr-20">{singleSummary.summary}</div>
+            <span class="timeblock fw-20">
+              <div class="numbox">
+                <div class="numdes">{singleSummary.activeTime}h</div>
+              </div>
+              <div class="numbox">
+                <div class="numdes">{singleSummary.waitTime}h</div>
+              </div>
+            </span>
+          </li>
+        </>
+      );
+    };
+    selectedData.customSummaryListCall =  async(selectedProp,offcanvasState) => {
+      const summaryData = await getFlowEffciencyDrill({
+        selectedSprintData:get(offcanvasState,'selectedValue.value',''),
+        issueType:selectedProp
+       })
+       const formatedData = summaryData.data.length > 0 ? formatSummary(summaryData.data) : []
+       console.log("offcanvas",offcanvasState)
+       let tempCopy = {...offcanvasState}
+       let arrCopy = {...offcanvasState.selectedData}
+       let tempValuCopy = {...offcanvasState.selectedData[selectedProp]}
+       if(formatedData.length > 0) tempValuCopy.summaryList = formatedData
+       arrCopy[selectedProp]=tempValuCopy
+      tempCopy.selectedData = arrCopy
+      dispatch(setIsOffCanvasOpen(tempCopy))
+    };
+    return selectedData;
+  };
+  const openDrilllDown = async (selectedSprint) => {
+    const drillDownData = await getFlowEffciencyDrill({
+      selectedSprintData: selectedSprint,
+    });
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+        selectedValue: {
+          label: selectedSprint,
+          value: selectedSprint,
+        },
+        dropDownMenuOptions: Object.keys(flowEffData).map((item) => ({
+          label: item,
+          value: item,
+        })),
+        selectedData: getSelectedData(drillDownData.data),
+      })
+    );
+  };
   const ref = useD3(
     (svg) => {
       svg.html("");
@@ -72,7 +201,7 @@ const FlowEfficiency = (props) => {
         .attr("width", width) //set the width and height of our visualization (these will be attributes of the <svg> tag
         .attr("height", height)
         .append("svg:g") //make a group to hold our pie chart
-                 .attr('transform', 'translate(' + 0 + ', -' + 100 + ')'); //move the center of the pie chart from 0, 0 to radius, radius
+        .attr("transform", "translate(" + 0 + ", -" + 100 + ")"); //move the center of the pie chart from 0, 0 to radius, radius
 
       var divwidth = 415;
 
@@ -187,7 +316,8 @@ const FlowEfficiency = (props) => {
           .text(middle_text + " ")
           .attr("dy", "0.3rem")
           .attr("class", "label")
-          .attr("text-anchor", "middle");
+          .attr("text-anchor", "middle")
+          .on("click", () => openDrilllDown(get(data, "name", "")));
 
         arcs
           .append("svg:text")
@@ -195,6 +325,7 @@ const FlowEfficiency = (props) => {
           .attr("dy", "55")
           .attr("class", "namelabel")
           .attr("text-anchor", "middle")
+          .on("click", (d, i) => openDrilllDown(get(data, "name", "")))
           .attr("sprint", sprint);
         arcs
           .select(".namelabel")

@@ -10,16 +10,20 @@ const DdDefaultSummary = (props) => {
     []
   );
   return (
+    <>
     <div className="stories-list">
       <div class="row">
         <div class="col-md-6">
-          {console.log("redis", selectedLevelOne)}
-          <h5>{selectedLevelOne.toUpperCase()}</h5>
+          <h5>{
+            selectedData.DdFlowPredictCustomSummary ? "PLANNED" :
+            selectedLevelOne.toUpperCase()
+            }</h5>
         </div>
         {selectedData.rightSummaryHeader
           ? selectedData.rightSummaryHeader(selectedData, selectedLevelOne)
           : ""}
       </div>
+      { selectedData.DdFlowPredictCustomSummary ? selectedData.customSummaryHeader() :
       <div class="summary_header" id="VTC_summary">
         {selectedData.customSummaryHeader ? (
           selectedData.customSummaryHeader()
@@ -31,10 +35,18 @@ const DdDefaultSummary = (props) => {
           </>
         )}
       </div>
+      }
       {!isEmpty(selectedData[selectedLevelOne]) &&
-        selectedData[selectedLevelOne]?.summaryList.length > 0 && (
+        selectedData[selectedLevelOne]?.summaryList && (
+          selectedData.DdFlowPredictCustomSummary ? <ol class='accordion'>
+          {selectedData[selectedLevelOne].summaryList.plannedSummary.map((summaryData)=>{
+            return selectedData.customSummaryList(summaryData)
+          })
+         }
+          </ol> :
           <ol className="summary_part">
-            {selectedData[selectedLevelOne]?.summaryList?.map((summaryData) => {
+            {
+              selectedData[selectedLevelOne]?.summaryList?.map((summaryData) => {
               return selectedData.customSummaryList ? (
                 selectedData.customSummaryList(summaryData)
               ) : (
@@ -47,6 +59,7 @@ const DdDefaultSummary = (props) => {
           </ol>
         )}
     </div>
+    </>
   );
 };
 

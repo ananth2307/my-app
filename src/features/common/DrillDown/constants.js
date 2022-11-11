@@ -30,3 +30,9 @@ export const dDDefaultLevelOne = [
     title: "Prod-Fix",
   },
 ];
+export const chartClass ={
+  FLOWDISTRIBUTION:"distribute-wrap flowacti-block",
+  FLOWVELOCITY:'velocitywrap-wrap flowacti-block',
+  FLOWEFFICIENCY:'efficiency-wrap floweffi-block',
+  FLOWPREDICTABILITY:'predictwrap flow-predi-block'
+}
