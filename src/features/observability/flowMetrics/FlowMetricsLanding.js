@@ -8,8 +8,7 @@ import { useSelector } from "react-redux";
 import { get } from "lodash";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 import { DrillDownOffCanvas } from "../../common";
-
-let isAlreadyCalledFromMount = false;
+import { getDefaultSelectedDate } from "../../common/helpers";
 
 const FlowMetrics = () => {
   const [state, setState] = useState({
@@ -19,15 +18,12 @@ const FlowMetrics = () => {
       flowEfficiency: {},
       flowLoad: {},
       flowPredictability: {},
-      activeSprints: {},
     },
     isShowDrillDown: false,
   });
   const { observability } = useSelector((state) => state);
 
-  const { data: appList = [] } = observabilityApi.useGetAppListQuery({
-    refetchOnMountOrArgChange: 10,
-  });
+  const [getAppList] = observabilityApi.useLazyGetAppListQuery({});
 
   const [getFlowDistribution] =
     observabilityApi.useGetFlowDistributionMutation();
@@ -38,40 +34,76 @@ const FlowMetrics = () => {
     observabilityApi.useGetFlowPredictabilityMutation();
   const [getActiveSprints] = observabilityApi.useGetActiveSprintsMutation();
 
+  let appList = [];
+  let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
+  initialStartDate = new Date(initialStartDate).getTime();
+  initialEndDate = new Date(initialEndDate).getTime();
+  
+
   const getFlowMetrics = useCallback(
     async (isInitialLoad = false) => {
       const payload = {
-        appCodes: isInitialLoad
-          ? getSelectedOptionsValue(appList)
-          : getSelectedOptionsValue(
+        appCodes: get(observability, "filterData.selectedApplications", [])
+          .length
+          ? getSelectedOptionsValue(
               get(observability, "filterData.selectedApplications", [])
-            ),
+            )
+          : getSelectedOptionsValue(appList),
         projects: getSelectedOptionsValue(
           get(observability, "filterData.selectedProjects", [])
         ),
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: get(observability, "filterData.selectedDate.startDate"),
-        toDt: get(observability, "filterData.selectedDate.endDate"),
+        startDt: isInitialLoad
+          ? initialStartDate
+          : get(observability, "filterData.selectedDate.startDate"),
+        toDt: isInitialLoad
+          ? initialEndDate
+          : get(observability, "filterData.selectedDate.endDate"),
+      };
+
+      const flowPredictabilityPayload = {
+        applications: isInitialLoad
+          ? getSelectedOptionsValue(appList)
+          : getSelectedOptionsValue(
+              get(observability, "filterData.selectedApplications", [])
+            ),
+        fromDt: isInitialLoad
+          ? initialStartDate
+          : get(observability, "filterData.selectedDate.startDate"),
+        issueTypes: ["All"],
+        sprintNames: [],
+        toDt: isInitialLoad
+          ? initialEndDate
+          : get(observability, "filterData.selectedDate.endDate"),
       };
 
       let flowMetricsPromiseData = await Promise.all([
         getFlowDistribution(payload),
         getFlowVelocity(payload),
-        getFlowEfficiency(payload),
-        getFlowLoad(payload),
-        getFlowPredictability(payload),
-        getActiveSprints(payload),
+        getFlowEfficiency({ ...payload, issueIds: [], issueTypes: ["All"] }),
+        getFlowPredictability(flowPredictabilityPayload),
+        getActiveSprints(payload)
       ]);
+      const flowLoadPayload = {
+        issueTypes: ["All"],
+        applications: isInitialLoad
+          ? ["ACT", "CODE8", "DAAS", "DOME", "AIFT", "MAT", "PII", "PROMOKART"]
+          : getSelectedOptionsValue(
+              get(observability, "filterData.selectedApplications", [])
+            ),
+        sprintNames: get(flowMetricsPromiseData, "[4].data", []),
+        workFlowStages: [],
+      };
+      const { data: flowLoadData } = await getFlowLoad(flowLoadPayload);
 
       const flowMetricsData = {
         flowDistribution: get(flowMetricsPromiseData, "[0].data", []),
         flowVelocity: get(flowMetricsPromiseData, "[1].data", []),
         flowEfficiency: get(flowMetricsPromiseData, "[2].data", []),
-        flowLoad: get(flowMetricsPromiseData, "[3].data", []),
-        flowPredictability: get(flowMetricsPromiseData, "[4].data", []),
-        activeSprints: get(flowMetricsPromiseData, "[5].data", []),
+        flowPredictability: get(flowMetricsPromiseData, "[3].data", []),
+        flowLoad: flowLoadData,
       };
 
       setState((state) => ({
@@ -81,19 +113,15 @@ const FlowMetrics = () => {
     },
     [state.flowMetricsData]
   );
-  const defaultSelectedDate = get(observability, "filterData.selectedDate", {});
   useEffect(() => {
-    //Get flow metrics data on initial load with default date and passing all Applications as selected
-    /** Before fetching waiting for default date and applications api call to finish**/
-    if (
-      defaultSelectedDate.startDate &&
-      appList?.length &&
-      !isAlreadyCalledFromMount
-    ) {
-      getFlowMetrics(true);
-      isAlreadyCalledFromMount = true;
-    }
-  }, [defaultSelectedDate, appList]);
+    getAppList({})
+      .unwrap()
+      .then((appListResp) => {
+        console.log("redis in mount applist", appListResp);
+        appList = appListResp;
+        getFlowMetrics(true);
+      });
+  }, []);
 
   return (
     <>

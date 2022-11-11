@@ -87,23 +87,20 @@ const FlowDistribution = (props) => {
           metricTypesMapping[key]
         );
         if (isMatching) {
-          if (isMatching) {
-            if (selectedData[key].summaryList && selectedData[key].count) {
-              selectedData[key].count += data[matchedKey];
-              selectedData[key].summaryList.push(
-                ...formatSummary(data[`${matchedKey}summary`])
-              );
-            } else {
-              selectedData[key].count = data[matchedKey];
-              selectedData[key].summaryList = [
-                ...formatSummary(data[`${matchedKey}summary`]),
-              ];
-            }
-          }
+          selectedData[key] = {
+            count: selectedData[key].count
+              ? selectedData[key].count + data[matchedKey]
+              : data[matchedKey],
+            summaryList: selectedData[key].summaryList
+              ? selectedData[key].summaryList.concat(
+                formatSummary(data[`${matchedKey}summary`])
+              )
+              : [...formatSummary(data[`${matchedKey}summary`])],
+          };
         }
       });
     });
-    selectedData.drillDownflowWrapClass = 'distribute-wrap flowacti-block'
+    selectedData.drillDownflowWrapClass = "distribute-wrap flowacti-block";
     return selectedData;
   };
 

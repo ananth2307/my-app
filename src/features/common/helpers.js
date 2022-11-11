@@ -1,3 +1,14 @@
+import { DATE_FORMAT } from "../../app/utilities/constants";
+import moment from "moment";
+
+const initialStartDate = moment().subtract(14, "days").format(DATE_FORMAT);
+const initialEndDate = moment().format(DATE_FORMAT);
+
+export const getDefaultSelectedDate = () => ({
+  initialStartDate,
+  initialEndDate,
+});
+
 export const getMetricTypeMappedCount = (type = {}, mapping) => {
   let count = 0;
   Object.keys(type).map((key) => {
@@ -22,25 +33,24 @@ export const statusOrder = (array, order, key) => {
 export const getMetricMatchingStatus = (type, mapping) => {
   let status = {
     isMatching: false,
-    matchedKey: ''
-  }
-  if(typeof(type) === 'object')
-  {
-  Object.keys(type).map((key) => {
-    if (mapping.includes(key)) {
+    matchedKey: "",
+  };
+  if (typeof type === "object") {
+    Object.keys(type).map((key) => {
+      if (mapping.includes(key)) {
+        status = {
+          isMatching: true,
+          matchedKey: key,
+        };
+      }
+    });
+  } else {
+    if (mapping.includes(type)) {
       status = {
         isMatching: true,
-        matchedKey: key
+        matchedKey: type,
       };
     }
-  });
-}else{
-  if(mapping.includes(type)){
-    status = {
-      isMatching: true,
-      matchedKey: type
-    };
   }
-}
   return status;
 };

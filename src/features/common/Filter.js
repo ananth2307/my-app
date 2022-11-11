@@ -9,7 +9,7 @@ import { setFilterData } from "../observability/observabilitySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { observabilityApi } from "../../app/services/observabilityApi";
 import { getSelectedOptionsValue } from "../../app/utilities/helpers";
-import { DATE_FORMAT } from "../../app/utilities/constants";
+import { getDefaultSelectedDate } from "./helpers";
 
 const Filter = (props) => {
   const [state, setState] = useState({
@@ -18,23 +18,18 @@ const Filter = (props) => {
   });
   const dispatch = useDispatch();
   const { observability } = useSelector((state) => state);
-  const {
-    data: appList = [],
-    isLoading: isAppListLoading,
-    isSuccess: isAppListSuccess,
-    isError: isAppListError,
-    error: getAppListError,
-  } = observabilityApi.useGetAppListQuery({ refetchOnMountOrArgChange: 10 });
 
   const [getProjectList] = observabilityApi.useGetProjectListMutation();
 
   const [getSprintList] = observabilityApi.useGetSprintListMutation();
 
+  const {data: appList} = observabilityApi.useGetAppListQuery({})
+
   /**End Hooks**/
 
   //Set initial date in the date picker
-  const initialStartDate = moment().subtract(14, "days").format(DATE_FORMAT);
-  const initialEndDate = moment().format(DATE_FORMAT);
+  const { initialStartDate, initialEndDate } = getDefaultSelectedDate();
+
   //common function to handle initial date and date change events
   const setDateRange = (selectedDate) => {
     dispatch(
@@ -67,7 +62,7 @@ const Filter = (props) => {
       startDt: get(observability, "filterData.selectedDate.startDate"),
       toDt: get(observability, "filterData.selectedDate.endDate"),
     });
-    let sprintList = []
+    let sprintList = [];
     if (props.isShowSprintList) {
       const { data } = await getSprintList({
         appCodes: getSelectedOptionsValue(

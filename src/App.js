@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import 'bootstrap/dist/css/bootstrap.css';
+import React, { Suspense, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.css";
 import "./assets/css/common.scss";
 import "./assets/css/internal.scss";
 import "./assets/css/bootstrap_extended.scss";
@@ -13,9 +13,13 @@ import ContainerLoader from "./app/common-components/ContainerLoader";
 
 function App() {
   const renderRoutes = (allRoutes) => {
-    return allRoutes.map((route) => (
-      route.childNavs ? renderRoutes(route.childNavs) : <Route key={route.key} path={route.path} element={route.component} />
-    ));
+    return allRoutes.map((route) =>
+      route.childNavs ? (
+        renderRoutes(route.childNavs)
+      ) : (
+        <Route key={route.key} path={route.path} element={route.component} />
+      )
+    );
   };
   return (
     <Provider store={store}>

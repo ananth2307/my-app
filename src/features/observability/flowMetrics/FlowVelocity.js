@@ -21,7 +21,7 @@ function FlowVelocity(props) {
       ) {
         let tempData = {
           month: getMonth[items.month - 1],
-          days: items.daysToComplete / items.issuesCompleted,
+          days: items.issuesCompleted ? items.daysToComplete / items.issuesCompleted : 0,
           issues: items.issuesCompleted,
           monthno: items.month.toString(),
         };
@@ -76,9 +76,9 @@ function FlowVelocity(props) {
                     ? selectedData[key].count + item[matchedKey]
                     : item[matchedKey],
                   summaryList: selectedData[key].summaryList
-                    ? selectedData[key].summaryList.push(
-                        ...formatSummary(item[`${matchedKey}summary`])
-                      )
+                    ? selectedData[key].summaryList.concat(
+                      formatSummary(item[`${matchedKey}summary`])
+                    )
                     : [...formatSummary(item[`${matchedKey}summary`])],
                 };
               }
@@ -248,6 +248,7 @@ function FlowVelocity(props) {
           return x(d.month);
         })
         .attr("y1", function (d) {
+          console.log("redis", d.days, d)
           return y(d.days);
         })
         .attr("y2", y(0))

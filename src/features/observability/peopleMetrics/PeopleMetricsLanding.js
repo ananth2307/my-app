@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { get } from "lodash";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
+import { DrillDownOffCanvas } from "../../common";
+import "../observability.styles.scss";
 
 const PeopleMetrics = (props) => {
   const [state, setState] = useState({
@@ -78,6 +80,7 @@ const PeopleMetrics = (props) => {
 
   return (
     <>
+      <DrillDownOffCanvas flowMetricsData={state.flowMetricsData} />
       <Filter getFilteredData={getPeopleMetrics} isShowSprintList={false} />
       <div className="dashboardwrap colswrap all-works">
         <div className="row">

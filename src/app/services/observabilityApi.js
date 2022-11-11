@@ -64,7 +64,7 @@ export const observabilityApi = api.injectEndpoints({
     }),
     getFlowPredictabilitySummary: build.mutation({
       query: (postBody = {}) => ({
-        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/ddflowsummary`,
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/ddFlowSummary`,
         method: 'POST',
         body: postBody,
       }),
@@ -101,6 +101,13 @@ export const observabilityApi = api.injectEndpoints({
     getIssueMetrics: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/issueMetrics`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getIssueMetricsDdOne: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/issueMetrics/drillDownOne`,
         method: 'POST',
         body: postBody,
       }),

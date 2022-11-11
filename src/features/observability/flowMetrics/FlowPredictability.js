@@ -4,14 +4,18 @@ import { useD3 } from "../../../hooks/useD3";
 import { truncate } from "../../../app/utilities/helpers";
 import { cloneDeep, get, isEmpty } from "lodash";
 import { metricTypesMapping } from "../../common/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { completed } from "../../../assets/images";
+import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 
 const FlowPredictability = (props) => {
   const dispatch = useDispatch();
+  const { data: appList } = observabilityApi.useGetAppListQuery({});
+  const observability = useSelector((state) => state.observability);
+  const common = useSelector((state) => state.common);
   const [getFlowPredicabilityDrill] =
     observabilityApi.useGetFlowPredictabilityDrillMutation();
   const [getFlowPredictSummary] =
@@ -91,13 +95,35 @@ const FlowPredictability = (props) => {
               ? selectedData[key].unplannedCompleted +
                 drillDownData[matchedKey].unplannedCompleted
               : drillDownData[matchedKey].unplannedCompleted,
+            plannedIssueId: selectedData[key].plannedIssueId
+              ? selectedData[key].plannedIssueId.concat(
+                  drillDownData[matchedKey].plannedIssueId
+                )
+              : drillDownData[matchedKey].plannedIssueId,
+            plannedCompletedIssueId: selectedData[key]
+              .plannedCompletedIssueId
+              ? selectedData[key].plannedCompletedIssueId.concat(
+                  drillDownData[matchedKey].plannedCompletedIssueId
+                )
+              : drillDownData[matchedKey].plannedCompletedIssueId,
+            unplannedIssueId: selectedData[key].unplannedIssueId
+              ? selectedData[key].unplannedIssueId.concat(
+                  drillDownData[matchedKey].unplannedIssueId
+                )
+              : drillDownData[matchedKey].unplannedIssueId,
+            unplannedCompletedIssueId: selectedData[key]
+              .unplannedCompletedIssueId
+              ? selectedData[key].unplannedCompletedIssueId.concat(
+                  drillDownData[matchedKey].unplannedCompletedIssueId
+                )
+              : drillDownData[matchedKey].unplannedCompletedIssueId,
           };
         }
       });
     }
     selectedData.DdLevelOneBoxClick = true;
     selectedData.DdFlowPredictCustomSummary = true;
-    selectedData.drillDownflowWrapClass = 'predictwrap flow-predi-block';
+    selectedData.drillDownflowWrapClass = "predictwrap flow-predi-block";
     selectedData.customSummaryHeader = () => (
       <div class="summary_header pre_summary">
         <div class="fw-5">Sl.No</div>
@@ -159,9 +185,13 @@ const FlowPredictability = (props) => {
       selectedProp,
       offcanvasState
     ) => {
+      console.log("redis1", selectedProp, offcanvasState);
       const summaryData = await getFlowPredictSummary({
-        selectedSprintData: get(offcanvasState, "selectedValue.value", ""),
-        issueType: selectedProp,
+        sprintNames: [get(common, "offcanvasState.selectedValue.value", "")],
+        plannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).plannedIssueId,
+        unplannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).unplannedIssueId,
+        plannedCompletedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).plannedCompletedIssueId,
+        unplannedCompletedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).unplannedCompletedIssueId,
       });
       const formatedData = summaryData.data
         ? formatSummary(summaryData.data)
@@ -192,9 +222,19 @@ const FlowPredictability = (props) => {
     };
     return selectedData;
   };
-  const openDrilllDown = async (selectedSprint) => {
+  const openDrillDown = async (selectedSprint) => {
     const drillDownData = await getFlowPredicabilityDrill({
-      selectedSprintData: selectedSprint,
+      issueTypes: ["All"],
+      applications: get(observability, "filterData.selectedApplications", [])
+        .length
+        ? get(observability, "filterData.selectedApplications", [])
+        : getSelectedOptionsValue(appList),
+      sprintNames: [selectedSprint],
+      projectNames: [],
+      issueIds: [],
+      workFlowStages: [],
+      fromDt: get(observability, "filterData.selectedDate.startDate"),
+      toDt: get(observability, "filterData.selectedDate.endDate"),
     });
     dispatch(
       setIsOffCanvasOpen({
@@ -250,18 +290,6 @@ const FlowPredictability = (props) => {
         if (obj.value2 > vmax) vmax = obj.value2;
       }
 
-      /*
-    for(var t=0; t < data.length; t++) {
-
-        var obj = data[t];
-        countv2 = countv2 + obj.value2;
-    }
-
-
-    countvavg = countv / data.length;
-    countv2avg = countv2 / data.length;
-*/
-
       var v1 = vmax + vmin;
       if (v1 < 1) v1 = 1;
 
@@ -311,7 +339,7 @@ const FlowPredictability = (props) => {
               ("predict");
             })
             .style("fill", "#7AD2DE")
-            .on("click", () => openDrilllDown(get(props, "label", "")));
+            .on("click", () => openDrillDown(get(props, "label", "")));
         } else if (props.value >= props.value2) {
           var circles = elemEnter
             .append("circle")
@@ -346,7 +374,7 @@ const FlowPredictability = (props) => {
           .text(function (d) {
             return props.value2;
           })
-          .on("click", () => openDrilllDown(get(props, "label", "")));
+          .on("click", () => openDrillDown(get(props, "label", "")));
 
         elemEnter
           .append("text")
@@ -361,7 +389,7 @@ const FlowPredictability = (props) => {
           .text(function (d) {
             return props.value; /*+ " | "*/
           })
-          .on("click", () => openDrilllDown(get(props, "label", "")));
+          .on("click", () => openDrillDown(get(props, "label", "")));
 
         elemEnter
           .append("text")
@@ -377,7 +405,7 @@ const FlowPredictability = (props) => {
           .text(function (d) {
             return truncate(props.label, 7);
           })
-          .on("click", () => openDrilllDown(get(props, "label", "")));
+          .on("click", () => openDrillDown(get(props, "label", "")));
 
         elemEnter
           .select(".labels")
