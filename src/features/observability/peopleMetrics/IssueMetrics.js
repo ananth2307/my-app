@@ -124,13 +124,6 @@ const IssueMetrics = (props) => {
     <>
       <svg
         ref={ref}
-        style={{
-          viewBox: "0 0 300 150",
-          preserveAspectRatio: "xMinYMid",
-          width: "100%",
-          height: "251",
-          overflow: "scroll",
-        }}
       ></svg>
     </>
   );

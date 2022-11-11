@@ -1,10 +1,10 @@
 import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { cloneDeep, get, isEmpty, map, truncate } from "lodash";
+import { get, groupBy } from "lodash";
 import { responsivefy } from "../../../app/utilities/helpers";
 
-const LevelOfCOllabaration = (props) => {
+const LevelOfCollaboration = (props) => {
   const collaborationdata = [
     {
       type: "features",
@@ -81,10 +81,18 @@ const LevelOfCOllabaration = (props) => {
   ];
   const ref = useD3((svg) => {
     // let width = get(props, "chartContainerRefs.current[1].offsetWidth", 415);
-    const width = 415;
+    // const width = 415;
+    let width = get(props, "chartContainerRefs.current[1].offsetWidth", 0);
     let data = collaborationdata;
-    let dataGroup = d3
-      .group(data, d => d.type)
+
+    const groupedData = groupBy(data, "type");
+    let dataGroup = [];
+    Object.keys(groupedData).map((dt) => {
+      dataGroup.push({
+        key: dt,
+        values: groupedData[dt],
+      });
+    });
 
     let color = d3
       .scaleOrdinal()
@@ -161,6 +169,8 @@ const LevelOfCOllabaration = (props) => {
       })
       .curve(d3.curveBasis);
 
+    console.log("redis", dataGroup);
+
     dataGroup.forEach(function (d, i) {
       vis
         .append("svg:path")
@@ -171,7 +181,7 @@ const LevelOfCOllabaration = (props) => {
         .attr("stroke-width", 2)
         .attr("id", "line_" + d.key)
         .attr("fill", "none")
-        .attr("transform", "translate(" + MARGINS.left + ",10)")
+        .attr("transform", "translate(" + MARGINS.left + ",10)");
     });
   }, []);
 
@@ -179,16 +189,9 @@ const LevelOfCOllabaration = (props) => {
     <>
       <svg
         ref={ref}
-        style={{
-          viewBox: "0 0 300 150",
-          preserveAspectRatio: "xMinYMid",
-          width: "100%",
-          height: "251",
-          overflow: "scroll",
-        }}
       ></svg>
     </>
   );
 };
 
-export default memo(LevelOfCOllabaration);
+export default memo(LevelOfCollaboration);

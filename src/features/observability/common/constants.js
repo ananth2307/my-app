@@ -1,14 +1,29 @@
 import React from "react";
 //Flow Metrics
-const FlowDistribution =  React.lazy(() => import("../flowMetrics/FlowDistribution"));
+const FlowDistribution = React.lazy(() =>
+  import("../flowMetrics/FlowDistribution")
+);
 const FlowVelocity = React.lazy(() => import("../flowMetrics/FlowVelocity"));
-const FlowEfficiency = React.lazy(() => import("../flowMetrics/FlowEfficiency"));
-const FlowPredictability = React.lazy(() => import("../flowMetrics/FlowPredictability"));
+const FlowEfficiency = React.lazy(() =>
+  import("../flowMetrics/FlowEfficiency")
+);
+const FlowPredictability = React.lazy(() =>
+  import("../flowMetrics/FlowPredictability")
+);
 const FlowLoad = React.lazy(() => import("../flowMetrics/FlowLoad"));
 
 //People Metrics
 const IssueMetrics = React.lazy(() => import("../peopleMetrics/IssueMetrics"));
-const LevelOfCollabaration = React.lazy(() => import("../peopleMetrics/LevelOfCollabaration"));
+const LevelOfCollaboration = React.lazy(() =>
+  import("../peopleMetrics/LevelOfCollaboration")
+);
+const TopAssignees = React.lazy(() => import("../peopleMetrics/TopAssignees"));
+const ProjectChampions = React.lazy(() =>
+  import("../peopleMetrics/ProjectChampions")
+);
+const TopContributors = React.lazy(() =>
+  import("../peopleMetrics/TopContributors")
+);
 
 //Flow Metrics
 export const FlowMetricChartContainers = [
@@ -169,12 +184,13 @@ export const PeopleMetricChartContainers = [
         text: "Blockers ",
         color: "red",
       },
-    ]
+    ],
   },
   {
     key: 2,
     title: "LEVEL OF COLLABORATION BY COMMENTS",
-    chart: (props) => <LevelOfCollabaration {...props} />,
+    chart: (props) => <LevelOfCollaboration {...props} />,
+    axisLegend: <div class="axis_legend_2">No. of comments</div>,
     navs: [
       {
         text: "Features",
@@ -205,34 +221,50 @@ export const PeopleMetricChartContainers = [
   {
     key: 3,
     title: "TOP ASSIGNEES",
-    chart: (props) => <FlowDistribution {...props} />,
+    chart: (props) => <TopAssignees {...props} />,
     navs: [
       {
         text: "",
         color: "",
       },
-    ]
+    ],
   },
   {
     key: 4,
     title: "PROJECT CHAMPIONS",
-    chart: (props) => <FlowDistribution {...props} />,
-    navs: [
-      {
-        text: "",
-        color: "",
-      },
-    ]
+    chart: (props) => <ProjectChampions {...props} />,
+    customClass: "col-lg-4 col-md-6 order-md-4 order-lg-5 filtercol",
+    customHeader: () => (
+      <div class="fltrhead">
+        <h4>Project Champions</h4>
+        <a href="" class="viewlink">
+          View All
+        </a>
+      </div>
+    ),
   },
   {
     key: 5,
-    title: "",
-    chart: (props) => <FlowDistribution {...props} />,
-    navs: [
-      {
-        text: "",
-        color: "",
-      },
-    ]
-  }
-]
+    title: "TOP CONTRIBUTORS",
+    chart: (props) => <TopContributors {...props} />,
+    customClass: "col-lg-8 col-md-12 order-md-5 order-lg-4 filtercol",
+    customHeader: () => (
+      <div class="fltrhead">
+        <h4>TOP CONTRIBUTORS</h4>
+        <div class="graph-des-nav">
+          <ul>
+            <li>
+              <span class="lightgreen"></span> Commit
+            </li>
+            <li>
+              <span class="pink"></span> Issues
+            </li>
+          </ul>
+        </div>
+        <a class="viewlink">
+          View All
+        </a>
+      </div>
+    ),
+  },
+];

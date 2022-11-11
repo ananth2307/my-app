@@ -183,7 +183,7 @@ const Filter = (props) => {
             text="Filter"
             onClick={(e) => {
               e.preventDefault();
-              props.getFIlteredData();
+              props.getFilteredData();
             }}
           />
         </div>

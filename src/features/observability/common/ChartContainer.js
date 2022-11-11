@@ -10,12 +10,12 @@ const ChartContainer = (props) => {
         }`}
       >
         <div className="dashcol bg-white">
-          <h4>{props.title}</h4>
+          {props.customHeader ? props.customHeader() : <h4>{props.title}</h4>}
           <div
             className="graphblock"
             ref={(el) => (chartContainerRefs.current[props.index] = el)}
           >
-            <div className={`graph-des-nav ${props.navContainerClass}`}>
+            {props.navs && <div className={`graph-des-nav ${props.navContainerClass}`}>
               <ul>
                 {props.navs?.map((nav, index) => (
                   <li key={index}>
@@ -24,7 +24,7 @@ const ChartContainer = (props) => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div>}
             <div className={props.chartContainerClass}>
               {props?.chart?.({ ...props, chartContainerRefs })}
             </div>

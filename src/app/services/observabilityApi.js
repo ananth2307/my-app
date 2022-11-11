@@ -97,6 +97,35 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    //People Metrics
+    getIssueMetrics: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/issueMetrics`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getCollaboration: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/level/collaboration`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getTopAssignee: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/topAssignee`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
+    getCommentsDdOne: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/comments/ddone`,
+        method: 'POST',
+        body: postBody,
+      }),
+    }),
   }),
   overrideExisting: true,
 });

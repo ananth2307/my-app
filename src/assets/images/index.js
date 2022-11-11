@@ -17,7 +17,8 @@ import download from './config-settings-tools/download.png';
 import edit from './config-settings-tools/edit.svg';
 import settings from './config-settings-tools/settings.png';
 import downCaret from './down-caret.svg';
-import completed from './completed.svg'
+import completed from './completed.svg';
+import goldMedal from "./gold-medal.svg";
 
 export {
     checkboxTick,
@@ -38,5 +39,6 @@ export {
     download,
     edit,
     settings,
-    downCaret
+    downCaret,
+    goldMedal,
 }
