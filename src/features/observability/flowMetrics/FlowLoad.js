@@ -1,270 +1,121 @@
 import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { truncate, responsivefy } from "../../../app/utilities/helpers";
-import { isEmpty } from "lodash";
-import { metricTypesMapping } from "../../common/constants";
-import { statusOrder } from "../../common/helpers";
-
-// const chartData1 = [
-//   {
-//     name: "Done",
-//     children: [
-//       {
-//         name: "Features",
-//         tasksize: 1,
-//         parent: "Done",
-//       },
-//       {
-//         name: "Defects",
-//         tasksize: 2,
-//         parent: "Done",
-//       },
-//       {
-//         name: "Risks",
-//         tasksize: 2,
-//         parent: "Done",
-//       },
-//       {
-//         name: "Enablers",
-//         tasksize: 1,
-//         parent: "Done",
-//       },
-//       {
-//         name: "Debt",
-//         tasksize: 1,
-//         parent: "Done",
-//       },
-//       {
-//         name: "Prod-Fix",
-//         tasksize: 1,
-//         parent: "Done",
-//       },
-//     ],
-//     tasksize: 8,
-//     items: "13",
-//   },
-//   {
-//     name: "In-Dev",
-//     children: [
-//       {
-//         name: "Features",
-//         tasksize: 2,
-//         parent: "In-Dev",
-//       },
-//       {
-//         name: "Defects",
-//         tasksize: 2,
-//         parent: "In-Dev",
-//       },
-//       {
-//         name: "Risks",
-//         tasksize: 0,
-//         parent: "In-Dev",
-//       },
-//       {
-//         name: "Enablers",
-//         tasksize: 3,
-//         parent: "In-Dev",
-//       },
-//       {
-//         name: "Debt",
-//         tasksize: 0,
-//         parent: "In-Dev",
-//       },
-//       {
-//         name: "Prod-Fix",
-//         tasksize: 0,
-//         parent: "In-Dev",
-//       },
-//     ],
-//     tasksize: 7,
-//     items: "13",
-//   },
-//   {
-//     name: "READY-VERIFICATION",
-//     children: [
-//       {
-//         name: "Features",
-//         tasksize: 0,
-//         parent: "READY-VERIFICATION",
-//       },
-//       {
-//         name: "Defects",
-//         tasksize: 4,
-//         parent: "READY-VERIFICATION",
-//       },
-//       {
-//         name: "Risks",
-//         tasksize: 0,
-//         parent: "READY-VERIFICATION",
-//       },
-//       {
-//         name: "Enablers",
-//         tasksize: 0,
-//         parent: "READY-VERIFICATION",
-//       },
-//       {
-//         name: "Debt",
-//         tasksize: 0,
-//         parent: "READY-VERIFICATION",
-//       },
-//       {
-//         name: "Prod-Fix",
-//         tasksize: 1,
-//         parent: "READY-VERIFICATION",
-//       },
-//     ],
-//     tasksize: 5,
-//     items: "13",
-//   },
-//   {
-//     name: "IN-DEFINE",
-//     children: [
-//       {
-//         name: "Features",
-//         tasksize: 1,
-//         parent: "IN-DEFINE",
-//       },
-//       {
-//         name: "Defects",
-//         tasksize: 3,
-//         parent: "IN-DEFINE",
-//       },
-//       {
-//         name: "Risks",
-//         tasksize: 0,
-//         parent: "IN-DEFINE",
-//       },
-//       {
-//         name: "Enablers",
-//         tasksize: 1,
-//         parent: "IN-DEFINE",
-//       },
-//       {
-//         name: "Debt",
-//         tasksize: 0,
-//         parent: "IN-DEFINE",
-//       },
-//       {
-//         name: "Prod-Fix",
-//         tasksize: 0,
-//         parent: "IN-DEFINE",
-//       },
-//     ],
-//     tasksize: 5,
-//     items: "13",
-//   },
-// ];
+import { cloneDeep, isEmpty, get } from "lodash";
+import { metricTypesMapping, sortingArr } from "../../common/constants";
+import { getMetricMatchingStatus, statusOrder } from "../../common/helpers";
+import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { useDispatch } from "react-redux";
 
 const FlowLoad = (props) => {
+  const dispatch = useDispatch();
   let chartData = [];
-  let getchild = [];
   let data = props?.flowMetricsData?.flowLoad;
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData);
+    delete tmpSummaryData.month;
+    let rtData = [];
+    Object.keys(tmpSummaryData).map((key) => {
+      rtData.push({
+        issueId: key,
+        summary: tmpSummaryData[key],
+      });
+    });
+    return rtData;
+  };
   if (!isEmpty(data)) {
-    let featureslist = [];
-    let enablerslist = [];
-    let defects = [];
-    let risk = [];
-    let debt = [];
-    let prodFix = [];
-    let types_data;
-    let totalCount = [];
-    for (let i = 0; i < data.length; i++) {
-      getchild = [];
-      featureslist = [];
-      enablerslist = [];
-      defects = [];
-      risk = [];
-      debt = [];
-      prodFix = [];
-      for (let j = 0; j < data[i].list.length; j++) {
-        const cr = "Change Request";
-        const st = "Sub task";
-        types_data = {
-          Task: data[i].list[j].Task,
-          Debt: data[i].list[j].Debt,
-          Bug: data[i].list[j].Bug,
-          Enablers: data[i].list[j].Enablers,
-          ChangeRequest: data[i].list[j][cr],
-          Story: data[i].list[j].Story,
-          Risk: data[i].list[j].Risk,
-          Subtask: data[i].list[j][st],
-          prodFix: data[i].list[j].prodFix,
-          Epic: data[i].list[j].Epic,
-        };
-        for (let [key, value] of Object.entries(types_data)) {
-          if (value === undefined) value = 0;
-          if ( metricTypesMapping.features.includes(key)) {
-            featureslist.push(value);
-          } else if (metricTypesMapping.enablers.includes(key)) {
-            enablerslist.push(value);
-          } else if (metricTypesMapping.risk.includes(key)) {
-            risk.push(value);
-          } else if (metricTypesMapping.defects.includes(key)) {
-            defects.push(value);
-          } else if (metricTypesMapping.debt.includes(key)) {
-            debt.push(value);
-          } else if (metricTypesMapping.prodFix.includes(key)) {
-            prodFix.push(value);
+    let totalCount = 0;
+    let selectedData = {};
+    let tempData = [];
+    data.map((list) => {
+      selectedData = {};
+      tempData = [];
+      list.list.map((items) => {
+        Object.keys(items).map((keys) => {
+          for (let [metricKey, value] of Object.entries(metricTypesMapping)) {
+            selectedData[metricKey] = selectedData[metricKey]
+              ? selectedData[metricKey]
+              : {};
+            const { isMatching, matchedKey } = getMetricMatchingStatus(
+              keys,
+              metricTypesMapping[metricKey]
+            );
+            if (isMatching) {
+              if (
+                selectedData[metricKey].summaryList &&
+                selectedData[metricKey].count
+              ) {
+                selectedData[metricKey].count += items[matchedKey];
+                selectedData[metricKey].summaryList.push(
+                  ...formatSummary(items[`${matchedKey}summary`])
+                );
+              } else {
+                selectedData[metricKey].count = items[matchedKey];
+                selectedData[metricKey].summaryList = [
+                  ...formatSummary(items[`${matchedKey}summary`]),
+                ];
+                break;
+              }
+            }
           }
-        }
-      }
-      getchild.push(
-        {
-          name: "Features",
-          tasksize: featureslist.reduce((a, b) => a + b, 0),
-          parent: data[i].status,
-        },
-        {
-          name: "Defects",
-          tasksize: defects.reduce((a, b) => a + b, 0),
-          parent: data[i].status,
-        },
-        {
-          name: "Risks",
-          tasksize: risk.reduce((a, b) => a + b, 0),
-          parent: data[i].status,
-        },
-        {
-          name: "Enablers",
-          tasksize: enablerslist.reduce((a, b) => a + b, 0),
-          parent: data[i].status,
-        },
-        {
-          name: "Debt",
-          tasksize: debt.reduce((a, b) => a + b, 0),
-          parent: data[i].status,
-        },
-        {
-          name: "Prod-Fix",
-          tasksize: prodFix.reduce((a, b) => a + b, 0),
-          parent: data[i].status,
-        }
-      );
-      totalCount = [];
-      for (let k = 0; k < getchild.length; k++) {
-        totalCount.push(getchild[k].tasksize);
+        });
+      });
+      Object.keys(metricTypesMapping).map((keys) => {
+        tempData.push({
+          name: keys,
+          count:
+            selectedData[keys].count !== undefined
+              ? selectedData[keys].count
+              : 0,
+          parent: list.status,
+          summaryList: selectedData[keys].summaryList
+            ? selectedData[keys].summaryList
+            : [],
+        });
+      });
+      totalCount = 0;
+      for (let k = 0; k < tempData.length; k++) {
+        totalCount += tempData[k].count;
       }
       chartData.push({
-        name: data[i].status,
-        children: getchild,
-        tasksize: totalCount.reduce((a, b) => a + b, 0),
+        name: list.status,
+        children: tempData,
+        count: totalCount,
         items: "13",
       });
-    }
-    let sortingArr = [
-      "Backlog",
-      "IN-DEFINE",
-      "In-Dev",
-      "READY-VERIFICATION",
-      "SIT IN-VERIFICATION",
-      "SIT-VERIFICATION FAILED",
-      "Testing",
-      "Done",
-    ];
+    });
     chartData = statusOrder(chartData, sortingArr, "name");
   }
+  const getSelectedData = (selectedData) => {
+    let tempData = {};
+    selectedData.map((items) => {
+      Object.defineProperty(tempData, `${items.name}`, {
+        value: { count: items.count, summaryList: items.summaryList },
+      });
+    });
+    tempData.drillDownflowWrapClass = 'flload-wrap flowacti-block'
+    return tempData;
+  };
+  const openDrilllDown = async (selectedParent) => {
+    const selectedParentData = chartData.filter(
+      (dt) => dt.name === selectedParent
+    )[0];
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+        selectedValue: {
+          label: selectedParent,
+          value: selectedParent,
+        },
+        dropDownMenuOptions: sortingArr.map((item) => ({
+          label: item,
+          value: item,
+        })),
+        selectedData: getSelectedData(selectedParentData.children),
+      })
+    );
+  };
   const ref = useD3(
     (svg1) => {
       svg1.html("");
@@ -295,12 +146,12 @@ const FlowLoad = (props) => {
 
         if (!name) return "#ffffff";
         else {
-          if (name == "Features") return colors[0];
-          else if (name == "Defects") return colors[1];
-          else if (name == "Risks") return colors[2];
-          else if (name == "Enablers") return colors[3];
-          else if (name == "Debt") return colors[4];
-          else if (name == "Prod-Fix") return colors[5];
+          if (name == "features") return colors[0];
+          else if (name == "defects") return colors[1];
+          else if (name == "risk") return colors[2];
+          else if (name == "enablers") return colors[3];
+          else if (name == "debt") return colors[4];
+          else if (name == "prodFix") return colors[5];
         }
       };
 
@@ -309,11 +160,11 @@ const FlowLoad = (props) => {
       var maxwidtha = 0;
 
       for (var r = 0; r < datasetfull.length; r++) {
-        tasksum = tasksum + parseInt(datasetfull[r].tasksize);
+        tasksum = tasksum + parseInt(datasetfull[r].count);
       }
 
       for (var r = 0; r < datasetfull.length; r++) {
-        datasetfull[r].widtha = (datasetfull[r].tasksize / tasksum) * 700;
+        datasetfull[r].widtha = (datasetfull[r].count / tasksum) * 700;
 
         if (datasetfull[r].widtha > 220) {
           datasetfull[r].widtha = 220;
@@ -370,7 +221,7 @@ const FlowLoad = (props) => {
           .style("text-anchor", "middle")
           .style("font-size", 22)
           .text(function (d) {
-            return dataset.tasksize;
+            return dataset.count;
           });
         svg
           .append("text")
@@ -384,7 +235,7 @@ const FlowLoad = (props) => {
           .text(truncate(dataset.name, 10));
 
         var nodes = d3.hierarchy(dataset).sum(function (d) {
-          return d.tasksize;
+          return d.count;
         });
 
         var vNodes = nodes.descendants();
@@ -417,6 +268,12 @@ const FlowLoad = (props) => {
           .style("fill", function (d) {
             if (d.depth == 0) return "#ffffff";
             else return colorCircle(d.data.name);
+          })
+          .on("click", (e, d) => {
+            let selectedLabel = get(d, "data.name", "");
+            if (get(d, "data.parent", ""))
+              selectedLabel = get(d, "data.parent", "");
+            openDrilllDown(selectedLabel);
           });
 
         svg
@@ -429,11 +286,7 @@ const FlowLoad = (props) => {
     },
     [chartData]
   );
-  return (
-    <div
-      ref={ref}
-    ></div>
-  );
+  return <div ref={ref}></div>;
 };
 
 export default FlowLoad;

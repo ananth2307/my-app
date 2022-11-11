@@ -4,7 +4,7 @@ import ChartContainer from "../common/ChartContainer";
 import { FlowMetricChartContainers } from "../common/constants";
 import "../observability.styles.scss";
 import { observabilityApi } from "../../../app/services/observabilityApi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { get } from "lodash";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 import { DrillDownOffCanvas } from "../../common";
@@ -66,12 +66,12 @@ const FlowMetrics = () => {
       ]);
 
       const flowMetricsData = {
-        flowDistribution: get(flowMetricsPromiseData, '[0].data', []),
-        flowVelocity: get(flowMetricsPromiseData, '[1].data', []),
-        flowEfficiency: get(flowMetricsPromiseData, '[2].data', []),
-        flowLoad: get(flowMetricsPromiseData, '[3].data', []),
-        flowPredictability: get(flowMetricsPromiseData, '[4].data', []),
-        activeSprints: get(flowMetricsPromiseData, '[5].data', []),
+        flowDistribution: get(flowMetricsPromiseData, "[0].data", []),
+        flowVelocity: get(flowMetricsPromiseData, "[1].data", []),
+        flowEfficiency: get(flowMetricsPromiseData, "[2].data", []),
+        flowLoad: get(flowMetricsPromiseData, "[3].data", []),
+        flowPredictability: get(flowMetricsPromiseData, "[4].data", []),
+        activeSprints: get(flowMetricsPromiseData, "[5].data", []),
       };
 
       setState((state) => ({

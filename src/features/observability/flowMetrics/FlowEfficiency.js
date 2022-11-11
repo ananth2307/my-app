@@ -3,42 +3,11 @@ import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { truncate } from "../../../app/utilities/helpers";
 import { cloneDeep, get, isEmpty } from "lodash";
-import { getMonth, metricTypesMapping } from "../../common/constants";
-import { useDispatch,useSelector } from "react-redux";
+import { metricTypesMapping } from "../../common/constants";
+import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { observabilityApi } from "../../../app/services/observabilityApi";
-
-// const chartData1 = [
-//   {
-//     middle: "28%",
-//     name: "ACPK Sprint 10.1_2022",
-//     details: [
-//       {
-//         label: "Active Time",
-//         value: 77,
-//       },
-//       {
-//         label: "Wait Time",
-//         value: 195,
-//       },
-//     ],
-//   },
-//   {
-//     middle: "25%",
-//     name: "ACPK Sprint 10.2_2022",
-//     details: [
-//       {
-//         label: "Active Time",
-//         value: 93,
-//       },
-//       {
-//         label: "Wait Time",
-//         value: 275,
-//       },
-//     ],
-//   },
-// ];
 
 const FlowEfficiency = (props) => {
   const dispatch = useDispatch();
@@ -69,19 +38,17 @@ const FlowEfficiency = (props) => {
   }
   const formatSummary = (summaryData) => {
     let tmpSummaryData = cloneDeep(summaryData);
-    let tempData = []
+    let tempData = [];
     tmpSummaryData.map((items) => {
-       Object.keys(items).map((key)=>{
-        console.log("key",items)
+      Object.keys(items).map((key) => {
         tempData.push({
-          issueId:items[key].jiraKey,
-          activeTime:items[key].activeTime.toFixed(1),
-          waitTime:items[key].waitTime.toFixed(1),
-          summary:items[key].summary
-        })
-       })
-      
-      })
+          issueId: items[key].jiraKey,
+          activeTime: items[key].activeTime.toFixed(1),
+          waitTime: items[key].waitTime.toFixed(1),
+          summary: items[key].summary,
+        });
+      });
+    });
     return tempData;
   };
   const getSelectedData = (drillDownData) => {
@@ -101,6 +68,7 @@ const FlowEfficiency = (props) => {
       }
     });
     selectedData.DdLevelOneBoxClick = true;
+    selectedData.drillDownflowWrapClass = 'efficiency-wrap floweffi-block'
     selectedData.customSummaryHeader = () => (
       <>
         <div class="fw-5">Sl.No</div>
@@ -110,28 +78,43 @@ const FlowEfficiency = (props) => {
         <div class="fw-10">Waiting time</div>
       </>
     );
-    selectedData.customBoxHeaders = (singleSummary) => {
-        return (
-          <>
-            <div class="flownum-labels efficiencyPercent">
-              <div class="flowlabel">efficiency</div>
+    selectedData.customBoxHeaders = (singleSummary, title) => {
+      return (
+        <>
+          <div class="flownum-labels efficiencyPercent">
+            <div class="flownum-block">
+              <h4>{title}</h4>
+              <div class="flowlabel">Efficiency</div>
               <div class="flownum">
-                {!isEmpty(singleSummary) ? singleSummary.Efficiency.toFixed(1) : 0}
+                {!isEmpty(singleSummary)
+                  ? singleSummary.Efficiency.toFixed(1)
+                  : 0}
                 <span>%</span>
               </div>
             </div>
-            <div class="flownum-ftr">
-              <div class="numbox">
-                <div class="numlabel">active time</div>
-                <div class="numdes">{!isEmpty(singleSummary) ? singleSummary.activeTime.toFixed(1) : 0}h</div>
-              </div>
-              <div class="numbox">
-                <div class="numlabel">waiting time</div>
-                <div class="numdes">{!isEmpty(singleSummary) ? singleSummary.waitTime.toFixed(1):0}h</div>
+          </div>
+          <div class="flownum-ftr">
+            <div class="numbox">
+              <div class="numlabel">active time</div>
+              <div class="numdes">
+                {!isEmpty(singleSummary)
+                  ? singleSummary.activeTime.toFixed(1)
+                  : 0}
+                h
               </div>
             </div>
-          </>
-        );
+            <div class="numbox">
+              <div class="numlabel">waiting time</div>
+              <div class="numdes">
+                {!isEmpty(singleSummary)
+                  ? singleSummary.waitTime.toFixed(1)
+                  : 0}
+                h
+              </div>
+            </div>
+          </div>
+        </>
+      );
     };
 
     selectedData.customSummaryList = (singleSummary) => {
@@ -152,20 +135,23 @@ const FlowEfficiency = (props) => {
         </>
       );
     };
-    selectedData.customSummaryListCall =  async(selectedProp,offcanvasState) => {
+    selectedData.customSummaryListCall = async (
+      selectedProp,
+      offcanvasState
+    ) => {
       const summaryData = await getFlowEffciencyDrill({
-        selectedSprintData:get(offcanvasState,'selectedValue.value',''),
-        issueType:selectedProp
-       })
-       const formatedData = summaryData.data.length > 0 ? formatSummary(summaryData.data) : []
-       console.log("offcanvas",offcanvasState)
-       let tempCopy = {...offcanvasState}
-       let arrCopy = {...offcanvasState.selectedData}
-       let tempValuCopy = {...offcanvasState.selectedData[selectedProp]}
-       if(formatedData.length > 0) tempValuCopy.summaryList = formatedData
-       arrCopy[selectedProp]=tempValuCopy
-      tempCopy.selectedData = arrCopy
-      dispatch(setIsOffCanvasOpen(tempCopy))
+        selectedSprintData: get(offcanvasState, "selectedValue.value", ""),
+        issueType: selectedProp,
+      });
+      const formatedData =
+        summaryData.data.length > 0 ? formatSummary(summaryData.data) : [];
+      let tempCopy = cloneDeep(offcanvasState);
+      let arrCopy = cloneDeep(offcanvasState.selectedData);
+      let tempValuCopy = cloneDeep(offcanvasState.selectedData[selectedProp]);
+      if (formatedData.length > 0) tempValuCopy.summaryList = formatedData;
+      arrCopy[selectedProp] = tempValuCopy;
+      tempCopy.selectedData = arrCopy;
+      dispatch(setIsOffCanvasOpen(tempCopy));
     };
     return selectedData;
   };

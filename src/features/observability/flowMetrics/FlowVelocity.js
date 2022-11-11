@@ -2,7 +2,7 @@
 import { useD3 } from "../../../hooks/useD3";
 import React, { memo } from "react";
 import * as d3 from "d3";
-import { cloneDeep, get, isEmpty, truncate } from "lodash";
+import { cloneDeep, get, isEmpty } from "lodash";
 import { getMonth, metricTypesMapping } from "../../common/constants";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
@@ -40,7 +40,7 @@ function FlowVelocity(props) {
     });
     return rtData;
   };
-  const getSelectedData = (selectedMonth, selectedMonthno) => {
+  const getSelectedData = (selectedMonth,selectedMonthno) => {
     let months = [
       "January",
       "February",
@@ -87,24 +87,32 @@ function FlowVelocity(props) {
         });
       }
     });
+    selectedData.drillDownflowWrapClass = 'velocitywrap-wrap flowacti-block'
     selectedData.rightSummaryHeader = (
       selectedDataFromComp,
       selectedLevelOneFromComp
     ) => {
       let avgDays = 0;
       !isEmpty(selectedDataFromComp[selectedLevelOneFromComp]) &&
-      selectedDataFromComp[selectedLevelOneFromComp]?.summaryList.map((items) => {
-          avgDays += items.daysToComplete;
-        });
+        selectedDataFromComp[selectedLevelOneFromComp]?.summaryList.map(
+          (items) => {
+            avgDays += items.daysToComplete;
+          }
+        );
       return (
         <div class="col-md-6">
           <span class="avg_lable">
             Average Days to Complete :{" "}
-            <span class="avg_day_summary">{selectedDataFromComp[selectedLevelOneFromComp]?.summaryList
-              ? Math.round(
-                  avgDays / selectedDataFromComp[selectedLevelOneFromComp]?.summaryList.length
-                )
-              : 0}</span> d
+            <span class="avg_day_summary">
+              {selectedDataFromComp[selectedLevelOneFromComp]?.summaryList
+                ? Math.round(
+                    avgDays /
+                      selectedDataFromComp[selectedLevelOneFromComp]
+                        ?.summaryList.length
+                  )
+                : 0}
+            </span>{" "}
+            d
           </span>
         </div>
       );
@@ -118,7 +126,6 @@ function FlowVelocity(props) {
       </>
     );
     selectedData.customSummaryList = (singleSummary) => {
-      console.log("redis", singleSummary);
       return (
         <li>
           <div class="fw-10">{singleSummary.issueId}</div>

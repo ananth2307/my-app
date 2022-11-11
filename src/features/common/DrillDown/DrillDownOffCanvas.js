@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import React  from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
@@ -6,7 +5,6 @@ import Dropdown from "./Dropdown";
 import { dDDefaultLevelOne } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
-import { chartClass } from "./constants";
 import {get,isEmpty} from 'lodash'
 
 const DrillDownOffCanvas = (props) => {
@@ -37,7 +35,7 @@ const DrillDownOffCanvas = (props) => {
             />
           </div>
         </div>
-        <div class={`flowbox-row ${chartClass[offcanvasState.title.replaceAll(" ",'')]}`}>
+        <div class={`flowbox-row ${selectedData.drillDownflowWrapClass}`}>
           {dDDefaultLevelOne.map((level) => (
             <DdDefaultLevelOne level={level} {...props}/>
           ))}
