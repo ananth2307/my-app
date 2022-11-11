@@ -1,6 +1,6 @@
 import { get, isEmpty } from "lodash";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 const DdDefaultSummary = (props) => {
   const commonSliceState = useSelector((state) => state.common);
   const selectedData = get(commonSliceState, "offcanvasState.selectedData", []);
@@ -30,8 +30,8 @@ const DdDefaultSummary = (props) => {
         ) : (
           <>
             <div class="fw-5">Sl.No</div>
-            <div class="fw-10">Issue Id</div>
-            <div class="fw-70">Summary</div>
+            <div class="fw-20">Issue Id</div>
+            <div class="fw-50">Summary</div>
           </>
         )}
       </div>

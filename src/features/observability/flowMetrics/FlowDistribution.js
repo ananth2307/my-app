@@ -6,7 +6,7 @@ import {
   getMetricTypeMappedCount,
   getMetricMatchingStatus,
 } from "../../common/helpers";
-import { cloneDeep, get, isEmpty, map, truncate } from "lodash";
+import { cloneDeep, get, isEmpty, truncate } from "lodash";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
@@ -62,15 +62,15 @@ const FlowDistribution = (props) => {
     });
 
   const formatSummary = (summaryData) => {
-    let tmpSummaryData = cloneDeep(summaryData)
-    delete tmpSummaryData.sprintName
+    let tmpSummaryData = cloneDeep(summaryData);
+    delete tmpSummaryData.sprintName;
     let rtData = [];
-    Object.keys(tmpSummaryData).map(key => {
+    Object.keys(tmpSummaryData).map((key) => {
       rtData.push({
         issueId: key,
-        summary: tmpSummaryData[key]
-      })
-    })
+        summary: tmpSummaryData[key],
+      });
+    });
     return rtData;
   };
 
@@ -81,27 +81,29 @@ const FlowDistribution = (props) => {
     let selectedData = {};
     selectedSprintData.list.map((data, index) => {
       Object.keys(metricTypesMapping).map((key) => {
-        selectedData[key] = selectedData[key] ? selectedData[key] : {}
+        selectedData[key] = selectedData[key] ? selectedData[key] : {};
         const { isMatching, matchedKey } = getMetricMatchingStatus(
           data,
           metricTypesMapping[key]
         );
         if (isMatching) {
-          selectedData[key] = {
-            count: selectedData[key].count
-              ? selectedData[key].count + data[matchedKey]
-              : data[matchedKey],
-            summaryList: selectedData[key].summaryList
-              ? selectedData[key].summaryList.push(
-                  ...formatSummary(data[`${matchedKey}summary`])
-                )
-              : [...formatSummary(data[`${matchedKey}summary`])],
-          };
-          console.log("redis12", selectedData[key].summaryList, formatSummary(data[`${matchedKey}summary`]))
-          // console.log("redis", data, matchedKey, key)
+          if (isMatching) {
+            if (selectedData[key].summaryList && selectedData[key].count) {
+              selectedData[key].count += data[matchedKey];
+              selectedData[key].summaryList.push(
+                ...formatSummary(data[`${matchedKey}summary`])
+              );
+            } else {
+              selectedData[key].count = data[matchedKey];
+              selectedData[key].summaryList = [
+                ...formatSummary(data[`${matchedKey}summary`]),
+              ];
+            }
+          }
         }
       });
     });
+    selectedData.drillDownflowWrapClass = 'distribute-wrap flowacti-block'
     return selectedData;
   };
 
@@ -163,18 +165,19 @@ const FlowDistribution = (props) => {
         var columns = Object.keys(json_data[0]);
 
         var keys = columns.slice(1);
-
+        var max = d3.max(json_data, function (d) {
+          return d.total;
+        });
+        json_data = json_data.map((it) => {
+          delete it.total;
+          return it;
+        });
         y.domain(
           json_data.map(function (d) {
             return d.sprint;
           })
         ); // x.domain...
-        x.domain([
-          0,
-          d3.max(json_data, function (d) {
-            return d.total;
-          }),
-        ]).nice(); // y.domain...
+        x.domain([0, max]).nice(); // y.domain...
         z.domain(keys);
 
         g.append("g")
