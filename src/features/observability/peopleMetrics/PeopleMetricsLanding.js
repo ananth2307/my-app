@@ -8,6 +8,7 @@ import { get } from "lodash";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 import { DrillDownOffCanvas } from "../../common";
 import "../observability.styles.scss";
+import { getDefaultSelectedDate } from "../../common/helpers";
 
 const PeopleMetrics = (props) => {
   const [state, setState] = useState({
@@ -21,14 +22,17 @@ const PeopleMetrics = (props) => {
   });
   const { observability } = useSelector((state) => state);
 
-  const { data: appList = [] } = observabilityApi.useGetAppListQuery({
-    refetchOnMountOrArgChange: 10,
-  });
+  const [getAppList] = observabilityApi.useLazyGetAppListQuery({});
 
   const [getIsueMetrics] = observabilityApi.useGetIssueMetricsMutation();
   const [getCollaboration] = observabilityApi.useGetCollaborationMutation();
   const [getTopAssignee] = observabilityApi.useGetTopAssigneeMutation();
   const [getCommentsDdOne] = observabilityApi.useGetCommentsDdOneMutation();
+
+  let appList = [];
+  let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
+  initialStartDate = new Date(initialStartDate).getTime();
+  initialEndDate = new Date(initialEndDate).getTime();
 
   const getPeopleMetrics = useCallback(
     async (isInitialLoad = false) => {
@@ -44,8 +48,8 @@ const PeopleMetrics = (props) => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: get(observability, "filterData.selectedDate.startDate"),
-        toDt: get(observability, "filterData.selectedDate.endDate"),
+        startDt: initialStartDate,
+        toDt: initialEndDate,
       };
 
       let peopleMetricsPromiseData = await Promise.all([
@@ -69,14 +73,14 @@ const PeopleMetrics = (props) => {
     },
     [state.peopleMetricsData]
   );
-  const defaultSelectedDate = get(observability, "filterData.selectedDate", {});
   useEffect(() => {
-    //Get flow metrics data on initial load with default date and passing all Applications as selected
-    /** Before fetching waiting for default date and applications api call to finish**/
-    if (defaultSelectedDate.startDate && appList?.length) {
-      getPeopleMetrics(true);
-    }
-  }, [defaultSelectedDate, appList]);
+    getAppList({})
+      .unwrap()
+      .then((appListResp) => {
+        appList = appListResp;
+        getPeopleMetrics(true);
+      });
+  }, []);
 
   return (
     <>

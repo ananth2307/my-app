@@ -117,7 +117,6 @@ const FlowMetrics = () => {
     getAppList({})
       .unwrap()
       .then((appListResp) => {
-        console.log("redis in mount applist", appListResp);
         appList = appListResp;
         getFlowMetrics(true);
       });

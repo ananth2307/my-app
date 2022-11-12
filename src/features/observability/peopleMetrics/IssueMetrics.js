@@ -16,7 +16,7 @@ import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 const IssueMetrics = (props) => {
   const dispatch = useDispatch();
   const { observability } = useSelector((state) => state);
-  const { data: appList = [] } = observabilityApi.useGetAppListQuery();
+  const { data: appList = [] } = observabilityApi.useGetAppListQuery({});
   const [getIssueMetricsDdOne] =
     observabilityApi.useGetIssueMetricsDdOneMutation();
 

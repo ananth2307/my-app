@@ -115,7 +115,7 @@ const FlowDistribution = (props) => {
         },
         dropDownMenuOptions: data.map((dt) => ({
           label: dt.sprint,
-          value: data.sprint,
+          value: dt.sprint,
         })),
         selectedData: getSelectedData(selectedSprint),
       })
