@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { cloneDeep, get, isEmpty, map, truncate } from "lodash";
+import { cloneDeep, get, omit, pick } from "lodash";
 import { responsivefy } from "../../../app/utilities/helpers";
 import { metricTypesMapping } from "../../common/constants";
 import {
@@ -21,27 +21,27 @@ const IssueMetrics = (props) => {
     observabilityApi.useGetIssueMetricsDdOneMutation();
 
   let issueMetricsData = get(props, "peopleMetricsData.issueMetrics", []);
-  let data = issueMetricsData
-    ? Object.keys(issueMetricsData).map((key) => ({
+  var filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
+  let { total } = pick(issueMetricsData, ["total"]);
+  console.log("redis total", total);
+  let data = filteredIssueMetricsData
+    ? Object.keys(filteredIssueMetricsData).map((key) => ({
         label: key,
-        value: issueMetricsData[key],
+        value: filteredIssueMetricsData[key],
       }))
     : [];
 
   const formatSummary = (summaryData) => {
-    let tmpSummaryData = cloneDeep(summaryData);
-    delete tmpSummaryData.sprintName;
-    let rtData = [];
-    Object.keys(tmpSummaryData).map((key) => {
-      rtData.push({
-        issueId: key,
-        summary: tmpSummaryData[key],
-      });
-    });
-    return rtData;
+    let rtData = {
+      issueKey: summaryData.key,
+      summary: summaryData.summary,
+      assignedTo: summaryData.assignedTo,
+      status: summaryData.status,
+    };
+    return [rtData];
   };
 
-  const getSelectedData = (selectedIssue) => {
+  const getSelectedData = async (selectedIssue) => {
     const selectedAppList = get(
       observability,
       "filterData.selectedApplications",
@@ -49,31 +49,79 @@ const IssueMetrics = (props) => {
     );
     let selectedData = {};
     const payload = {
-      appCodes: selectedAppList.length
+      applications: selectedAppList.length
         ? getSelectedOptionsValue(selectedAppList)
         : getSelectedOptionsValue(appList),
-      sprintName: getSelectedOptionsValue(
-        get(observability, "filterData.selectedSprints", [])
-      ),
+      priorities: [selectedIssue],
+      sprintNames: [],
       startDt: get(observability, "filterData.selectedDate.startDate"),
       toDt: get(observability, "filterData.selectedDate.endDate"),
     };
-    const issueMetricsDdOneData = getIssueMetricsDdOne(payload);
-    console.log("redis", issueMetricsDdOneData);
+    const { data: issueMetricsDdOneData } = await getIssueMetricsDdOne(payload);
+    const issuesData = get(issueMetricsDdOneData, "[0].issues");
+    console.log("redis issues", issuesData);
+    issuesData.map((issue, index) => {
+      let data = issue.data;
+      Object.keys(metricTypesMapping).map((key) => {
+        selectedData[key] = selectedData[key] ? selectedData[key] : {};
+        const { isMatching, matchedKey } = getMetricMatchingStatus(
+          data.issueType,
+          metricTypesMapping[key]
+        );
+        if (isMatching) {
+          selectedData[key] = {
+            count: selectedData[key].count ? selectedData[key].count + 1 : 1,
+            summaryList: selectedData[key].summaryList
+              ? selectedData[key].summaryList.concat(formatSummary(data))
+              : [...formatSummary(data)],
+          };
+        }
+      });
+    });
+    selectedData.customSummaryHeader = () => (
+      <>
+        <div className="fw-5">Sl.No</div>
+        <div className="fw-20">Issue Key</div>
+        <div className="fw-70">Summary</div>
+        <div className="fw-20">User Asignee</div>
+        <div className="fw-10">Status</div>
+        <div className="fw-10"></div>
+      </>
+    );
+    selectedData.customSummaryList = (singleSummary) => {
+      return (
+        <li>
+          <div className="fw-20">{singleSummary.issueKey}</div>
+          <div className="fw-70">{singleSummary.summary}</div>
+          <div className="fw-20">{singleSummary.assignedTo}</div>
+          <div className="fw-10">{singleSummary.status}</div>
+          <div className="fw-10"><a type="submit" className="followup-btn box-shade">Follow Up</a></div>
+        </li>
+      );
+    };
     return selectedData;
   };
 
-  const openDrillDown = (selectedIssue) => {
+  const openDrillDown = async ({ data: selectedIssue, index }) => {
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+      })
+    );
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
         title: props.title,
         selectedValue: {
           label: selectedIssue.label,
-          value: selectedIssue.value,
+          value: selectedIssue.label,
         },
-        dropDownMenuOptions: data,
-        selectedData: getSelectedData(selectedIssue),
+        dropDownMenuOptions: data.map((dt) => ({
+          label: dt.label,
+          value: dt.label,
+        })),
+        selectedData: await getSelectedData(selectedIssue.label),
       })
     );
   };
@@ -90,20 +138,9 @@ const IssueMetrics = (props) => {
           .scaleOrdinal()
           .range(["#fc543a", "#fda26b", "#fec82f", "#81A71A", "#167ad6"]);
 
-        let count = 0;
-
         for (let t = 0; t < data.length; t++) {
           let obj = data[t];
-          count = count + obj.value;
-        }
-
-        for (let t = 0; t < data.length; t++) {
-          let obj = data[t];
-          obj.perc = (obj.value * 100) / count;
-          console.log(obj.perc);
-          if (obj.perc == "NaN") {
-            obj.perc = 0;
-          }
+          obj.perc = total ? (obj.value * 100) / total : 0;
           data[t].value = obj.perc.toFixed(2);
         }
 
@@ -132,12 +169,12 @@ const IssueMetrics = (props) => {
           }); //we must tell it out to access the value of each element in our data array
 
         let arcs = vis
-          .selectAll("g.slice") //this selects all <g> elements with class slice (there aren't any yet)
+          .selectAll("g.slice") //this selects all <g> elements with className slice (there aren't any yet)
           .data(pie) //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
           .enter() //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
           .append("svg:g") //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-          .attr("class", "slice")
-          .on("click", (e, { data }) => openDrillDown(data));
+          .attr("className", "slice")
+          .on("click", (e, data) => openDrillDown(data));
 
         arcs
           .append("svg:path")

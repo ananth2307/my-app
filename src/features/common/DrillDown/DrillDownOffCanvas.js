@@ -35,16 +35,16 @@ const DrillDownOffCanvas = (props) => {
             />
           </div>
         </div>
-        <div class={`flowbox-row ${selectedData.drillDownflowWrapClass}`}>
+        <div class={`flowbox-row ${selectedData.drillDownflowWrapClass ? selectedData.drillDownflowWrapClass : "distribute-wrap flowacti-block"}`}>
           {dDDefaultLevelOne.map((level) => (
             <DdDefaultLevelOne level={level} {...props}/>
           ))}
         </div>
-        <div class="flow-descriptions-block flowpredi-des ">
+        <div class="flow-descriptions-block flowpredi-des">
           <DdDefaultSummary />
         </div>
         {selectedData.DdFlowPredictCustomSummary &&
-        <div class="flow-descriptions-block flowpredi-des ">
+        <div class="flow-descriptions-block flowpredi-des">
         <div class="stories-list">
         <h5>UNPLANNED</h5>
         {selectedData.customSummaryHeader()}
