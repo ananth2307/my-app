@@ -7,11 +7,12 @@ import {
   getMetricMatchingStatus,
 } from "../../common/helpers";
 import { cloneDeep, get, isEmpty, truncate } from "lodash";
-import { useDispatch } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 
 const FlowDistribution = (props) => {
   const dispatch = useDispatch();
+  const offcanvasState = useSelector((state) => state.common?.offcanvasState);
   let data = [];
   !isEmpty(props?.flowMetricsData?.flowDistribution) &&
     props?.flowMetricsData?.flowDistribution.map((sprint) => {
@@ -103,6 +104,10 @@ const FlowDistribution = (props) => {
     return selectedData;
   };
 
+  const handleDdMenuChange = (selectedSprint) => {
+    dispatch(setSelectedData(getSelectedData(selectedSprint.value)))
+  }
+
   const openDrillDown = (selectedSprint) => {
     dispatch(
       setIsOffCanvasOpen({
@@ -117,6 +122,7 @@ const FlowDistribution = (props) => {
           value: dt.sprint,
         })),
         selectedData: getSelectedData(selectedSprint),
+        handleDdMenuChange: handleDdMenuChange
       })
     );
   };

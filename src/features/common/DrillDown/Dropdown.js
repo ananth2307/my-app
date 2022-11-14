@@ -6,6 +6,7 @@ const Dropdown = (props) => {
   return (
     <Select
       options={props.options}
+      onChange={props.onChange}
       {...props}
     />
   );

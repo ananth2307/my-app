@@ -23,7 +23,6 @@ const IssueMetrics = (props) => {
   let issueMetricsData = get(props, "peopleMetricsData.issueMetrics", []);
   var filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
   let { total } = pick(issueMetricsData, ["total"]);
-  console.log("redis total", total);
   let data = filteredIssueMetricsData
     ? Object.keys(filteredIssueMetricsData).map((key) => ({
         label: key,
@@ -59,7 +58,6 @@ const IssueMetrics = (props) => {
     };
     const { data: issueMetricsDdOneData } = await getIssueMetricsDdOne(payload);
     const issuesData = get(issueMetricsDdOneData, "[0].issues");
-    console.log("redis issues", issuesData);
     issuesData.map((issue, index) => {
       let data = issue.data;
       Object.keys(metricTypesMapping).map((key) => {

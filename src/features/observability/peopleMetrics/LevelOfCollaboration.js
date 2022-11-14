@@ -222,8 +222,6 @@ LevelOfCollabData.length > 0 && LevelOfCollabData.map(dt=>{
       })
       .curve(d3.curveBasis);
 
-    console.log("redis", dataGroup);
-
     dataGroup.forEach(function (d, i) {
       vis
         .append("svg:path")
