@@ -84,7 +84,6 @@ const TopAssignees = (props) => {
         .enter()
         .append("g")
         .attr("transform", function (d) {
-          console.log(d);
           return "translate(" + x0(d.month) + ",0)";
         })
         .selectAll("rect")

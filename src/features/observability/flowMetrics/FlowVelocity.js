@@ -248,7 +248,6 @@ function FlowVelocity(props) {
           return x(d.month);
         })
         .attr("y1", function (d) {
-          console.log("redis", d.days, d)
           return y(d.days);
         })
         .attr("y2", y(0))
