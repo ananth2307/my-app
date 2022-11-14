@@ -5,8 +5,10 @@ import * as d3 from "d3";
 import { cloneDeep, get, isEmpty } from "lodash";
 import { getMonth, metricTypesMapping } from "../../common/constants";
 import { useDispatch } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
+
+
 function FlowVelocity(props) {
   const dispatch = useDispatch();
   const { flowVelocity } = props.flowMetricsData;
@@ -140,6 +142,11 @@ function FlowVelocity(props) {
     };
     return selectedData;
   };
+
+  const handleDdMenuChange = ( selectedValue ) => {
+    dispatch(setSelectedData(getSelectedData(selectedValue.label, selectedValue.value)))
+  }
+
   const openDrilllDown = (selectedMonth, selectedMonthno) => {
     dispatch(
       setIsOffCanvasOpen({
@@ -154,6 +161,7 @@ function FlowVelocity(props) {
           value: item.monthno,
         })),
         selectedData: getSelectedData(selectedMonth, selectedMonthno),
+        handleDdMenuChange: handleDdMenuChange,
       })
     );
   };

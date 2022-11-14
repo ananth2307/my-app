@@ -122,7 +122,7 @@ const FlowDistribution = (props) => {
           value: dt.sprint,
         })),
         selectedData: getSelectedData(selectedSprint),
-        handleDdMenuChange: handleDdMenuChange
+        handleDdMenuChange: handleDdMenuChange,
       })
     );
   };

@@ -4,7 +4,7 @@ import { useD3 } from "../../../hooks/useD3";
 import { cloneDeep, isEmpty, get } from "lodash";
 import { metricTypesMapping, sortingArr } from "../../common/constants";
 import { getMetricMatchingStatus, statusOrder } from "../../common/helpers";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { useDispatch } from "react-redux";
 
 const FlowLoad = (props) => {
@@ -96,6 +96,15 @@ const FlowLoad = (props) => {
     tempData.drillDownflowWrapClass = 'flload-wrap flowacti-block'
     return tempData;
   };
+
+  const handleDdMenuChange = ( selectedParent ) => {
+    console.log("redis123", selectedParent, chartData)
+    const selectedParentData = chartData.filter(
+      (dt) => dt.name === selectedParent.value
+    )[0];
+    dispatch(setSelectedData(getSelectedData(selectedParentData.children)))
+  }
+
   const openDrilllDown = async (selectedParent) => {
     const selectedParentData = chartData.filter(
       (dt) => dt.name === selectedParent
@@ -113,6 +122,7 @@ const FlowLoad = (props) => {
           value: item,
         })),
         selectedData: getSelectedData(selectedParentData.children),
+        handleDdMenuChange: handleDdMenuChange,
       })
     );
   };
