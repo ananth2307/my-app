@@ -100,7 +100,6 @@ const FlowDistribution = (props) => {
         }
       });
     });
-    selectedData.drillDownflowWrapClass = "distribute-wrap flowacti-block";
     return selectedData;
   };
 

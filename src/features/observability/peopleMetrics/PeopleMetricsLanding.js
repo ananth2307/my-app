@@ -31,10 +31,9 @@ const PeopleMetrics = (props) => {
 
   let appList = [];
   let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
-  // initialStartDate = new Date(initialStartDate).getTime();
-  // initialEndDate = new Date(initialEndDate).getTime();
-  initialStartDate = 1667035224
-  initialEndDate = 1668331224
+  initialStartDate = new Date(initialStartDate).getTime();
+  initialEndDate = new Date(initialEndDate).getTime();
+
 
 
   const getPeopleMetrics = useCallback(
