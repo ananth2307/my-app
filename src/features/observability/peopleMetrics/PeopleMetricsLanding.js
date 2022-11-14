@@ -31,8 +31,11 @@ const PeopleMetrics = (props) => {
 
   let appList = [];
   let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
-  initialStartDate = new Date(initialStartDate).getTime();
-  initialEndDate = new Date(initialEndDate).getTime();
+  // initialStartDate = new Date(initialStartDate).getTime();
+  // initialEndDate = new Date(initialEndDate).getTime();
+  initialStartDate = 1667035224
+  initialEndDate = 1668331224
+
 
   const getPeopleMetrics = useCallback(
     async (isInitialLoad = false) => {
@@ -51,11 +54,20 @@ const PeopleMetrics = (props) => {
         startDt: initialStartDate,
         toDt: initialEndDate,
       };
+      const TopAssigneePayload = {
+        applications:isInitialLoad
+        ? getSelectedOptionsValue(appList)
+        : getSelectedOptionsValue(
+            get(observability, "filterData.selectedApplications", [])
+          ),
+          fromDt:initialStartDate,          
+          toDt:initialEndDate
+      };
 
       let peopleMetricsPromiseData = await Promise.all([
         getIsueMetrics(defaultPayload),
         getCollaboration(defaultPayload),
-        getTopAssignee(defaultPayload),
+        getTopAssignee(TopAssigneePayload),
         getCommentsDdOne(defaultPayload),
       ]);
 
@@ -84,7 +96,7 @@ const PeopleMetrics = (props) => {
 
   return (
     <>
-      <DrillDownOffCanvas flowMetricsData={state.flowMetricsData} />
+      <DrillDownOffCanvas peopleMetricsData={state.peopleMetricsData} />
       <Filter getFilteredData={getPeopleMetrics} isShowSprintList={false} />
       <div className="dashboardwrap colswrap all-works">
         <div className="row">

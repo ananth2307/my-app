@@ -3,6 +3,8 @@ import { goldMedal } from "../../../assets/images";
 import { get } from "lodash";
 
 const ProjectChampions = (props) => {
+  let topAssigneetempData = get(props, "peopleMetricsData.topAssignee", []);
+  console.log("PROJECT CHAMPION",props)
   return (
     <div class="cham-block">
       <div class="chamrow" id="championsDiv">

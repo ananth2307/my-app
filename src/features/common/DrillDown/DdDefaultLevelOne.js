@@ -28,7 +28,7 @@ const DdDefaultLevelOne = (props) => {
       onClick={onSelectLvlOne}
       key={props.level.name}
     >
-     { !selectedData.customBoxHeaders && <h4>{props?.level?.title}</h4>}
+     { !selectedData.customBoxHeaders && <h4>{props?.level?.title }</h4>}
       {selectedData.customBoxHeaders ?  selectedData.customBoxHeaders(selectedData[props?.level?.name],props.level.title):<h2 class="fdcount">{get(offcanvasState, `selectedData.${props.level.name}.count`, 0)}</h2>}
     </div>
   );

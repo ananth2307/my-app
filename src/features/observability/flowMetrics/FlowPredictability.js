@@ -123,6 +123,8 @@ const FlowPredictability = (props) => {
     }
     selectedData.DdLevelOneBoxClick = true;
     selectedData.DdFlowPredictCustomSummary = true;
+    selectedData.summaryToptitle= 'PLANNED';
+    selectedData.summaryBottomtitle= 'UNPLANNED';
     selectedData.drillDownflowWrapClass = "predictwrap flow-predi-block";
     selectedData.customSummaryHeader = () => (
       <div class="summary_header pre_summary">

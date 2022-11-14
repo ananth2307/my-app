@@ -1,11 +1,11 @@
 import React  from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
-import { useSelector } from "react-redux";
+import { useSelector} from "react-redux";
 import Dropdown from "./Dropdown";
 import { dDDefaultLevelOne } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
-import {get,isEmpty} from 'lodash'
+import {get} from 'lodash'
 
 const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
@@ -16,6 +16,8 @@ const DrillDownOffCanvas = (props) => {
     "drillDownSelectionState.selectedLevelOne",
     []
   );
+  const OpenIssueSummaryList = get(selectedData[selectedLevelOne],'summaryList.openIssue',[])
+  const predictabilityPlannedSummary = get(selectedData[selectedLevelOne],'summaryList.plannedSummary',[])
   return (
     <CustomOffCanvas className="custom-off-canvas">
       <div class="flowblock custom_scroll">
@@ -41,27 +43,19 @@ const DrillDownOffCanvas = (props) => {
           ))}
         </div>
         <div class="flow-descriptions-block flowpredi-des ">
-          <DdDefaultSummary />
+          <DdDefaultSummary
+            summaryTitle={selectedData?.summaryToptitle}
+            summaryList={selectedData.DdtopAssigneeCustomSummary ? OpenIssueSummaryList : selectedData.DdFlowPredictCustomSummary ? predictabilityPlannedSummary : get(selectedData[selectedLevelOne],'summaryList',[])}
+           />
         </div>
-        {selectedData.DdFlowPredictCustomSummary &&
         <div class="flow-descriptions-block flowpredi-des ">
         <div class="stories-list">
-        <h5>UNPLANNED</h5>
-        {selectedData.customSummaryHeader()}
-        {
-          !isEmpty(selectedData[selectedLevelOne]) &&
-        selectedData[selectedLevelOne]?.summaryList && selectedData[selectedLevelOne].summaryList.unplannedSummary && (
-            <ol class='accordion'>
-            {selectedData[selectedLevelOne].summaryList.unplannedSummary.map((summaryData)=>{
-            return selectedData.customSummaryList(summaryData)
-          })
-            }
-            </ol>
-          )
-        }
+        <DdDefaultSummary
+            summaryTitle={selectedData?.summaryBottomtitle}
+            summaryList={selectedData.DdtopAssigneeCustomSummary ? get(selectedData[selectedLevelOne],'summaryList.doneIssue',[]) : get(selectedData[selectedLevelOne],'summaryList.unplannedSummary',[])}
+           />
         </div>
         </div>
-        }
       </div>
     </CustomOffCanvas>
   );
