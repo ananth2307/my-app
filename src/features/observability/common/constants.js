@@ -24,7 +24,19 @@ const ProjectChampions = React.lazy(() =>
 const TopContributors = React.lazy(() =>
   import("../peopleMetrics/TopContributors")
 );
-
+//productMetrics
+const StaticCodeAnalysis = React.lazy(() =>
+  import("../productivityMetrics/StaticCodeAnalysis")
+);
+const CodeAnalysis = React.lazy(() =>
+  import("../productivityMetrics/CodeAnalysis")
+);
+const BuildMetrics = React.lazy(() =>
+  import("../productivityMetrics/BuildMetrics")
+);
+const DeploymentMetrics = React.lazy(() =>
+  import("../productivityMetrics/DeploymentMetrics")
+);
 //Flow Metrics
 export const FlowMetricChartContainers = [
   {
@@ -261,10 +273,63 @@ export const PeopleMetricChartContainers = [
             </li>
           </ul>
         </div>
-        <a class="viewlink">
-          View All
-        </a>
+        <a class="viewlink">View All</a>
       </div>
     ),
+  },
+];
+export const ProductMetricChartContainers = [
+  {
+    key: 1,
+    title: "STATIC CODE ANALYSIS",
+    chart: (props) => <StaticCodeAnalysis {...props} />,
+    navs: [
+      {
+        text: "Low",
+        color: "dark-blue",
+      },
+      {
+        text: "Medium",
+        color: "lgreen",
+      },
+      {
+        text: "High",
+        color: "dyellow",
+      },
+      {
+        text: "Critical",
+        color: "lorange",
+      },
+      {
+        text: "Blockers ",
+        color: "red",
+      },
+    ],
+  },
+  {
+    key: 2,
+    title: "CODE ANALYSIS",
+    chart: (props) => <CodeAnalysis {...props} />,
+    navs: [
+      {
+        text: " Lines of code",
+        color: "skblue",
+      },
+      {
+        text: "Violation",
+        color: "red",
+      },
+    ],
+  },
+  {
+    key: 3,
+    title: "BUILD METRICS",
+    chart: (props) => <BuildMetrics {...props} />,
+  },
+  {
+    key: 4,
+    title: "DEPLOYMENT METRICS",
+    chart: (props) => <DeploymentMetrics {...props} />,
+    customClass: "col-lg-12 filtercol",
   },
 ];

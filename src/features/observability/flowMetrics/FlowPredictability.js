@@ -5,7 +5,7 @@ import { truncate } from "../../../app/utilities/helpers";
 import { cloneDeep, get, isEmpty } from "lodash";
 import { metricTypesMapping } from "../../common/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { completed } from "../../../assets/images";
@@ -100,8 +100,7 @@ const FlowPredictability = (props) => {
                   drillDownData[matchedKey].plannedIssueId
                 )
               : drillDownData[matchedKey].plannedIssueId,
-            plannedCompletedIssueId: selectedData[key]
-              .plannedCompletedIssueId
+            plannedCompletedIssueId: selectedData[key].plannedCompletedIssueId
               ? selectedData[key].plannedCompletedIssueId.concat(
                   drillDownData[matchedKey].plannedCompletedIssueId
                 )
@@ -123,8 +122,8 @@ const FlowPredictability = (props) => {
     }
     selectedData.DdLevelOneBoxClick = true;
     selectedData.DdFlowPredictCustomSummary = true;
-    selectedData.summaryToptitle= 'PLANNED';
-    selectedData.summaryBottomtitle= 'UNPLANNED';
+    selectedData.summaryToptitle = "PLANNED";
+    selectedData.summaryBottomtitle = "UNPLANNED";
     selectedData.drillDownflowWrapClass = "predictwrap flow-predi-block";
     selectedData.customSummaryHeader = () => (
       <div class="summary_header pre_summary">
@@ -190,10 +189,18 @@ const FlowPredictability = (props) => {
       console.log("redis1", selectedProp, offcanvasState);
       const summaryData = await getFlowPredictSummary({
         sprintNames: [get(common, "offcanvasState.selectedValue.value", "")],
-        plannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).plannedIssueId,
-        unplannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).unplannedIssueId,
-        plannedCompletedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).plannedCompletedIssueId,
-        unplannedCompletedIssueId: get(offcanvasState, `selectedData.${selectedProp}`).unplannedCompletedIssueId,
+        plannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`)
+          .plannedIssueId,
+        unplannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`)
+          .unplannedIssueId,
+        plannedCompletedIssueId: get(
+          offcanvasState,
+          `selectedData.${selectedProp}`
+        ).plannedCompletedIssueId,
+        unplannedCompletedIssueId: get(
+          offcanvasState,
+          `selectedData.${selectedProp}`
+        ).unplannedCompletedIssueId,
       });
       const formatedData = summaryData.data
         ? formatSummary(summaryData.data)
@@ -224,8 +231,9 @@ const FlowPredictability = (props) => {
     };
     return selectedData;
   };
-  const openDrillDown = async (selectedSprint) => {
-    const drillDownData = await getFlowPredicabilityDrill({
+
+  const getDrillDownData = async (selectedSprint) =>
+    await getFlowPredicabilityDrill({
       issueTypes: ["All"],
       applications: get(observability, "filterData.selectedApplications", [])
         .length
@@ -238,6 +246,14 @@ const FlowPredictability = (props) => {
       fromDt: get(observability, "filterData.selectedDate.startDate"),
       toDt: get(observability, "filterData.selectedDate.endDate"),
     });
+
+  const handleDdMenuChange = async (selectedSprint) => {
+    const drillDownData = await getDrillDownData(selectedSprint.value);
+    dispatch(setSelectedData(getSelectedData(drillDownData.data)));
+  };
+
+  const openDrillDown = async (selectedSprint) => {
+    const drillDownData = await getDrillDownData(selectedSprint);
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -251,6 +267,7 @@ const FlowPredictability = (props) => {
           value: item.label,
         })),
         selectedData: getSelectedData(drillDownData.data),
+        handleDdMenuChange: handleDdMenuChange,
       })
     );
   };

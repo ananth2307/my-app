@@ -70,14 +70,14 @@ export const observabilityApi = api.injectEndpoints({
     }),
     getFlowEfficiency: build.mutation({
       query: (postBody = {}) => ({
-        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main`,
+        url: `http://localhost:7111/api/v1/safeFlowMetrics/flow/flowEfficiency/main`,
         method: 'POST',
         body: postBody,
       }),
     }),
     getFlowEfficiencyDrill: build.mutation({
       query: (postBody = {}) => ({
-        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main/drilldown`,
+        url: `http://localhost:7111/api/v1/safeFlowMetrics/flow/flowEfficiency/main/drilldown`,
         method: 'POST',
         body: postBody,
       }),
@@ -134,10 +134,24 @@ export const observabilityApi = api.injectEndpoints({
     })
   }),
   getLinesOfCodes: build.mutation({
-    query:(postedBy={}) =>({
+    query:(postBody={}) =>({
       url:`${OBSERVABILITY_BASE_URL}/home/analysis/against/linesOfCodes`,
       method:'POST',
-      body:postedBy
+      body:postBody
+    })
+  }),
+  getLineOfCodeDatewise: build.mutation({
+    query:(postBody={}) => ({
+      url:`${OBSERVABILITY_BASE_URL}/productivityMetrics/codeAnalysis/dateWise`,
+      method:'POST',
+      body:postBody
+    })
+  }),
+  getBulidMetrics:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/productMetric/buildMetric/ddone`,
+      method: 'POST',
+      body: postBody,
     })
   }),
     getCommentsDdOne: build.mutation({

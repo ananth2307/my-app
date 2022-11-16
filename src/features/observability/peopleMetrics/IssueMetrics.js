@@ -1,15 +1,14 @@
 import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { cloneDeep, get, omit, pick } from "lodash";
+import { get, omit, pick } from "lodash";
 import { responsivefy } from "../../../app/utilities/helpers";
 import { metricTypesMapping } from "../../common/constants";
 import {
-  getMetricTypeMappedCount,
   getMetricMatchingStatus,
 } from "../../common/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 
@@ -23,7 +22,6 @@ const IssueMetrics = (props) => {
   let issueMetricsData = get(props, "peopleMetricsData.issueMetrics", []);
   var filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
   let { total } = pick(issueMetricsData, ["total"]);
-  console.log("redis total", total);
   let data = filteredIssueMetricsData
     ? Object.keys(filteredIssueMetricsData).map((key) => ({
         label: key,
@@ -59,7 +57,6 @@ const IssueMetrics = (props) => {
     };
     const { data: issueMetricsDdOneData } = await getIssueMetricsDdOne(payload);
     const issuesData = get(issueMetricsDdOneData, "[0].issues");
-    console.log("redis issues", issuesData);
     issuesData.map((issue, index) => {
       let data = issue.data;
       Object.keys(metricTypesMapping).map((key) => {
@@ -102,6 +99,10 @@ const IssueMetrics = (props) => {
     return selectedData;
   };
 
+  const handleDdMenuChange = (selectedSprint) => {
+    dispatch(setSelectedData(getSelectedData(selectedSprint.value)))
+  }
+
   const openDrillDown = async ({ data: selectedIssue, index }) => {
     dispatch(
       setIsOffCanvasOpen({
@@ -122,6 +123,7 @@ const IssueMetrics = (props) => {
           value: dt.label,
         })),
         selectedData: await getSelectedData(selectedIssue.label),
+        handleDdMenuChange: handleDdMenuChange
       })
     );
   };

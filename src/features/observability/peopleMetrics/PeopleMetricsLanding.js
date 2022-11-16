@@ -62,19 +62,9 @@ const PeopleMetrics = (props) => {
           fromDt:initialStartDate,          
           toDt:initialEndDate
       };
-     const collabPayload= 
-     {
-       appCodes: [
-         "CODE8"
-       ],
-       projects: [],
-       sprintName: [],
-       startDt: 1664562600,
-       toDt: 1668536940
-     }
       let peopleMetricsPromiseData = await Promise.all([
         getIsueMetrics(defaultPayload),
-        getCollaboration(collabPayload),
+        getCollaboration(defaultPayload),
         getTopAssignee(TopAssigneePayload),
         getCommentsDdOne(defaultPayload),
       ]);

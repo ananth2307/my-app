@@ -8,11 +8,13 @@ const commonSlice = createSlice({
       title: "",
       dropDownMenuOptions: [],
       selectedValue: {},
-      selectedData: []
+      selectedData: [],
+      handleDdMenuChange: () => {},
+      isDropDownShown:true
     },
     drillDownSelectionState: {
-      selectedLevelOne: "features"
-    }
+      selectedLevelOne: "features",
+    },
   },
   reducers: {
     setIsOffCanvasOpen: {
@@ -29,10 +31,26 @@ const commonSlice = createSlice({
       reducer(state, action) {
         state.offcanvasState.isDrilldownOpen = action.payload;
       },
-    }
+    },
+    setSelectedDdMenuValue: {
+      reducer(state, action) {
+        state.offcanvasState.selectedValue = action.payload;
+      },
+    },
+    setSelectedData: {
+      reducer(state, action) {
+        state.offcanvasState.selectedData = action.payload;
+      },
+    },
   },
 });
 
-export const { setIsOffCanvasOpen, setSelectedLevelOne, hideOffCanvas } = commonSlice.actions;
+export const {
+  setIsOffCanvasOpen,
+  setSelectedLevelOne,
+  hideOffCanvas,
+  setSelectedDdMenuValue,
+  setSelectedData,
+} = commonSlice.actions;
 
 export default commonSlice.reducer;

@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
 const LevelOfCollaboration = (props) => {
+  
   const dispatch = useDispatch();
 
   let LevelOfCollabData = get(props, "peopleMetricsData.collaboration", []);
@@ -37,6 +38,7 @@ const LevelOfCollaboration = (props) => {
     tempData.drillDownflowWrapClass = "distribute-wrap flowacti-block";
     return tempData;
   };
+  console.log("collab data", collaborationdata);
   const openDrillDown = (selectedIssue) => {
     console.log(selectedIssue);
     dispatch(
@@ -59,8 +61,6 @@ const LevelOfCollaboration = (props) => {
   };
   const ref = useD3(
     (svg) => {
-      // let width = get(props, "chartContainerRefs.current[1].offsetWidth", 415);
-      // const width = 415;
       let width = get(props, "chartContainerRefs.current[1].offsetWidth", 0);
       let data = collaborationdata;
 
@@ -151,8 +151,6 @@ const LevelOfCollaboration = (props) => {
           return yScale(d.comments);
         })
         .curve(d3.curveBasis);
-
-      console.log("redis", dataGroup);
 
       dataGroup.forEach(function (d, i) {
         vis

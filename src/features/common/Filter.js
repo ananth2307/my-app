@@ -12,15 +12,10 @@ import { getSelectedOptionsValue } from "../../app/utilities/helpers";
 import { getDefaultSelectedDate } from "./helpers";
 
 const Filter = (props) => {
-  console.log('bjkkjsjksksfj',props)
-  const {getFilteredData } = props;
   const [state, setState] = useState({
     projList: [],
     sprintList: [],
   });
-  // useEffect(()=>{
-  //   getFilteredData(true)
-  // })
   const dispatch = useDispatch();
   const { observability } = useSelector((state) => state);
 
@@ -28,8 +23,7 @@ const Filter = (props) => {
 
   const [getSprintList] = observabilityApi.useGetSprintListMutation();
 
-  const {data: appList} = observabilityApi.useGetAppListQuery({})
-
+  const { data: appList } = observabilityApi.useGetAppListQuery({});
   /**End Hooks**/
 
   //Set initial date in the date picker
@@ -183,7 +177,7 @@ const Filter = (props) => {
             text="Filter"
             onClick={(e) => {
               e.preventDefault();
-              props.getFilteredData(true);
+              props.getFilteredData();
             }}
           />
         </div>

@@ -7,6 +7,8 @@ import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
 import { get } from 'lodash';
 import { DrillDownOffCanvas } from '../../common';
 import Filter from '../../common/Filter';
+import ChartContainer from "../common/ChartContainer";
+import { ProductMetricChartContainers } from "../common/constants";
 
 const  ProductivityMetricsLanding = () =>{
     const [state, setstate] = useState({
@@ -23,12 +25,18 @@ const  ProductivityMetricsLanding = () =>{
     const [getAppList] = observabilityApi.useLazyGetAppListQuery({});
     const [getStaticCodeAnalysis] = observabilityApi.useGetStaticCodeAnalysisMutation();
     const [getLinesOfCodes] = observabilityApi.useGetLinesOfCodesMutation();
-   
+    const [getBuildMetrics] = observabilityApi.useGetBulidMetricsMutation();
 
     let appList = [];
     let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
     initialStartDate = new Date(initialStartDate).getTime();
     initialEndDate = new Date(initialEndDate).getTime();
+    var std = initialStartDate.toString();
+    std=std.slice(0, -3);
+    std=parseInt(std);
+    var etd = initialEndDate.toString();
+    etd=etd.slice(0, -3);
+    etd=parseInt(etd);
     
     const getProductitvityMetrics = useCallback(
         async(isInitialLoad = false) => {
@@ -47,16 +55,48 @@ const  ProductivityMetricsLanding = () =>{
                 startDt: initialStartDate,
                 toDt: initialEndDate,
               };
+              const tmpPayload = {
+                appCodes: [
+                    "ACT",
+                    "CODE8",
+                    "DAAS",
+                    "DOME",
+                    "AIFT",
+                    "MAT",
+                    "PII",
+                    "PROMOKART"
+                ],
+                projects: [],
+                sprintName: [],
+                startDt: 1664562600000,
+                toDt: 1668623340000
+            }
+              const buildMetricsPayload = {
+                applications:[
+                  "ACT",
+                  "CODE8",
+                  "DAAS",
+                  "DOME",
+                  "AIFT",
+                  "MAT",
+                  "PII",
+                  "PROMOKART"
+              ],
+                  fromDt:std,          
+                  toDt:etd
+              };
 
               let producivityMetricsPromiseData = await Promise.all([
                 getStaticCodeAnalysis(defaultPayload),
-                getLinesOfCodes(defaultPayload),
+                getLinesOfCodes(tmpPayload),
+                getBuildMetrics(buildMetricsPayload)
 
               ]
               );
               const productivityMetricsData ={
-                staticCodeAnalysis:get(producivityMetricsPromiseData,'[0].data',[]),
-                linesOfCodes:get(producivityMetricsPromiseData,'[1].data',[]),
+                staticCodeAnalysisData:get(producivityMetricsPromiseData,'[0].data',[]),
+                codeAnalysisData:get(producivityMetricsPromiseData,'[1].data',[]),
+                buildMetricsData:get(producivityMetricsPromiseData,'[2].data',[])
                 
               }
               setstate((state)=>({
@@ -72,12 +112,29 @@ const  ProductivityMetricsLanding = () =>{
         .unwrap()
         .then((appListResp)=>{
             appList = appListResp;
+            console.log("appp",appList)
             getProductitvityMetrics(true)
         })
     }, []);
   return (
-    <><DrillDownOffCanvas peopleMetricsData={state.peopleMetricsData} />
+    <><DrillDownOffCanvas productivityMetricsData={state.productivityMetricsData} />
     <Filter getFilteredData={getProductitvityMetrics} isShowSprintList={false}/>
+    <div className="dashboardwrap colswrap all-works">
+        <div className="row">
+          {ProductMetricChartContainers?.map((chartType, index) => {
+            return (
+              <ChartContainer
+                key={chartType}
+                index={index}
+                {...chartType}
+                productivityMetricsData={state.productivityMetricsData}
+              >
+                {chartType.component}
+              </ChartContainer>
+            );
+          })}
+        </div>
+      </div>
     </>
   )
 }

@@ -5,7 +5,7 @@ import { truncate } from "../../../app/utilities/helpers";
 import { cloneDeep, get, isEmpty } from "lodash";
 import { metricTypesMapping } from "../../common/constants";
 import { useDispatch } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 
@@ -155,10 +155,19 @@ const FlowEfficiency = (props) => {
     };
     return selectedData;
   };
+
+  const getDrillDownData = async (selectedSprint) => await getFlowEffciencyDrill({
+    selectedSprintData: selectedSprint,
+  });
+
+  const handleDdMenuChange = async ( selectedSprint ) => {
+    const drillDownData = await getDrillDownData(selectedSprint.value);
+    dispatch(setSelectedData(getSelectedData(drillDownData.data)))
+  }
+
   const openDrilllDown = async (selectedSprint) => {
-    const drillDownData = await getFlowEffciencyDrill({
-      selectedSprintData: selectedSprint,
-    });
+    const drillDownData = await getDrillDownData(selectedSprint);
+    console.log("redis on open", drillDownData)
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -172,6 +181,7 @@ const FlowEfficiency = (props) => {
           value: item,
         })),
         selectedData: getSelectedData(drillDownData.data),
+        handleDdMenuChange: handleDdMenuChange,
       })
     );
   };
