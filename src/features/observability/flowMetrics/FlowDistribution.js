@@ -2,10 +2,17 @@ import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
 import { metricTypesMapping } from "../../common/constants";
-import { getMetricTypeMappedCount } from "../../common/helpers";
-import { get, isEmpty, truncate } from "lodash";
+import {
+  getMetricTypeMappedCount,
+  getMetricMatchingStatus,
+} from "../../common/helpers";
+import { cloneDeep, get, isEmpty, truncate } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 
 const FlowDistribution = (props) => {
+  const dispatch = useDispatch();
+  const offcanvasState = useSelector((state) => state.common?.offcanvasState);
   let data = [];
   !isEmpty(props?.flowMetricsData?.flowDistribution) &&
     props?.flowMetricsData?.flowDistribution.map((sprint) => {
@@ -55,13 +62,78 @@ const FlowDistribution = (props) => {
       data.push(tmpdata);
     });
 
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData);
+    delete tmpSummaryData.sprintName;
+    let rtData = [];
+    Object.keys(tmpSummaryData).map((key) => {
+      rtData.push({
+        issueId: key,
+        summary: tmpSummaryData[key],
+      });
+    });
+    return rtData;
+  };
+
+  const getSelectedData = (selectedSprint) => {
+    const selectedSprintData = props.flowMetricsData?.flowDistribution?.filter(
+      (dt) => dt.sprintName === selectedSprint
+    )[0];
+    let selectedData = {};
+    selectedSprintData.list.map((data, index) => {
+      Object.keys(metricTypesMapping).map((key) => {
+        selectedData[key] = selectedData[key] ? selectedData[key] : {};
+        const { isMatching, matchedKey } = getMetricMatchingStatus(
+          data,
+          metricTypesMapping[key]
+        );
+        if (isMatching) {
+          selectedData[key] = {
+            count: selectedData[key].count
+              ? selectedData[key].count + data[matchedKey]
+              : data[matchedKey],
+            summaryList: selectedData[key].summaryList
+              ? selectedData[key].summaryList.concat(
+                formatSummary(data[`${matchedKey}summary`])
+              )
+              : [...formatSummary(data[`${matchedKey}summary`])],
+          };
+        }
+      });
+    });
+    return selectedData;
+  };
+
+  const handleDdMenuChange = (selectedSprint) => {
+    dispatch(setSelectedData(getSelectedData(selectedSprint.value)))
+  }
+
+  const openDrillDown = (selectedSprint) => {
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+        selectedValue: {
+          label: selectedSprint,
+          value: selectedSprint,
+        },
+        dropDownMenuOptions: data.map((dt) => ({
+          label: dt.sprint,
+          value: dt.sprint,
+        })),
+        selectedData: getSelectedData(selectedSprint),
+        handleDdMenuChange: handleDdMenuChange,
+      })
+    );
+  };
+
   const ref = useD3(
     (svg) => {
       if (data && data.length) {
-        const wrap = function() {
+        const wrap = function () {
           let self = d3.select(this),
             text = self.text();
-            self.text(truncate(text, { length: 9, omission: '...'}));
+          self.text(truncate(text, { length: 9, omission: "..." }));
         };
         let divwidth = 415,
           divheight = 500;
@@ -95,18 +167,19 @@ const FlowDistribution = (props) => {
         var columns = Object.keys(json_data[0]);
 
         var keys = columns.slice(1);
-
+        var max = d3.max(json_data, function (d) {
+          return d.total;
+        });
+        json_data = json_data.map((it) => {
+          delete it.total;
+          return it;
+        });
         y.domain(
           json_data.map(function (d) {
             return d.sprint;
           })
         ); // x.domain...
-        x.domain([
-          0,
-          d3.max(json_data, function (d) {
-            return d.total;
-          }),
-        ]).nice(); // y.domain...
+        x.domain([0, max]).nice(); // y.domain...
         z.domain(keys);
 
         g.append("g")
@@ -125,6 +198,9 @@ const FlowDistribution = (props) => {
           .append("rect")
           .attr("rx", 6)
           .attr("ry", 6)
+          .on("click", (e, data) => {
+            openDrillDown(get(data, "data.sprint", ""));
+          })
           .attr("y", function (d) {
             return y(d.data.sprint);
           }) //.attr("x", function(d) { return x(d.data.State); })
@@ -147,7 +223,7 @@ const FlowDistribution = (props) => {
           .attr("x", -35)
           .attr("fill", "#000")
           .attr("font-weight", "400")
-          .attr("text-overflow", "ellipsis")
+          .attr("text-overflow", "ellipsis");
 
         svg
           .select(".y.axis")
@@ -170,6 +246,9 @@ const FlowDistribution = (props) => {
           .attr("font-weight", "100")
           .attr("text-anchor", "start");
       }
+      svg.selectAll(".y.axis .tick").on("click", (e, sprint) => {
+        openDrillDown(sprint);
+      });
     },
     [data]
   );
@@ -179,10 +258,11 @@ const FlowDistribution = (props) => {
       <svg
         ref={ref}
         style={{
-          height: 500,
+          viewBox: "0 0 300 150",
+          preserveAspectRatio: "xMinYMid",
           width: "100%",
-          marginRight: "0px",
-          marginLeft: "0px",
+          height: "251",
+          overflow: "scroll",
         }}
       ></svg>
     </>

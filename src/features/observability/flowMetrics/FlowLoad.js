@@ -1,160 +1,131 @@
 import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { truncate, responsivefy } from "../../../app/utilities/helpers";
-
-const chartData = [
-  {
-    name: "Done",
-    children: [
-      {
-        name: "Features",
-        tasksize: 1,
-        parent: "Done",
-      },
-      {
-        name: "Defects",
-        tasksize: 2,
-        parent: "Done",
-      },
-      {
-        name: "Risks",
-        tasksize: 2,
-        parent: "Done",
-      },
-      {
-        name: "Enablers",
-        tasksize: 1,
-        parent: "Done",
-      },
-      {
-        name: "Debt",
-        tasksize: 1,
-        parent: "Done",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 1,
-        parent: "Done",
-      },
-    ],
-    tasksize: 8,
-    items: "13",
-  },
-  {
-    name: "In-Dev",
-    children: [
-      {
-        name: "Features",
-        tasksize: 2,
-        parent: "In-Dev",
-      },
-      {
-        name: "Defects",
-        tasksize: 2,
-        parent: "In-Dev",
-      },
-      {
-        name: "Risks",
-        tasksize: 0,
-        parent: "In-Dev",
-      },
-      {
-        name: "Enablers",
-        tasksize: 3,
-        parent: "In-Dev",
-      },
-      {
-        name: "Debt",
-        tasksize: 0,
-        parent: "In-Dev",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 0,
-        parent: "In-Dev",
-      },
-    ],
-    tasksize: 7,
-    items: "13",
-  },
-  {
-    name: "READY-VERIFICATION",
-    children: [
-      {
-        name: "Features",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Defects",
-        tasksize: 4,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Risks",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Enablers",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Debt",
-        tasksize: 0,
-        parent: "READY-VERIFICATION",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 1,
-        parent: "READY-VERIFICATION",
-      },
-    ],
-    tasksize: 5,
-    items: "13",
-  },
-  {
-    name: "IN-DEFINE",
-    children: [
-      {
-        name: "Features",
-        tasksize: 1,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Defects",
-        tasksize: 3,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Risks",
-        tasksize: 0,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Enablers",
-        tasksize: 1,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Debt",
-        tasksize: 0,
-        parent: "IN-DEFINE",
-      },
-      {
-        name: "Prod-Fix",
-        tasksize: 0,
-        parent: "IN-DEFINE",
-      },
-    ],
-    tasksize: 5,
-    items: "13",
-  },
-];
+import { cloneDeep, isEmpty, get } from "lodash";
+import { metricTypesMapping, sortingArr } from "../../common/constants";
+import { getMetricMatchingStatus, statusOrder } from "../../common/helpers";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
+import { useDispatch } from "react-redux";
 
 const FlowLoad = (props) => {
+  const dispatch = useDispatch();
+  let chartData = [];
+  let data = props?.flowMetricsData?.flowLoad;
+  const formatSummary = (summaryData) => {
+    let tmpSummaryData = cloneDeep(summaryData);
+    delete tmpSummaryData.month;
+    let rtData = [];
+    Object.keys(tmpSummaryData).map((key) => {
+      rtData.push({
+        issueId: key,
+        summary: tmpSummaryData[key],
+      });
+    });
+    return rtData;
+  };
+  if (!isEmpty(data)) {
+    let totalCount = 0;
+    let selectedData = {};
+    let tempData = [];
+    data.map((list) => {
+      selectedData = {};
+      tempData = [];
+      list.list.map((items) => {
+        Object.keys(items).map((keys) => {
+          for (let [metricKey, value] of Object.entries(metricTypesMapping)) {
+            selectedData[metricKey] = selectedData[metricKey]
+              ? selectedData[metricKey]
+              : {};
+            const { isMatching, matchedKey } = getMetricMatchingStatus(
+              keys,
+              metricTypesMapping[metricKey]
+            );
+            if (isMatching) {
+              if (
+                selectedData[metricKey].summaryList &&
+                selectedData[metricKey].count
+              ) {
+                selectedData[metricKey].count += items[matchedKey];
+                selectedData[metricKey].summaryList.push(
+                  ...formatSummary(items[`${matchedKey}summary`])
+                );
+              } else {
+                selectedData[metricKey].count = items[matchedKey];
+                selectedData[metricKey].summaryList = [
+                  ...formatSummary(items[`${matchedKey}summary`]),
+                ];
+                break;
+              }
+            }
+          }
+        });
+      });
+      Object.keys(metricTypesMapping).map((keys) => {
+        tempData.push({
+          name: keys,
+          count:
+            selectedData[keys].count !== undefined
+              ? selectedData[keys].count
+              : 0,
+          parent: list.status,
+          summaryList: selectedData[keys].summaryList
+            ? selectedData[keys].summaryList
+            : [],
+        });
+      });
+      totalCount = 0;
+      for (let k = 0; k < tempData.length; k++) {
+        totalCount += tempData[k].count;
+      }
+      chartData.push({
+        name: list.status,
+        children: tempData,
+        count: totalCount,
+        items: "13",
+      });
+    });
+    chartData = statusOrder(chartData, sortingArr, "name");
+  }
+  const getSelectedData = (selectedData) => {
+    let tempData = {};
+    selectedData.map((items) => {
+      Object.defineProperty(tempData, `${items.name}`, {
+        value: { count: items.count, summaryList: items.summaryList },
+      });
+    });
+    tempData.drillDownflowWrapClass = 'flload-wrap flowacti-block'
+    return tempData;
+  };
+
+  const handleDdMenuChange = ( selectedParent ) => {
+    console.log("redis123", selectedParent, chartData)
+    const selectedParentData = chartData.filter(
+      (dt) => dt.name === selectedParent.value
+    )[0];
+    dispatch(setSelectedData(getSelectedData(selectedParentData.children)))
+  }
+
+  const openDrilllDown = async (selectedParent) => {
+    const selectedParentData = chartData.filter(
+      (dt) => dt.name === selectedParent
+    )[0];
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+        selectedValue: {
+          label: selectedParent,
+          value: selectedParent,
+        },
+        dropDownMenuOptions: sortingArr.map((item) => ({
+          label: item,
+          value: item,
+        })),
+        selectedData: getSelectedData(selectedParentData.children),
+        handleDdMenuChange: handleDdMenuChange,
+      })
+    );
+  };
   const ref = useD3(
     (svg1) => {
       svg1.html("");
@@ -185,12 +156,12 @@ const FlowLoad = (props) => {
 
         if (!name) return "#ffffff";
         else {
-          if (name == "Features") return colors[0];
-          else if (name == "Defects") return colors[1];
-          else if (name == "Risks") return colors[2];
-          else if (name == "Enablers") return colors[3];
-          else if (name == "Debt") return colors[4];
-          else if (name == "Prod-Fix") return colors[5];
+          if (name == "features") return colors[0];
+          else if (name == "defects") return colors[1];
+          else if (name == "risk") return colors[2];
+          else if (name == "enablers") return colors[3];
+          else if (name == "debt") return colors[4];
+          else if (name == "prodFix") return colors[5];
         }
       };
 
@@ -199,11 +170,11 @@ const FlowLoad = (props) => {
       var maxwidtha = 0;
 
       for (var r = 0; r < datasetfull.length; r++) {
-        tasksum = tasksum + parseInt(datasetfull[r].tasksize);
+        tasksum = tasksum + parseInt(datasetfull[r].count);
       }
 
       for (var r = 0; r < datasetfull.length; r++) {
-        datasetfull[r].widtha = (datasetfull[r].tasksize / tasksum) * 700;
+        datasetfull[r].widtha = (datasetfull[r].count / tasksum) * 700;
 
         if (datasetfull[r].widtha > 220) {
           datasetfull[r].widtha = 220;
@@ -260,14 +231,8 @@ const FlowLoad = (props) => {
           .style("text-anchor", "middle")
           .style("font-size", 22)
           .text(function (d) {
-            console.log(d);
-            return dataset.tasksize;
+            return dataset.count;
           });
-
-        console.log("aabb");
-        console.log(maxwidtha);
-        console.log(width);
-
         svg
           .append("text")
           .style("fill", "#000000")
@@ -280,7 +245,7 @@ const FlowLoad = (props) => {
           .text(truncate(dataset.name, 10));
 
         var nodes = d3.hierarchy(dataset).sum(function (d) {
-          return d.tasksize;
+          return d.count;
         });
 
         var vNodes = nodes.descendants();
@@ -313,6 +278,12 @@ const FlowLoad = (props) => {
           .style("fill", function (d) {
             if (d.depth == 0) return "#ffffff";
             else return colorCircle(d.data.name);
+          })
+          .on("click", (e, d) => {
+            let selectedLabel = get(d, "data.name", "");
+            if (get(d, "data.parent", ""))
+              selectedLabel = get(d, "data.parent", "");
+            openDrilllDown(selectedLabel);
           });
 
         svg
@@ -321,46 +292,11 @@ const FlowLoad = (props) => {
           .text(function (d, i) {
             return dataset.name;
           });
-
-        //svg.selectAll('circle').data(vNodes).enter().append('text').text("abcdd");
-
-        /*
-                  vNodes
-                  .append("text")
-      
-                  .style("fill", "#000000")
-                  .attr("fill", "white")
-                  .attr('class', 'labels')
-                  .attr("dy", ".2em")
-      
-                  .style('text-anchor', 'middle')
-                  .style('font-size', 10)
-                  .text(function(d) {
-                      console.log("q");
-                      console.log(d);
-                      return "Abc";
-                  });
-      
-          */
-        // $(".innercirc").on("click", function () {
-        //   var called = $(this).siblings(".labelc").children("title").text();
-        //   getFlowLoaddrill1(called);
-        // });
       }
     },
     [chartData]
   );
-  return (
-    <div
-      ref={ref}
-      style={{
-        height: 500,
-        width: "100%",
-        marginRight: "0px",
-        marginLeft: "0px",
-      }}
-    ></div>
-  );
+  return <div ref={ref}></div>;
 };
 
 export default FlowLoad;

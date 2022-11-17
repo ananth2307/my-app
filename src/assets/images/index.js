@@ -17,12 +17,18 @@ import download from './config-settings-tools/download.png';
 import edit from './config-settings-tools/edit.svg';
 import settings from './config-settings-tools/settings.png';
 import downCaret from './down-caret.svg';
+import completed from './completed.svg';
+import goldMedal from "./gold-medal.svg";
+import successCheck from './success-check.png';
+import failedCross from './faild-cross.png';
 
 export {
     checkboxTick,
     logo,
     loginBanner,
     loginBg,
+    successCheck,
+    failedCross,
     logoSmall,
     observability,
     gnc,
@@ -30,11 +36,13 @@ export {
     configuration,
     notification,
     user,
+    completed,
     logout,
     loader,
     deleteIcon,
     download,
     edit,
     settings,
-    downCaret
+    downCaret,
+    goldMedal,
 }
