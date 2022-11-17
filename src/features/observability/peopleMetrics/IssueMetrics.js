@@ -57,7 +57,7 @@ const IssueMetrics = (props) => {
     };
     const { data: issueMetricsDdOneData } = await getIssueMetricsDdOne(payload);
     const issuesData = get(issueMetricsDdOneData, "[0].issues");
-    issuesData.map((issue, index) => {
+    issuesData.length > 0 && issuesData.map((issue, index) => {
       let data = issue.data;
       Object.keys(metricTypesMapping).map((key) => {
         selectedData[key] = selectedData[key] ? selectedData[key] : {};
@@ -103,7 +103,7 @@ const IssueMetrics = (props) => {
     dispatch(setSelectedData(getSelectedData(selectedSprint.value)))
   }
 
-  const openDrillDown = async ({ data: selectedIssue, index }) => {
+  const openDrillDown = ({ data: selectedIssue, index }) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -122,7 +122,7 @@ const IssueMetrics = (props) => {
           label: dt.label,
           value: dt.label,
         })),
-        selectedData: await getSelectedData(selectedIssue.label),
+        selectedData: getSelectedData(selectedIssue.label),
         handleDdMenuChange: handleDdMenuChange
       })
     );

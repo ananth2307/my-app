@@ -6,10 +6,10 @@ export const observabilityApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAppList: build.query({
       query: ({user = "kevin"}) => ({
-        url: `${OBSERVABILITY_BASE_URL}/cmdb/${user}/Operation`,
+        url: `http://localhost:7111/api/v1/cmdb/${user}/Operation`,
       }),
       transformResponse: (appList) => appList?.map(app => {
-        return {label: `${app.appName}[${app.appCode}]`, value: app.appCode}
+        return {label: `${app.appName}[${app.appCode}]`, value: app.appCode,id:app.id}
       }),
     }),
     getProjectList: build.mutation({
@@ -150,6 +150,58 @@ export const observabilityApi = api.injectEndpoints({
   getBulidMetrics:build.mutation({
     query:(postBody={}) =>({
       url:`${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/productMetric/buildMetric/ddone`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+    //opsMetrics
+  //Incident Management
+  getIncidents:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/incidentManagement/filter/noOfIncident`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+  getIncidentsPercategory:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/incidentManagement/filter/category`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+  getMeanTimetoRecover:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/incidentManagement/filter/MTTR/Dashboard`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+  //ChangeManagement
+  getChangeRequest:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/noOfChangeRequest`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+  getChangeRequestPerCategory:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/category`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+  getChangeRequestPerRisk:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/getForRisk`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
+  getMeanTimetoChange:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/meanTime/dashboard`,
       method: 'POST',
       body: postBody,
     })

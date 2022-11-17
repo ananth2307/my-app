@@ -9,8 +9,32 @@ import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 const LevelOfCollaboration = (props) => {
   
   const dispatch = useDispatch();
-
-  let LevelOfCollabData = get(props, "peopleMetricsData.collaboration", []);
+//   let LevelOfCollabData = [{
+//     "month": "Nov 22",
+//     "features": 19,
+//     "story": 12,
+//     "debt": 3,
+//     "enablers": 9,
+//     "prodFix": 2,
+//     "risk": 4,
+//     "changeRequest": 0,
+//     "bugs": 11,
+//     "task": 0,
+//     "epic": 0
+// },{
+//   "month": "Oct 22",
+//   "features":39,
+//   "story": 32,
+//   "debt": 3,
+//   "enablers": 9,
+//   "prodFix": 2,
+//   "risk": 4,
+//   "changeRequest": 0,
+//   "bugs": 11,
+//   "task": 0,
+//   "epic": 0
+// }];
+let LevelOfCollabData = get(props, "peopleMetricsData.collaboration", []);
   let collaborationdata = [];
   let monthNum = 0;
   LevelOfCollabData.length > 0 &&
@@ -38,9 +62,7 @@ const LevelOfCollaboration = (props) => {
     tempData.drillDownflowWrapClass = "distribute-wrap flowacti-block";
     return tempData;
   };
-  console.log("collab data", collaborationdata);
   const openDrillDown = (selectedIssue) => {
-    console.log(selectedIssue);
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -63,7 +85,6 @@ const LevelOfCollaboration = (props) => {
     (svg) => {
       let width = get(props, "chartContainerRefs.current[1].offsetWidth", 0);
       let data = collaborationdata;
-
       const groupedData = groupBy(data, "type");
       let dataGroup = [];
       Object.keys(groupedData).map((dt) => {
@@ -72,6 +93,7 @@ const LevelOfCollaboration = (props) => {
           values: groupedData[dt],
         });
       });
+      
 
       let color = d3
         .scaleOrdinal()

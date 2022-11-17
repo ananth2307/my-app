@@ -1,4 +1,4 @@
-import { get, isEmpty } from "lodash";
+import { get } from "lodash";
 import React from "react";
 import { useSelector } from "react-redux";
 const DdDefaultSummary = (props) => {

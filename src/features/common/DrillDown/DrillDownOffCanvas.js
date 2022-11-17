@@ -12,8 +12,6 @@ const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
   const commonSliceState = useSelector((state) => state.common);
   const selectedData = get(commonSliceState, "offcanvasState.selectedData", []);
-  const { days, codeAnalysisLineData, codeAnalysisViolationsData } =
-    selectedData;
   const selectedLevelOne = get(
     commonSliceState,
     "drillDownSelectionState.selectedLevelOne",
@@ -67,11 +65,6 @@ const DrillDownOffCanvas = (props) => {
               ))}
             </div>
             <div class="flow-descriptions-block flowpredi-des ">
-              {/* {console.log("redis12" , selectedData.DdtopAssigneeCustomSummary
-          ,OpenIssueSummaryList
-          ,selectedData.DdFlowPredictCustomSummary
-          ,predictabilityPlannedSummary
-          ,get(selectedData[selectedLevelOne], "summaryList", []), selectedData,selectedLevelOne, selectedData[selectedLevelOne])} */}
               <DdDefaultSummary
                 summaryTitle={selectedData?.summaryToptitle}
                 summaryList={

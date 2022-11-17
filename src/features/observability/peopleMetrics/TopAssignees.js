@@ -4,7 +4,7 @@ import { useD3 } from "../../../hooks/useD3";
 import { get } from "lodash";
 import { responsivefy } from "../../../app/utilities/helpers";
 import { useDispatch } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { metricTypesMapping } from "../../common/constants";
 import { cloneDeep } from "lodash";
@@ -44,8 +44,9 @@ const TopAssignees = (props) => {
     rtData.doneIssue = doneIssue;
     return rtData;
   };
-  const getSelectedData = (selectedEmpData, selectedName) => {
+  const getSelectedData = ( selectedName) => {
     let selectedData = {};
+    let selectedEmpData = cloneDeep(topAssigneetempData)
     selectedEmpData.map((items) => {
       if (items.assignee === selectedName) {
         for (let [key, value] of Object.entries(items.list)) {
@@ -64,10 +65,6 @@ const TopAssignees = (props) => {
                     selectedData[metricKeys].summaryList &&
                     selectedData[metricKeys].count
                   ) {
-                    console.log(
-                      "resss",
-                      formatSummary(value, matchedKey).openIssue
-                    );
                     selectedData[metricKeys].count += value.length;
                     selectedData[metricKeys].summaryList.openIssue.push(
                       ...formatSummary(value, matchedKey).openIssue
@@ -109,7 +106,6 @@ const TopAssignees = (props) => {
       </>
     );
     selectedData.customSummaryList = (selectedData) => {
-      console.log("seeeee", selectedData);
       return (
         <>
           <li>
@@ -130,6 +126,9 @@ const TopAssignees = (props) => {
     };
     return selectedData;
   };
+  const handleDdMenuChange = (selectedValue) =>{
+    dispatch(setSelectedData(getSelectedData(selectedValue.label)))
+  }
   const openDrillDown = (selectedName) => {
     dispatch(
       setIsOffCanvasOpen({
@@ -143,7 +142,8 @@ const TopAssignees = (props) => {
           label: name.label,
           value: name.label,
         })),
-        selectedData: getSelectedData(topAssigneetempData, selectedName),
+        selectedData: getSelectedData(selectedName),
+        handleDdMenuChange:handleDdMenuChange,
       })
     );
   };
