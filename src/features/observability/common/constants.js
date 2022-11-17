@@ -37,6 +37,30 @@ const BuildMetrics = React.lazy(() =>
 const DeploymentMetrics = React.lazy(() =>
   import("../productivityMetrics/DeploymentMetrics")
 );
+//Ops metrics
+//Incident Mangement
+const Incidents = React.lazy(() =>
+import("../opsMetrics/IncidentManagement/Incidents")
+);
+const IncidentsPerCategory = React.lazy(() =>
+import("../opsMetrics/IncidentManagement/IncidentsPerCategory")
+);
+const MeanTimetoRecovery = React.lazy(() =>
+import("../opsMetrics/IncidentManagement/MeanTimetoRecovery")
+);
+//ChangeMangement
+const ChangeRequest  = React.lazy(() =>
+import("../opsMetrics/ChangeMangement/ChangeRequest")
+);
+const ChangeRequestPerCategory  = React.lazy(() =>
+import("../opsMetrics/ChangeMangement/ChangeRequestPerCategory")
+);
+const ChangeRequestPerRisk  = React.lazy(() =>
+import("../opsMetrics/ChangeMangement/ChangeRequestPerRisk")
+);
+const MeanTimetoChange  = React.lazy(() =>
+import("../opsMetrics/ChangeMangement/MeanTimetoChange")
+);
 //Flow Metrics
 export const FlowMetricChartContainers = [
   {
@@ -331,5 +355,123 @@ export const ProductMetricChartContainers = [
     title: "DEPLOYMENT METRICS",
     chart: (props) => <DeploymentMetrics {...props} />,
     customClass: "col-lg-12 filtercol",
+  },
+];
+export const OpsIncidentMangement = [
+  {
+    key: 1,
+    title: "NO. OF INCIDENTS",
+    chart: (props) => <Incidents {...props} />,
+    navs: [
+      {
+        text: "Performanc",
+        color: "dark-blue",
+      },
+      {
+        text: "Availability",
+        color: "skblue",
+      },
+      {
+        text: "Network",
+        color: "red",
+      },
+      {
+        text: "Others",
+        color: "purple",
+      },
+    ],
+  },
+  {
+    key: 2,
+    title: "NO. OF INCIDENTS (PER CATEGORY)",
+    chart: (props) => <IncidentsPerCategory {...props} />,
+    navs: [
+      {
+        text: " Critical",
+        color: "red",
+      },
+      {
+        text: "Major",
+        color: "dyellow",
+      },
+      {
+        text: "Minor",
+        color: "skblue",
+      },
+    ],
+  },
+  {
+    key: 3,
+    title: "MEAN TIME TO RECOVERY (IN DAYS)",
+    chart: (props) => <MeanTimetoRecovery {...props} />,
+  },
+];
+export const OpsChangeMangement = [
+  {
+    key: 1,
+    title: "NO. OF CHANGE REQUESTS",
+    chart: (props) => <ChangeRequest {...props} />,
+    navs: [
+      {
+        text: "Normal",
+        color: "dark-blue",
+      },
+      {
+        text: "Standard",
+        color: "skblue",
+      },
+      {
+        text: "Emergency",
+        color: "red",
+      },
+    ],
+  },
+  {
+    key: 2,
+    title: "NO. OF CHANGE REQUESTS (PER CATEGORY)",
+    chart: (props) => <ChangeRequestPerCategory {...props} />,
+    navs: [
+      {
+        text: " Critical",
+        color: "red",
+      },
+      {
+        text: "Major",
+        color: "dyellow",
+      },
+      {
+        text: "Minor",
+        color: "skblue",
+      },
+    ],
+  },
+  {
+    key: 3,
+    title: "NO. OF CHANGE REQUESTS (PER RISK)",
+    chart: (props) => <ChangeRequestPerRisk {...props} />,
+    navs: [
+      {
+        text: "Low",
+        color: "lowblue",
+      },
+      {
+        text: "Medium",
+        color: "dyellow",
+      },
+      {
+        text: "High",
+        color: "lorange",
+      },
+      {
+        text: "very High",
+        color: "red",
+      },
+      
+    ],
+  },
+  {
+    key: 4,
+    title: "MEAN TIME TO CHANGE",
+    chart: (props) => <MeanTimetoChange {...props} />,
   },
 ];

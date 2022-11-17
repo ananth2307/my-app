@@ -1,10 +1,6 @@
 import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
-import { responsivefy } from "../../../app/utilities/helpers";
 import * as d3 from "d3";
-import { data } from "jquery";
-import { get } from "lodash";
-import * as bootstrap from "bootstrap";
 import { failedCross, successCheck } from "../../../assets/images";
 
 const DeploymentMetrics = (props) => {
@@ -17,7 +13,7 @@ const DeploymentMetrics = (props) => {
   ];
   const ref = useD3(
     (svg) => {
-      var initStackedBarChart = {
+      let initStackedBarChart = {
         draw: function (config) {
           let me = this;
           let domEle = config.element;
@@ -41,9 +37,9 @@ const DeploymentMetrics = (props) => {
               "translate(" + margin.left + "," + margin.top + ")"
             );
 
-          var color = d3.scaleOrdinal().range(["#A6CE38", "#EC6666"]);
+          let color = d3.scaleOrdinal().range(["#A6CE38", "#EC6666"]);
 
-          var x0 = d3.scaleBand().rangeRound([0, width]).paddingOuter(0.2);
+          let x0 = d3.scaleBand().rangeRound([0, width]).paddingOuter(0.2);
 
           x0.domain(
             data.map(function (d) {
@@ -51,13 +47,13 @@ const DeploymentMetrics = (props) => {
             })
           );
 
-          var stack = d3
+          let stack = d3
             .stack()
             .keys(stackKey)
             .order(d3.stackOrderNone)
             .offset(d3.stackOffsetNone);
 
-          var layers = stack(data);
+          let layers = stack(data);
           //data.sort(function(a, b) { return b.total - a.total; });
           xScale.domain(
             data.map(function (d) {
@@ -73,7 +69,7 @@ const DeploymentMetrics = (props) => {
             ])
             .nice();
 
-          var layer = svg
+          let layer = svg
             .selectAll(".layer")
             .data(layers)
             .enter()
@@ -120,7 +116,7 @@ const DeploymentMetrics = (props) => {
             .call(yAxis);
         },
       };
-      var key = ["lines", "violation"];
+      let key = ["lines", "violation"];
       initStackedBarChart.draw({
         data: data,
         key: key,

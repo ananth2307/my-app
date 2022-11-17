@@ -2,15 +2,12 @@ import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import { responsivefy } from "../../../app/utilities/helpers";
 import * as d3 from "d3";
-import { data } from "jquery";
 import { get } from "lodash";
-import * as bootstrap from "bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
 const StaticCodeAnalysis = (props) => {
   const dispatch = useDispatch();
-  console.log("props", props);
   let tmpstaticCodedata = get(
     props,
     "productivityMetricsData.staticCodeAnalysisData",
@@ -19,7 +16,7 @@ const StaticCodeAnalysis = (props) => {
   let staticCodedata = [];
   tmpstaticCodedata &&
     Object.keys(tmpstaticCodedata).map((key) => {
-      key != "totalIssues" &&
+      key !== "totalIssues" &&
         staticCodedata.push({
           label: key,
           value: tmpstaticCodedata[key],
@@ -29,7 +26,6 @@ const StaticCodeAnalysis = (props) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
-        isDropdownShown: false,
         title: props.title,
       })
     );
@@ -39,15 +35,15 @@ const StaticCodeAnalysis = (props) => {
       let data = staticCodedata;
       if (data.length) {
         let width = get(props, "chartContainerRefs.current[0].offsetWidth", 0);
-        var height = 0.75 * width; //this is the double because are showing just the half of the pie
-        var radius = 100;
-        var labelr = radius + 30; // radius for label anchor
+        let height = 0.75 * width; //this is the double because are showing just the half of the pie
+        let radius = 100;
+        let labelr = radius + 30; // radius for label anchor
         //array of colors for the pie (in the same order as the dataset)
-        var color = d3
+        let color = d3
           .scaleOrdinal()
           .range(["#167ad6", "#81A71A", "#fec82f", "#fda26b", "#fc543a"]);
 
-        var vis = svg
+        let vis = svg
           //create the SVG element inside the <body>
           .data([data]) //associate our data with the document
           .attr("width", width) //set the width and height of our visualization (these will be attributes of the <svg> tag
@@ -55,23 +51,21 @@ const StaticCodeAnalysis = (props) => {
           .call(responsivefy)
           .append("svg:g") //make a group to hold our pie chart
           .on("click", function (d, i) {
-            var bsOffcanvas = new bootstrap.Offcanvas("#staticCodeAnalysis");
-            bsOffcanvas.show();
           })
           .attr("transform", "translate(" + width / 2 + "," + 150 + ")"); //move the center of the pie chart from 0, 0 to radius, radius
 
-        var arc = d3
+        let arc = d3
           .arc() //this will create <path> elements for us using arc data
           .innerRadius(radius - 20)
           //                                .outerRadius(radius);
           .outerRadius(radius - 10); // full height semi pie
         //.innerRadius(0);
-        var outerArc = d3
+        let outerArc = d3
           .arc()
           .innerRadius(radius * 0.9)
           .outerRadius(radius * 0.9);
 
-        var pie = d3
+        let pie = d3
           .pie() //this will create arc data for us given a list of values
           .startAngle(0 * (Math.PI / 135))
           .endAngle(270 * (Math.PI / 135))
@@ -81,7 +75,7 @@ const StaticCodeAnalysis = (props) => {
             return d.value;
           }); //we must tell it out to access the value of each element in our data array
 
-        var arcs = vis
+        let arcs = vis
           .selectAll("g.slice") //this selects all <g> elements with class slice (there aren't any yet)
           .data(pie) //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
           .enter() //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
@@ -98,7 +92,7 @@ const StaticCodeAnalysis = (props) => {
             openDrillDown(d);
           });
 
-        var pos = d3
+        let pos = d3
           .arc()
           .innerRadius(radius + 20)
           .outerRadius(radius + 20);

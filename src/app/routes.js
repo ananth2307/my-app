@@ -19,8 +19,11 @@ const ProductivityMetrics = React.lazy(() =>
 const DevopsMetrics = React.lazy(() =>
   import("../features/observability/devopsMetrics/DevopsMetrics")
 );
-const OpsMetrics = React.lazy(() =>
-  import("../features/observability/opsMetrics/OpsMetrics")
+const OpsMetricsIncidentManagement = React.lazy(() =>
+  import("../features/observability/opsMetrics/IncidentManagement/IncidentMangementLanding")
+);
+const OpsMetricsChangeManagement = React.lazy(() =>
+  import("../features/observability/opsMetrics/ChangeMangement/ChangeMangementLanding")
 );
 const Bitbucket = React.lazy(() =>
   import("../features/gnc/bitbucket/Bitbucket")
@@ -120,21 +123,21 @@ export const routes = [
         name: "OpsMetrics",
         path: "observability/opsMetrics/incidentManagement",
         customDropContainerClass: "ops",
-        component: <OpsMetrics />,
+        component: <OpsMetricsIncidentManagement />,
         key: "1.5",
         childNavs: [
           {
             text: "Incident Management",
             name: "IncidentManagement",
             path: "observability/opsMetrics/incidentManagement",
-            component: <OpsMetrics />,
+            component: <OpsMetricsIncidentManagement/>,
             key: "1.5.1",
           },
           {
             text: "Change Management",
             name: "ChangeManagement",
             path: "observability/opsMetrics/changeManagement",
-            component: <OpsMetrics />,
+            component: <OpsMetricsChangeManagement/>,
             key: "1.5.1",
           },
         ],

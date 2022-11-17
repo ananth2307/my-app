@@ -1,17 +1,16 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import * as d3 from "d3";
-import { cloneDeep, get, set } from "lodash";
-import * as bootstrap from "bootstrap";
+import { cloneDeep, get,  } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { getMonth } from "../../common/constants";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
-import Chart from 'chart.js/auto'
 const CodeAnalysis = (props) => {
-  const codeAnalysisRef = useRef();
   const dispatch = useDispatch();
+  const { observability } = useSelector((state) => state);
+  const { data: appList = [] } = observabilityApi.useGetAppListQuery({});
   const [getLineOfCodeDatewise] =
     observabilityApi.useGetLineOfCodeDatewiseMutation();
   const tmpCodeAnalysisData = get(
@@ -32,30 +31,30 @@ const CodeAnalysis = (props) => {
   const dropDownLabels = codeAnalysisData.length > 0 && [
     ...new Set(codeAnalysisData.map((item) => item.month)),
   ];
-  const getDrillDownData = async () =>
-    await getLineOfCodeDatewise({
-      appCodes: [
-        "ACT",
-        "CODE8",
-        "DAAS",
-        "DOME",
-        "AIFT",
-        "MAT",
-        "PII",
-        "PROMOKART",
-      ],
-      projects: [],
-      sprintName: [],
+  const getDrillDownData = async () =>{
+    const selectedAppList = get(
+      observability,
+      "filterData.selectedApplications",
+      []
+    );
+    const payload = {
+      appCodes: selectedAppList.length
+        ? getSelectedOptionsValue(selectedAppList)
+        : getSelectedOptionsValue(appList),
+        projects:[],
+      sprintNames: [],
       startDt: 1664562600000,
-      toDt: 1668623340000,
-      // startDt: get(observability,'filterData.selectedDate.startDate'),
-      // toDt: get(observability,'filterData.selectedDate.endDate')
-    });
+      toDt: 1668709740000,
+      // startDt: get(observability, "filterData.selectedDate.startDate"),
+      // toDt: get(observability, "filterData.selectedDate.endDate"),
+    };
+    const response = await getLineOfCodeDatewise(payload);
+   return response;
+  }
   const getDaysInMonth = (month, year) => {
-    console.log("dasds", month, year);
     let monthIndex = getMonth.findIndex((item) => item === month);
-    var date = new Date(year, monthIndex, 1);
-    var days = [];
+    let date = new Date(year, monthIndex, 1);
+    let days = [];
     while (date.getMonth() === monthIndex) {
       days.push(
         new Date(date).getDate() +
@@ -69,71 +68,34 @@ const CodeAnalysis = (props) => {
     return days;
   };
   const getSelectedData = (data, month) => {
+
     let tmpData = cloneDeep(data);
     let codeAnalysisViolationsData = [];
     let codeAnalysisLineData = [];
     let selectedData = {};
     selectedData.days = getDaysInMonth(month, new Date().getFullYear());
-    selectedData.days.map(dayMonth => {
+    selectedData.days.map((dayMonth) => {
       let dataforCurrent = tmpData.find((item) => item.date === dayMonth);
-        if (dataforCurrent !== undefined && dataforCurrent !== null) {
-          codeAnalysisViolationsData.push(dataforCurrent.violations);
-          codeAnalysisLineData.push(dataforCurrent.lines);
-        }
-        else{
-          codeAnalysisViolationsData.push(0)
-          codeAnalysisLineData.push(0)
-        }
-  })
-  selectedData.codeAnalysisLineData = codeAnalysisLineData;
-  selectedData.codeAnalysisViolationsData = codeAnalysisViolationsData;
-    selectedData.customDrillDownCanvas = (days,codeAnalysisLineData,codeAnalysisViolationsData,codeAnalysisRef) => {
-      const canvasRef = codeAnalysisRef.current.getContext("2d")
-      const data = {
-        labels: days,
-        datasets: [
-          {
-            label: "No.Of Lines",
-            data: codeAnalysisLineData,
-            backgroundColor: ["#7bd1dd"],
-            borderWidth: 1,
-          },
-          {
-            label: "Violations",
-            data: codeAnalysisViolationsData,
-            backgroundColor: ["#f95537"],
-            borderWidth: 1,
-          },
-        ],
-      };
-      const config = {
-        type: "bar",
-        data: data,
-        options: {
-          scales: {
-            x: {
-              grid: {
-                display: false,
-              },
-            },
-            y: {
-              grid: {
-                display: false,
-              },
-            },
-          },
-        },
-      };
-      const myChart = new Chart(
-        canvasRef,
-        config
-    );
-    return(
-      <canvas ref={canvasRef} id='myChart'></canvas>
-    )
-    };
+      if (dataforCurrent !== undefined && dataforCurrent !== null) {
+        codeAnalysisViolationsData.push(dataforCurrent.violations);
+        codeAnalysisLineData.push(dataforCurrent.lines);
+      } else {
+        codeAnalysisViolationsData.push(0);
+        codeAnalysisLineData.push(0);
+      }
+    });
+    selectedData.codeAnalysisLineData = codeAnalysisLineData;
+    selectedData.codeAnalysisViolationsData = codeAnalysisViolationsData;
+    selectedData.customDrillDownCanvas = true;
     return selectedData;
-    
+  };
+  const handleDdMenuChange = async (selectedValue) => {
+    const LineOfCodeDatewiseData = await getDrillDownData();
+    dispatch(
+      setSelectedData(
+        getSelectedData(LineOfCodeDatewiseData.data, selectedValue.label)
+      )
+    );
   };
   const openDrillDown = async (selectedMonth) => {
     const LineOfCodeDatewiseData = await getDrillDownData();
@@ -153,7 +115,7 @@ const CodeAnalysis = (props) => {
           LineOfCodeDatewiseData.data,
           selectedMonth
         ),
-        // handleDdMenuChange: handleDdMenuChange,
+        handleDdMenuChange: handleDdMenuChange,
       })
     );
   };
@@ -161,9 +123,9 @@ const CodeAnalysis = (props) => {
     (svg) => {
       let data = codeAnalysisData;
       let width = get(props, "chartContainerRefs.current[1].offsetWidth", 1);
-      var height = 0.75 * width;
+      let height = 0.75 * width;
       if (data.length) {
-        var groupSpacing = 0;
+        let groupSpacing = 0;
         svg
           .attr("width", width) //set the width and height of our visualization (these will be attributes of the <svg> tag
           .attr("height", height);
@@ -178,15 +140,15 @@ const CodeAnalysis = (props) => {
         height = 200;
         //g = svg.append("g");
 
-        var x0 = d3.scaleBand().rangeRound([0, width]).paddingInner(0.4);
+        let x0 = d3.scaleBand().rangeRound([0, width]).paddingInner(0.4);
 
-        var x1 = d3.scaleBand().padding(0.01);
+        let x1 = d3.scaleBand().padding(0.01);
 
-        var y = d3.scaleLinear().rangeRound([height, 0]);
+        let y = d3.scaleLinear().rangeRound([height, 0]);
 
-        var z = d3.scaleOrdinal().range(["#7bd1dd", "#f95537"]);
+        let z = d3.scaleOrdinal().range(["#7bd1dd", "#f95537"]);
 
-        var keys = Object.keys(data[0]).slice(1);
+        let keys = Object.keys(data[0]).slice(1);
         x0.domain(
           data.map(function (d) {
             return d.month;

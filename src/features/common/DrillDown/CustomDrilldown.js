@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
@@ -8,6 +8,7 @@ const CustomDrilldown = (props) => {
   const { days, codeAnalysisLineData, codeAnalysisViolationsData } =
     selectedData;
   const ref = useRef(null);
+  const [myChart, setMyChart] = useState(null);
   useEffect(() => {
     if (!ref) return;
     const ctx = ref.current.getContext("2d");
@@ -47,7 +48,15 @@ const CustomDrilldown = (props) => {
       },
     };
     const myChart = new Chart(ctx, config);
+    setMyChart(myChart)
   }, [ref]);
-  return <canvas ref={ref} id="myChart" />;
+  useEffect(() => {
+    if (!myChart) return;
+    myChart.data.datasets[0].data = codeAnalysisLineData;
+    myChart.data.datasets[1].data = codeAnalysisViolationsData;
+    myChart.data.labels = days;
+    myChart.update();
+  }, [codeAnalysisLineData, codeAnalysisViolationsData,days,myChart])
+  return <canvas ref={ref} id="myChart"/>;
 };
 export default CustomDrilldown;

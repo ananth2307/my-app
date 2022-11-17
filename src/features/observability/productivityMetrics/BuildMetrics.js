@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import * as d3 from "d3";
 import { get } from "lodash";
-import * as bootstrap from "bootstrap";
 import { failedCross, successCheck } from "../../../assets/images";
 
 const BuildMterics = (props) => {
@@ -38,15 +37,9 @@ const BuildMterics = (props) => {
     buildCount: buildCount,
     sucessPercent: ((totalViolations / buildCount) * 100).toFixed(1),
   };
-  console.log(
-    totalViolations,
-    totalLines,
-    buildMetricsData,
-    tmpBuildMetricsData
-  );
   const ref = useD3(
     (svg) => {
-      var initStackedBarChart = {
+      let initStackedBarChart = {
         draw: function (config) {
           let me = this;
           let domEle = config.element;
@@ -69,9 +62,9 @@ const BuildMterics = (props) => {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-          var color = d3.scaleOrdinal().range(["#A6CE38", "#EC6666"]);
+          let color = d3.scaleOrdinal().range(["#A6CE38", "#EC6666"]);
 
-          var x0 = d3.scaleBand().rangeRound([0, width]).paddingOuter(0.2);
+          let x0 = d3.scaleBand().rangeRound([0, width]).paddingOuter(0.2);
 
           x0.domain(
             data.map(function (d) {
@@ -79,13 +72,13 @@ const BuildMterics = (props) => {
             })
           );
 
-          var stack = d3
+          let stack = d3
             .stack()
             .keys(stackKey)
             .order(d3.stackOrderNone)
             .offset(d3.stackOffsetNone);
 
-          var layers = stack(data);
+          let layers = stack(data);
           //data.sort(function(a, b) { return b.total - a.total; });
           xScale.domain(
             data.map(function (d) {
@@ -101,7 +94,7 @@ const BuildMterics = (props) => {
             ])
             .nice();
 
-          var layer = svg
+          let layer = svg
             .selectAll(".layer")
             .data(layers)
             .enter()
@@ -157,9 +150,9 @@ const BuildMterics = (props) => {
             .call(yAxis);
         },
       };
-      var data = buildMetricsData;
+      let data = buildMetricsData;
       if (data.length > 0) {
-        var key = ["lines", "violation"];
+        let key = ["lines", "violation"];
         initStackedBarChart.draw({
           data: data,
           key: key,

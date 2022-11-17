@@ -4,7 +4,9 @@ import { map } from "lodash";
 export const getSelectedOptionsValue = (options=[]) => {
   return map(options, "value");
 };
-
+export const getSelectedOptionsById = (options=[]) => {
+  return map(options, "id");
+}; 
 export const filterOptions = (optionsProps, searchText, setState) => {
   setState(
     optionsProps?.filter((option) => option.label?.includes(searchText))
