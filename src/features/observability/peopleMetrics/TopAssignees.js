@@ -112,16 +112,18 @@ const TopAssignees = (props) => {
       console.log("seeeee", selectedData);
       return (
         <>
-        <li>
-          <div class="fw-20">{selectedData?.jiraId}</div>
-          <div class="fw-50">{selectedData.summary} </div>
-          <div class="fw-20">{new Date(selectedData.createDate).toLocaleDateString()}</div>
-          <div class="fw-20" >{selectedData.reportedBy}</div>
-          <div class="fw-20">{selectedData.priority}</div>
-          <div class="fw-20">
-            {(selectedData.totalTimeSpent / 36000).toFixed(1)}h
-          </div>
-          <div class="fw-20">{selectedData.status}</div>
+          <li>
+            <div class="fw-20">{selectedData?.jiraId}</div>
+            <div class="fw-50">{selectedData.summary} </div>
+            <div class="fw-20">
+              {new Date(selectedData.createDate).toLocaleDateString()}
+            </div>
+            <div class="fw-20">{selectedData.reportedBy}</div>
+            <div class="fw-20">{selectedData.priority}</div>
+            <div class="fw-20">
+              {(selectedData.totalTimeSpent / 36000).toFixed(1)}h
+            </div>
+            <div class="fw-20">{selectedData.status}</div>
           </li>
         </>
       );

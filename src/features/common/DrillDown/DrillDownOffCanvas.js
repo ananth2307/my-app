@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
@@ -6,11 +6,14 @@ import { dDDefaultLevelOne } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
 import { get } from "lodash";
+import CustomDrilldown from "./CustomDrilldown";
 
 const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
   const commonSliceState = useSelector((state) => state.common);
   const selectedData = get(commonSliceState, "offcanvasState.selectedData", []);
+  const { days, codeAnalysisLineData, codeAnalysisViolationsData } =
+    selectedData;
   const selectedLevelOne = get(
     commonSliceState,
     "drillDownSelectionState.selectedLevelOne",
@@ -48,34 +51,40 @@ const DrillDownOffCanvas = (props) => {
             />
           </div>
         </div>
-        <div
-          class={`flowbox-row ${
-            selectedData.drillDownflowWrapClass
-              ? selectedData.drillDownflowWrapClass
-              : "distribute-wrap flowacti-block"
-          }`}
-        >
-          {dDDefaultLevelOne.map((level) => (
-            <DdDefaultLevelOne level={level} {...props} />
-          ))}
-        </div>
-        <div class="flow-descriptions-block flowpredi-des ">
-          {console.log("redis12" , selectedData.DdtopAssigneeCustomSummary
-                ,OpenIssueSummaryList
-                ,selectedData.DdFlowPredictCustomSummary
-                ,predictabilityPlannedSummary
-                ,get(selectedData[selectedLevelOne], "summaryList", []), selectedData,selectedLevelOne, selectedData[selectedLevelOne])}
-          <DdDefaultSummary
-            summaryTitle={selectedData?.summaryToptitle}
-            summaryList={
-              selectedData.DdtopAssigneeCustomSummary
-                ? OpenIssueSummaryList
-                : selectedData.DdFlowPredictCustomSummary
-                ? predictabilityPlannedSummary
-                : get(selectedData[selectedLevelOne], "summaryList", [])
-            }
-          />
-        </div>
+        {selectedData?.customDrillDownCanvas ? (
+          <CustomDrilldown />
+        ) : (
+          <>
+            <div
+              class={`flowbox-row ${
+                selectedData.drillDownflowWrapClass
+                  ? selectedData.drillDownflowWrapClass
+                  : "distribute-wrap flowacti-block"
+              }`}
+            >
+              {dDDefaultLevelOne.map((level) => (
+                <DdDefaultLevelOne level={level} {...props} />
+              ))}
+            </div>
+            <div class="flow-descriptions-block flowpredi-des ">
+              {/* {console.log("redis12" , selectedData.DdtopAssigneeCustomSummary
+          ,OpenIssueSummaryList
+          ,selectedData.DdFlowPredictCustomSummary
+          ,predictabilityPlannedSummary
+          ,get(selectedData[selectedLevelOne], "summaryList", []), selectedData,selectedLevelOne, selectedData[selectedLevelOne])} */}
+              <DdDefaultSummary
+                summaryTitle={selectedData?.summaryToptitle}
+                summaryList={
+                  selectedData.DdtopAssigneeCustomSummary
+                    ? OpenIssueSummaryList
+                    : selectedData.DdFlowPredictCustomSummary
+                    ? predictabilityPlannedSummary
+                    : get(selectedData[selectedLevelOne], "summaryList", [])
+                }
+              />
+            </div>
+          </>
+        )}
         {selectedData.DdtopAssigneeCustomSummary ||
           (selectedData.DdFlowPredictCustomSummary && (
             <div class="flow-descriptions-block flowpredi-des ">

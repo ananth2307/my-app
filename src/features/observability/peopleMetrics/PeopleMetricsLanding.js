@@ -62,7 +62,6 @@ const PeopleMetrics = (props) => {
           fromDt:initialStartDate,          
           toDt:initialEndDate
       };
-
       let peopleMetricsPromiseData = await Promise.all([
         getIsueMetrics(defaultPayload),
         getCollaboration(defaultPayload),

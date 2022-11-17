@@ -23,8 +23,7 @@ const Filter = (props) => {
 
   const [getSprintList] = observabilityApi.useGetSprintListMutation();
 
-  const {data: appList} = observabilityApi.useGetAppListQuery({})
-
+  const { data: appList } = observabilityApi.useGetAppListQuery({});
   /**End Hooks**/
 
   //Set initial date in the date picker

@@ -9,7 +9,8 @@ const commonSlice = createSlice({
       dropDownMenuOptions: [],
       selectedValue: {},
       selectedData: [],
-      handleDdMenuChange: () => {}
+      handleDdMenuChange: () => {},
+      isDropDownShown:true
     },
     drillDownSelectionState: {
       selectedLevelOne: "features",

@@ -1,6 +1,5 @@
 import { api } from "./baseApiSetup";
 import { constants } from "../utilities/constants";
-
 const OBSERVABILITY_BASE_URL = `/api/v1`;
 
 export const observabilityApi = api.injectEndpoints({
@@ -126,6 +125,35 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+      //productivity Metrics
+  getStaticCodeAnalysis: build.mutation({
+    query:(postedBy={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/home/staticCodeAnalysis`,
+      method:'POST',
+      body:postedBy
+    })
+  }),
+  getLinesOfCodes: build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/home/analysis/against/linesOfCodes`,
+      method:'POST',
+      body:postBody
+    })
+  }),
+  getLineOfCodeDatewise: build.mutation({
+    query:(postBody={}) => ({
+      url:`${OBSERVABILITY_BASE_URL}/productivityMetrics/codeAnalysis/dateWise`,
+      method:'POST',
+      body:postBody
+    })
+  }),
+  getBulidMetrics:build.mutation({
+    query:(postBody={}) =>({
+      url:`${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/productMetric/buildMetric/ddone`,
+      method: 'POST',
+      body: postBody,
+    })
+  }),
     getCommentsDdOne: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/comments/ddone`,
