@@ -32,9 +32,7 @@ const PeopleMetrics = (props) => {
   let appList = [];
   let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
   initialStartDate = new Date(initialStartDate).getTime();
-  // initialStartDate = parseInt(initialStartDate.slice(0,-3));
   initialEndDate = new Date(initialEndDate).getTime();
-  // initialEndDate = parseInt(initialEndDate.slice(0,-3));
   const tmpAppcodes = [
     "ACT",
     "CODE8",
