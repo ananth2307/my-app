@@ -45,7 +45,7 @@ const TopSucess = (props) => {
       </>
     );
     selectedData.customSummaryList = (selectedData) => {
-      return Object.keys(selectedData).map((keyk) => (
+      return Object.keys(selectedData).map((key) => (
         <li>
           <div class="fw-40">{key}</div>
           <div class="fw-20">{selectedData[key]}</div>

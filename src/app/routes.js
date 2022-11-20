@@ -17,7 +17,7 @@ const ProductivityMetrics = React.lazy(() =>
   import("../features/observability/productivityMetrics/ProductivityMetricsLanding")
 );
 const DevopsMetrics = React.lazy(() =>
-  import("../features/observability/devopsMetrics/DevopsMetrics")
+  import("../features/observability/devopsMetrics/DevopsMetricsLanding")
 );
 const OpsMetricsIncidentManagement = React.lazy(() =>
   import("../features/observability/opsMetrics/IncidentManagement/IncidentMangementLanding")

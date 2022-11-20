@@ -21,6 +21,8 @@ import completed from './completed.svg';
 import goldMedal from "./gold-medal.svg";
 import successCheck from './success-check.png';
 import failedCross from './faild-cross.png';
+import homeFilter from "./homefilter.png"
+import appIcon from './app.png';
 
 export {
     checkboxTick,
@@ -45,4 +47,6 @@ export {
     settings,
     downCaret,
     goldMedal,
+    homeFilter,
+    appIcon,
 }
