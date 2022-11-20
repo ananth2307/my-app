@@ -5,13 +5,13 @@ const MODULE_BASE_URL = "/api/v1";
 
 export const configurationApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getToolsList: build.query({
-      query: (page = 0, length = 10) =>
-        `tools/listByItemsPerPage/${page}/${length}`,
+    getToolsList: build.mutation({
+      query: ({page = 0, limit = 10}) => {
+        return `http://localhost:7111/api/v1/tools/listByItemsPerPage/${page}/${limit}`;
+      },
     }),
-    getGroupsList: build.query({
-      query: (page = 0, length = 10) =>
-        `groups/listByItemsPerPage/${page}/${length}`,
+    getToolsListCount: build.query({
+      query: () => `http://localhost:7111/api/v1/tools/count`,
     }),
   }),
   overrideExisting: true,
