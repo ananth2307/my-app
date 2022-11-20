@@ -5,94 +5,101 @@ const OBSERVABILITY_BASE_URL = `/api/v1`;
 export const observabilityApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAppList: build.query({
-      query: ({user = "kevin"}) => ({
+      query: ({ user = "kevin" }) => ({
         url: `http://localhost:7111/api/v1/cmdb/${user}/Operation`,
       }),
-      transformResponse: (appList) => appList?.map(app => {
-        return {label: `${app.appName}[${app.appCode}]`, value: app.appCode,id:app.id}
-      }),
+      transformResponse: (appList) =>
+        appList?.map((app) => {
+          return {
+            label: `${app.appName}[${app.appCode}]`,
+            value: app.appCode,
+            id: app.id,
+          };
+        }),
     }),
     getProjectList: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/projectLists`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
-      transformResponse: (projectList) => projectList?.map(proj => {
-        return {label: proj.projectName, value: proj.projectName}
-      }),
+      transformResponse: (projectList) =>
+        projectList?.map((proj) => {
+          return { label: proj.projectName, value: proj.projectName };
+        }),
     }),
     getSprintList: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/sprint/sprintNames`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
-      transformResponse: (sprintList) => sprintList?.map(sprint => {
-        return {label: sprint, value: sprint}
-      }),
+      transformResponse: (sprintList) =>
+        sprintList?.map((sprint) => {
+          return { label: sprint, value: sprint };
+        }),
     }),
     //Flow Metrics Page start
     getFlowDistribution: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowDistribution/main`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowVelocity: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowVelocity/main`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowPredictability: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/ddflowpredicatablitymain`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowPredictabilityDrill: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/ddflowpredicatablitymonth`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowPredictabilitySummary: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/ddFlowSummary`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowEfficiency: build.mutation({
       query: (postBody = {}) => ({
         url: `http://localhost:7111/api/v1/safeFlowMetrics/flow/flowEfficiency/main`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowEfficiencyDrill: build.mutation({
       query: (postBody = {}) => ({
         url: `http://localhost:7111/api/v1/safeFlowMetrics/flow/flowEfficiency/main/drilldown`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getActiveSprints: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/issueMetrics/activeSprints`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getFlowLoad: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowMetrics/flowLoadMain`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
@@ -100,116 +107,152 @@ export const observabilityApi = api.injectEndpoints({
     getIssueMetrics: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/issueMetrics`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getIssueMetricsDdOne: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/issueMetrics/drillDownOne`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getCollaboration: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/level/collaboration`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
     getTopAssignee: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/topAssignee`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),
-      //productivity Metrics
-  getStaticCodeAnalysis: build.mutation({
-    query:(postedBy={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/home/staticCodeAnalysis`,
-      method:'POST',
-      body:postedBy
-    })
-  }),
-  getLinesOfCodes: build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/home/analysis/against/linesOfCodes`,
-      method:'POST',
-      body:postBody
-    })
-  }),
-  getLineOfCodeDatewise: build.mutation({
-    query:(postBody={}) => ({
-      url:`${OBSERVABILITY_BASE_URL}/productivityMetrics/codeAnalysis/dateWise`,
-      method:'POST',
-      body:postBody
-    })
-  }),
-  getBulidMetrics:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/productMetric/buildMetric/ddone`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
+    //productivity Metrics
+    getStaticCodeAnalysis: build.mutation({
+      query: (postedBy = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/staticCodeAnalysis`,
+        method: "POST",
+        body: postedBy,
+      }),
+    }),
+    getLinesOfCodes: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/analysis/against/linesOfCodes`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getLineOfCodeDatewise: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/productivityMetrics/codeAnalysis/dateWise`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getBulidMetrics: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/productMetric/buildMetric/ddone`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     //opsMetrics
-  //Incident Management
-  getIncidents:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/incidentManagement/filter/noOfIncident`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
-  getIncidentsPercategory:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/incidentManagement/filter/category`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
-  getMeanTimetoRecover:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/incidentManagement/filter/MTTR/Dashboard`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
-  //ChangeManagement
-  getChangeRequest:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/noOfChangeRequest`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
-  getChangeRequestPerCategory:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/category`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
-  getChangeRequestPerRisk:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/getForRisk`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
-  getMeanTimetoChange:build.mutation({
-    query:(postBody={}) =>({
-      url:`${OBSERVABILITY_BASE_URL}/changeManagement/filter/meanTime/dashboard`,
-      method: 'POST',
-      body: postBody,
-    })
-  }),
+    //Incident Management
+    getIncidents: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/incidentManagement/filter/noOfIncident`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getIncidentsPercategory: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/incidentManagement/filter/category`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getMeanTimetoRecover: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/incidentManagement/filter/MTTR/Dashboard`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    //ChangeManagement
+    getChangeRequest: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/changeManagement/filter/noOfChangeRequest`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getChangeRequestPerCategory: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/changeManagement/filter/category`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getChangeRequestPerRisk: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/changeManagement/filter/getForRisk`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getMeanTimetoChange: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/changeManagement/filter/meanTime/dashboard`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    //Jenkins
+    getBuildTrend: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/buildTrend`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getSuccessFailCountRatio: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/SFRatioAndCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getNodeDetails: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/nodeCUD`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getJobDetaills: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/jobsCUD`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getTopSuccessFailure: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/SFTopCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     getCommentsDdOne: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/comments/ddone`,
-        method: 'POST',
+        method: "POST",
         body: postBody,
       }),
     }),

@@ -2,17 +2,14 @@ import React, { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
+import { useChartjs } from "../../../hooks/useD3";
 const CustomDrilldown = (props) => {
   const commonSliceState = useSelector((state) => state.common);
   const selectedData = get(commonSliceState, "offcanvasState.selectedData", []);
   const { days, codeAnalysisLineData, codeAnalysisViolationsData } =
     selectedData;
-  const ref = useRef(null);
-  const [myChart, setMyChart] = useState(null);
-  useEffect(() => {
-    if (!ref) return;
-    const ctx = ref.current.getContext("2d");
-    const data = {
+    const canvasRef = useRef(null)
+   const data = {
       labels: days,
       datasets: [
         {
@@ -47,16 +44,7 @@ const CustomDrilldown = (props) => {
         },
       },
     };
-    const myChart = new Chart(ctx, config);
-    setMyChart(myChart)
-  }, [ref]);
-  useEffect(() => {
-    if (!myChart) return;
-    myChart.data.datasets[0].data = codeAnalysisLineData;
-    myChart.data.datasets[1].data = codeAnalysisViolationsData;
-    myChart.data.labels = days;
-    myChart.update();
-  }, [codeAnalysisLineData, codeAnalysisViolationsData,days,myChart])
-  return <canvas ref={ref} id="myChart"/>;
+    useChartjs(canvasRef,config)
+  return <canvas ref={canvasRef}/>;
 };
 export default CustomDrilldown;

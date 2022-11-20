@@ -28,7 +28,7 @@ const OpsMetricsChangeManagement = React.lazy(() =>
 const Bitbucket = React.lazy(() =>
   import("../features/gnc/bitbucket/Bitbucket")
 );
-const Jenkins = React.lazy(() => import("../features/gnc/jenkins/Jenkins"));
+const Jenkins = React.lazy(() => import("../features/gnc/jenkins/JenkinsLanding"));
 const AppConfig = React.lazy(() =>
   import("../features/efficiency/appConfig/AppConfig")
 );

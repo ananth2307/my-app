@@ -31,24 +31,26 @@ const DrillDownOffCanvas = (props) => {
     <CustomOffCanvas className="custom-off-canvas">
       <div class="flowblock custom_scroll">
         <h3 class="flowhead">{offcanvasState?.title}</h3>
-        <div class="flowact-nav">
-          <div class="frmgroup col-lg-2 dd_picker">
-            <Dropdown
-              options={
-                offcanvasState?.dropDownMenuOptions
-                  ? offcanvasState.dropDownMenuOptions
-                  : []
-              }
-              onChange={(selectedValue) =>
-                offcanvasState.handleDdMenuChange(selectedValue)
-              }
-              hideSelectedOptions={false}
-              placeholder="Select Sprint"
-              closeMenuOnSelect={true}
-              defaultValue={offcanvasState.selectedValue}
-            />
+        {offcanvasState?.dropDownMenuOptions && (
+          <div class="flowact-nav">
+            <div class="frmgroup col-lg-2 dd_picker">
+              <Dropdown
+                options={
+                  offcanvasState?.dropDownMenuOptions
+                    ? offcanvasState.dropDownMenuOptions
+                    : []
+                }
+                onChange={(selectedValue) =>
+                  offcanvasState.handleDdMenuChange(selectedValue)
+                }
+                hideSelectedOptions={false}
+                placeholder="Select Sprint"
+                closeMenuOnSelect={true}
+                defaultValue={offcanvasState.selectedValue}
+              />
+            </div>
           </div>
-        </div>
+        )}
         {selectedData?.customDrillDownCanvas ? (
           <CustomDrilldown />
         ) : (
@@ -60,9 +62,10 @@ const DrillDownOffCanvas = (props) => {
                   : "distribute-wrap flowacti-block"
               }`}
             >
-              {dDDefaultLevelOne.map((level) => (
-                <DdDefaultLevelOne level={level} {...props} />
-              ))}
+              {offcanvasState?.dropDownMenuOptions &&
+                dDDefaultLevelOne.map((level) => (
+                  <DdDefaultLevelOne level={level} {...props} />
+                ))}
             </div>
             <div class="flow-descriptions-block flowpredi-des ">
               <DdDefaultSummary
@@ -72,7 +75,9 @@ const DrillDownOffCanvas = (props) => {
                     ? OpenIssueSummaryList
                     : selectedData.DdFlowPredictCustomSummary
                     ? predictabilityPlannedSummary
-                    : get(selectedData[selectedLevelOne], "summaryList", [])
+                    : offcanvasState?.dropDownMenuOptions
+                    ? get(selectedData[selectedLevelOne], "summaryList", [])
+                    : get(selectedData, "summaryList", [])
                 }
               />
             </div>

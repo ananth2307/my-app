@@ -103,7 +103,7 @@ const IssueMetrics = (props) => {
     dispatch(setSelectedData(getSelectedData(selectedSprint.value)))
   }
 
-  const openDrillDown = ({ data: selectedIssue, index }) => {
+  const openDrillDown = async ({ data: selectedIssue, index }) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -122,7 +122,7 @@ const IssueMetrics = (props) => {
           label: dt.label,
           value: dt.label,
         })),
-        selectedData: getSelectedData(selectedIssue.label),
+        selectedData:  await getSelectedData(selectedIssue.label),
         handleDdMenuChange: handleDdMenuChange
       })
     );

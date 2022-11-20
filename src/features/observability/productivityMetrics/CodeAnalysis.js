@@ -31,26 +31,26 @@ const CodeAnalysis = (props) => {
   const dropDownLabels = codeAnalysisData.length > 0 && [
     ...new Set(codeAnalysisData.map((item) => item.month)),
   ];
-  const getDrillDownData = async () =>{
-    const selectedAppList = get(
-      observability,
-      "filterData.selectedApplications",
-      []
-    );
-    const payload = {
-      appCodes: selectedAppList.length
-        ? getSelectedOptionsValue(selectedAppList)
-        : getSelectedOptionsValue(appList),
-        projects:[],
-      sprintNames: [],
-      startDt: 1664562600000,
-      toDt: 1668709740000,
-      // startDt: get(observability, "filterData.selectedDate.startDate"),
-      // toDt: get(observability, "filterData.selectedDate.endDate"),
-    };
-    const response = await getLineOfCodeDatewise(payload);
-   return response;
-  }
+  // const getDrillDownData = async () =>{
+  //   const selectedAppList = get(
+  //     observability,
+  //     "filterData.selectedApplications",
+  //     []
+  //   );
+  //   const payload = {
+  //     appCodes: selectedAppList.length
+  //       ? getSelectedOptionsValue(selectedAppList)
+  //       : getSelectedOptionsValue(appList),
+  //       projects:[],
+  //     sprintNames: [],
+  //     startDt: 1664562600000,
+  //     toDt: 1668709740000,
+  //     // startDt: get(observability, "filterData.selectedDate.startDate"),
+  //     // toDt: get(observability, "filterData.selectedDate.endDate"),
+  //   };
+  //   const response = await getLineOfCodeDatewise(payload);
+  //  return response;
+  // }
   const getDaysInMonth = (month, year) => {
     let monthIndex = getMonth.findIndex((item) => item === month);
     let date = new Date(year, monthIndex, 1);
@@ -67,9 +67,25 @@ const CodeAnalysis = (props) => {
     }
     return days;
   };
-  const getSelectedData = (data, month) => {
-
-    let tmpData = cloneDeep(data);
+  const getSelectedData = async (month) => {
+    const selectedAppList = get(
+      observability,
+      "filterData.selectedApplications",
+      []
+    );
+    const payload = {
+      appCodes: selectedAppList.length
+        ? getSelectedOptionsValue(selectedAppList)
+        : getSelectedOptionsValue(appList),
+        projects:[],
+      sprintNames: [],
+      startDt: 1664562600000,
+      toDt: 1668709740000,
+      // startDt: get(observability, "filterData.selectedDate.startDate"),
+      // toDt: get(observability, "filterData.selectedDate.endDate"),
+    };
+    const LineOfCodeDatewiseData = await getLineOfCodeDatewise(payload);
+    let tmpData = cloneDeep(LineOfCodeDatewiseData.data);
     let codeAnalysisViolationsData = [];
     let codeAnalysisLineData = [];
     let selectedData = {};
@@ -90,15 +106,28 @@ const CodeAnalysis = (props) => {
     return selectedData;
   };
   const handleDdMenuChange = async (selectedValue) => {
-    const LineOfCodeDatewiseData = await getDrillDownData();
     dispatch(
       setSelectedData(
-        getSelectedData(LineOfCodeDatewiseData.data, selectedValue.label)
+        await getSelectedData(selectedValue.label)
       )
     );
   };
   const openDrillDown = async (selectedMonth) => {
-    const LineOfCodeDatewiseData = await getDrillDownData();
+    dispatch(setIsOffCanvasOpen({
+      isDrilldownOpen: true,
+      title: props.title,
+      selectedValue: {
+        label: selectedMonth,
+        value: selectedMonth,
+      },
+      dropDownMenuOptions: dropDownLabels.map((month) => ({
+        label: month,
+        value: month,
+      })),
+      selectedData:{
+        customDrillDownCanvas:true
+      }
+    }));
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -111,8 +140,7 @@ const CodeAnalysis = (props) => {
           label: month,
           value: month,
         })),
-        selectedData: getSelectedData(
-          LineOfCodeDatewiseData.data,
+        selectedData: await getSelectedData(
           selectedMonth
         ),
         handleDdMenuChange: handleDdMenuChange,

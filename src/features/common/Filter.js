@@ -112,77 +112,86 @@ const Filter = (props) => {
   };
 
   return (
-    <div className="actnav dashactnav">
-      <div className="actright">
-        <div className="frmgroup dateinput">
-          <CustomDateRangePicker
-            initialSettings={{
-              startDate: initialStartDate,
-              endDate: initialEndDate,
-            }}
-            selectedDate={(selectedDate) => {
-              setDateRange(selectedDate);
-            }}
-          />
-        </div>
-        <div className="frmgroup">
-          <CustomSelect
-            options={appList ? appList : []}
-            isMulti={true}
-            hideSelectedOptions={false}
-            isCheckboxSelect={true}
-            placeholder="Select Application"
-            isSearchable={true}
-            closeMenuOnSelect={false}
-            onChange={(selectedApplications) =>
-              handleSelectedAppChange(selectedApplications)
-            }
-          />
-        </div>
-        <div className="frmgroup">
-          <CustomSelect
-            options={state?.projList ? state?.projList : []}
-            isMulti={true}
-            hideSelectedOptions={false}
-            isCheckboxSelect={true}
-            placeholder="Select Project"
-            isSearchable={true}
-            closeMenuOnSelect={false}
-            onChange={(selectedProjects) =>
-              handleSelectedProjChange(selectedProjects)
-            }
-          />
-        </div>
-        {props.isShowSprintList && (
-          <div className="frmgroup">
-            <CustomSelect
-              options={state?.sprintList ? state.sprintList : []}
-              isMulti={true}
-              hideSelectedOptions={false}
-              isCheckboxSelect={true}
-              placeholder="Select Sprint"
-              isSearchable={true}
-              closeMenuOnSelect={false}
-              onChange={(selectedSprints) =>
-                handleSelectedSprintChange(selectedSprints)
-              }
+    <>
+      <div className="actnav dashactnav">
+        <div className={!props?.isApplicationHide ? "actright" : "col-md-6"}>
+          <div className="frmgroup dateinput">
+            <CustomDateRangePicker
+              initialSettings={{
+                startDate: initialStartDate,
+                endDate: initialEndDate,
+              }}
+              selectedDate={(selectedDate) => {
+                setDateRange(selectedDate);
+              }}
             />
           </div>
-        )}
-      </div>
-      <div className="dashfltr">
-        <div className="filtrbtn">
-          <Button
-            className="outline-btn"
-            text="Filter"
-            onClick={(e) => {
-              e.preventDefault();
-              props.getFilteredData();
-            }}
-          />
+          {!props?.isApplicationHide && (
+            <>
+              <div className="frmgroup">
+                <CustomSelect
+                  options={appList ? appList : []}
+                  isMulti={true}
+                  hideSelectedOptions={false}
+                  isCheckboxSelect={true}
+                  placeholder="Select Application"
+                  isSearchable={true}
+                  closeMenuOnSelect={false}
+                  onChange={(selectedApplications) =>
+                    handleSelectedAppChange(selectedApplications)
+                  }
+                />
+              </div>
+              <div className="frmgroup">
+                <CustomSelect
+                  options={state?.projList ? state?.projList : []}
+                  isMulti={true}
+                  hideSelectedOptions={false}
+                  isCheckboxSelect={true}
+                  placeholder="Select Project"
+                  isSearchable={true}
+                  closeMenuOnSelect={false}
+                  onChange={(selectedProjects) =>
+                    handleSelectedProjChange(selectedProjects)
+                  }
+                />
+              </div>
+            </>
+          )}
+          {props.isShowSprintList && (
+            <div className="frmgroup">
+              <CustomSelect
+                options={state?.sprintList ? state.sprintList : []}
+                isMulti={true}
+                hideSelectedOptions={false}
+                isCheckboxSelect={true}
+                placeholder="Select Sprint"
+                isSearchable={true}
+                closeMenuOnSelect={false}
+                onChange={(selectedSprints) =>
+                  handleSelectedSprintChange(selectedSprints)
+                }
+              />
+            </div>
+          )}
+        </div>
+        <div className="dashfltr">
+          <div className="filtrbtn">
+            <Button
+              className="outline-btn"
+              text="Filter"
+              onClick={(e) => {
+                e.preventDefault();
+                props.getFilteredData();
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+      <div class="clfltr">
+        A filter has been applied to the data. <a href="#">Clear Filter</a>
+      </div>
+    </>
   );
 };
 
