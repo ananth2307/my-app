@@ -53,7 +53,7 @@ const Pagination = (props) => {
             </div>
           </div>
         </div>
-        <a class="pagelink lastpage" onClick={() => onPageChange(totalPages-1)}>
+        <a className="pagelink lastpage" onClick={() => onPageChange(totalPages-1)}>
           Last
         </a>
       </div>

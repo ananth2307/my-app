@@ -34,7 +34,7 @@ const TableActions = (props) => {
                         tabindex="0"
                         onClick={() => onGetLimit(parseInt(limit))}
                       >
-                        <span class="text">{limit}</span>
+                        <span className="text">{limit}</span>
                       </a>
                     </li>
                   ))}
