@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
-import TableActions from "../../../../app/common-components/TableActions";
 import Button from "../../../../app/common-components/Button";
 import DataTable from "../../../../app/common-components/DataTable";
 import { configurationApi } from "../../../../app/services/configurationApi";
-import { Offcanvas } from "bootstrap";
-import CustomOffCanvas from "../../../../app/common-components/CustomOffCanvas";
-import {
-  settings,
-  download,
-  edit,
-  deleteIcon,
-} from "../../../../assets/images";
-import Pagination from "../../../../app/common-components/pagination";
+import { settings, download } from "../../../../assets/images";
 
 const tableHeaders = [
   {
@@ -103,8 +94,15 @@ const Tools = () => {
           setState({ ...state, toolList: tools, count });
         });
       });
-    
   }, [state.page, state.limit]);
+
+  const onEditData = (data) => {
+    //api call
+  };
+
+  const onDeleteData = (data) => {
+    //api call
+  };
 
   return (
     <>
@@ -115,10 +113,13 @@ const Tools = () => {
         <DataTable
           headers={tableHeaders}
           body={state.toolList}
-          limit={state.limit}
           count={state.count}
           onPageChange={(page) => setState({ ...state, page })}
           onGetLimit={(limit) => setState({ ...state, limit, page: 0 })}
+          hasAction
+          onEdit={onEditData}
+          onDelete={onDeleteData}
+          currentPage={state.page}
         />
       </div>
     </>
