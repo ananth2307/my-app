@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { get } from "lodash";
-import moment from "moment";
 //Internal App imports
 import Button from "../../app/common-components/Button";
 import CustomSelect from "../../app/common-components/select";

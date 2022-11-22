@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 
-const TableActions = (props) => {
-  const { onGetLimit, limit:currentLimit } = props;
+const Pagination = (props) => {
+  const { totalPages, onPageChange } = props;
+  const [state, setState] = useState({
+    page: 0,
+  });
   return (
     <div className="filternav toolnav">
       <div className="pagecount">
+        <label>Go to page</label>
+        <a className="pagelink firstpage" onClick={() => onPageChange(0)}>
+          First
+        </a>
         <div className="frmgroup">
           <label>Rows per page</label>
           <div className="dropdown bootstrap-select">
@@ -16,25 +23,28 @@ const TableActions = (props) => {
             >
               <div className="filter-option">
                 <div className="filter-option-inner">
-                  <div className="filter-option-inner-inner">{currentLimit}</div>
+                  <div className="filter-option-inner-inner">10</div>
                 </div>{" "}
               </div>
             </button>
             <div className="dropdown-menu ">
               <div className="inner show" tabindex="-1">
                 <ul className="dropdown-menu inner show">
-                  {[10, 20, 30, 40, 50].map((limit, index) => (
-                    <li className="selected active">
+                  {Array.from(Array(totalPages).keys()).map((m, index) => (
+                    <li className="selected">
                       <a
                         className={
-                          currentLimit === limit
+                          state.page === index
                             ? "dropdown-item active selected"
                             : "dropdown-item"
                         }
                         tabindex="0"
-                        onClick={() => onGetLimit(parseInt(limit))}
+                        onClick={() => {
+                          setState({ ...state, page: index });
+                          onPageChange(index);
+                        }}
                       >
-                        <span className="text">{limit}</span>
+                        <span className="text">{index + 1}</span>
                       </a>
                     </li>
                   ))}
@@ -43,9 +53,12 @@ const TableActions = (props) => {
             </div>
           </div>
         </div>
+        <a className="pagelink lastpage" onClick={() => onPageChange(totalPages-1)}>
+          Last
+        </a>
       </div>
     </div>
   );
 };
 
-export default TableActions;
+export default Pagination;
