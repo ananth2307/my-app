@@ -47,12 +47,11 @@ const PeopleMetrics = (props) => {
   const getPeopleMetrics = useCallback(
     async (isInitialLoad = false) => {
       const defaultPayload = {
-        appCodes:tmpAppcodes,
-        // appCodes: isInitialLoad
-        //   ? getSelectedOptionsValue(appList)
-        //   : getSelectedOptionsValue(
-        //       get(observability, "filterData.selectedApplications", [])
-        //     ),
+        appCodes: isInitialLoad
+          ? getSelectedOptionsValue(appList)
+          : getSelectedOptionsValue(
+              get(observability, "filterData.selectedApplications", [])
+            ),
         projects: getSelectedOptionsValue(
           get(observability, "filterData.selectedProjects", [])
         ),
@@ -63,9 +62,13 @@ const PeopleMetrics = (props) => {
         toDt: initialEndDate,
       };
       const TopAssigneePayload = {
-        applications:tmpAppcodes,
-          fromDt:1664562600,          
-          toDt:1668709740
+        applications:isInitialLoad
+        ? getSelectedOptionsValue(appList)
+        : getSelectedOptionsValue(
+            get(observability, "filterData.selectedApplications", [])
+          ),
+          startDt: initialStartDate,
+          toDt: initialEndDate,
       };
       let peopleMetricsPromiseData = await Promise.all([
         getIsueMetrics(defaultPayload),

@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import React, { memo } from 'react'
 import { Doughnut } from 'react-chartjs-2';
 
@@ -17,7 +18,7 @@ const PullRequestCount = (props) => {
 const {pullRequest} = PullRequestCountData;
 let chartLabel = [];
 let chartData = [];
-pullRequest.length > 0 && pullRequest.map(items=>{
+!isEmpty(pullRequest) && pullRequest.map(items=>{
   Object.keys(items).map(key=>{
     chartLabel.push(key)
     chartData.push(items[key])

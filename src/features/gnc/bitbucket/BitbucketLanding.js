@@ -59,8 +59,8 @@ const BitbucketLanding = (props) => {
 
   const getBitBucketData = useCallback(async () => {
     const defaultPayload = {
-      fromDt: initialStartDate / 1000,
-      toDt: initialEndDate / 1000,
+      fromDt: initialStartDate/1000,
+      toDt: initialEndDate/1000,
     };
     const topCountPayload = {
       fromDt: initialStartDate / 1000,
@@ -74,14 +74,8 @@ const BitbucketLanding = (props) => {
       getTotalClone(defaultPayload),
       getTotalPullRequest(defaultPayload),
       getCommitTrend(defaultPayload),
-      getCreateDeleteDetails({
-        "fromDt": 1636223400,
-        "toDt": 1669055340
-    }),
-      getPullRequestCount({
-        "fromDt": 1636223400,
-        "toDt": 1669055340
-    }),
+      getCreateDeleteDetails(defaultPayload),
+      getPullRequestCount(defaultPayload),
       getPullRequestTrend(defaultPayload),
       getLoginLogoutDetails(defaultPayload),
       getTopRepoDownloads(topCountPayload),

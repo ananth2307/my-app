@@ -1,12 +1,14 @@
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import React, { memo } from 'react'
 import { Line } from 'react-chartjs-2'
+import Chart from 'chart.js/auto';
+import { ChartLineColor1 } from '../../common/constants';
 
 const CommitTrend = (props) => {
   const commitTrendData =  get(props,'bitBucketData.commitTrendData.commitTrend',[]);
   let labels = [];
   let lineData = [];
-  commitTrendData.length > 0 && commitTrendData.map((items)=>{
+ !isEmpty(commitTrendData) && commitTrendData.map((items)=>{
     Object.keys(items).map(key=>{
        labels.push(key)
        lineData.push(items[key])
@@ -18,8 +20,8 @@ const CommitTrend = (props) => {
         label: "Commit Trend",
         data: lineData,
         fill: false,
-        borderColor: "rgb(75, 192, 192)",
-        backgroundColor:'rgb(75, 192, 192)',
+        borderColor: ChartLineColor1,
+        backgroundColor:ChartLineColor1,
         tension: 0.1
     }]
 };

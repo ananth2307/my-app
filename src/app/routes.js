@@ -163,7 +163,7 @@ export const routes = [
       {
         name: "Bitbucket",
         text: "Bitbucket",
-        path: "gnc/bitbucket",
+        path: "gnc/bitbucketTrend",
         component: <Bitbucket />,
         key: "2.2",
       },

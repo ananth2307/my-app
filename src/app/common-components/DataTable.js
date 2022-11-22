@@ -11,7 +11,8 @@ const DataTable = ({
   count,
   hasAction,
   onEdit,
-  onDelete
+  onDelete,
+  isPagination,
 }) => {
   const [state, setState] = useState({
     limit: 10,
@@ -65,7 +66,10 @@ const DataTable = ({
                               </a>
                             </td>
                             <td>
-                              <a onClick={() => onDelete(row)} className="delete_cmdb">
+                              <a
+                                onClick={() => onDelete(row)}
+                                className="delete_cmdb"
+                              >
                                 <img src={deleteIcon} alt="Delete" />
                               </a>
                             </td>
@@ -82,11 +86,13 @@ const DataTable = ({
           </tbody>
         </table>
       </div>
-      <Pagination
-        rows={body}
-        onPageChange={(page) => onPageChange(page)}
-        totalPages={Math.ceil(count / state.limit)}
-      />
+      {isPagination && (
+        <Pagination
+          rows={body}
+          onPageChange={(page) => onPageChange(page)}
+          totalPages={Math.ceil(count / state.limit)}
+        />
+      )}
     </>
   );
 };

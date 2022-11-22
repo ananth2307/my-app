@@ -6,7 +6,7 @@ export const observabilityApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAppList: build.query({
       query: ({ user = "kevin" }) => ({
-        url: `http://localhost:7111/api/v1/cmdb/${user}/Operation`,
+        url: `${OBSERVABILITY_BASE_URL}/cmdb/${user}/Operation`,
       }),
       transformResponse: (appList) =>
         appList?.map((app) => {

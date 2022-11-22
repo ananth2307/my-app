@@ -1,7 +1,7 @@
-import React, { memo, useRef, } from "react";
+import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import * as d3 from "d3";
-import { cloneDeep, get,  } from "lodash";
+import { cloneDeep, get, isEmpty,  } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
@@ -19,7 +19,7 @@ const CodeAnalysis = (props) => {
     []
   );
   let codeAnalysisData =
-    tmpCodeAnalysisData.length > 0 &&
+   !isEmpty(tmpCodeAnalysisData)&&
     tmpCodeAnalysisData?.map((items) => {
       const { date, lines, violations } = items;
       return {
@@ -31,26 +31,6 @@ const CodeAnalysis = (props) => {
   const dropDownLabels = codeAnalysisData.length > 0 && [
     ...new Set(codeAnalysisData.map((item) => item.month)),
   ];
-  // const getDrillDownData = async () =>{
-  //   const selectedAppList = get(
-  //     observability,
-  //     "filterData.selectedApplications",
-  //     []
-  //   );
-  //   const payload = {
-  //     appCodes: selectedAppList.length
-  //       ? getSelectedOptionsValue(selectedAppList)
-  //       : getSelectedOptionsValue(appList),
-  //       projects:[],
-  //     sprintNames: [],
-  //     startDt: 1664562600000,
-  //     toDt: 1668709740000,
-  //     // startDt: get(observability, "filterData.selectedDate.startDate"),
-  //     // toDt: get(observability, "filterData.selectedDate.endDate"),
-  //   };
-  //   const response = await getLineOfCodeDatewise(payload);
-  //  return response;
-  // }
   const getDaysInMonth = (month, year) => {
     let monthIndex = getMonth.findIndex((item) => item === month);
     let date = new Date(year, monthIndex, 1);
@@ -79,10 +59,8 @@ const CodeAnalysis = (props) => {
         : getSelectedOptionsValue(appList),
         projects:[],
       sprintNames: [],
-      startDt: 1664562600000,
-      toDt: 1668709740000,
-      // startDt: get(observability, "filterData.selectedDate.startDate"),
-      // toDt: get(observability, "filterData.selectedDate.endDate"),
+      startDt: get(observability, "filterData.selectedDate.startDate"),
+      toDt: get(observability, "filterData.selectedDate.endDate"),
     };
     const LineOfCodeDatewiseData = await getLineOfCodeDatewise(payload);
     let tmpData = cloneDeep(LineOfCodeDatewiseData.data);

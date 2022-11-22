@@ -2,7 +2,6 @@ import { isEmpty } from "lodash";
 import React, { memo } from "react";
 
 const BitBucketHeader = (props) => {
-  console.log(props);
   const {
     mostActiveRepoData,
     mostPullRequstData,
@@ -10,7 +9,6 @@ const BitBucketHeader = (props) => {
     totalCloneData,
     totalPullRequestData,
   } = props.data;
-  console.log("dfadfa", isEmpty(mostActiveRepoData?.topRepoCount));
   return (
     <>
       <div

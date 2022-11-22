@@ -10,13 +10,3 @@ export const useD3 = (renderChartFn, dependencies) => {
       }, [dependencies]);
     return ref;
 }
-export const useChartjs = (nodeRef, chartOptions) => {
-  React.useEffect(() => {
-    const renderedChart = new Chart(nodeRef.current, chartOptions);
-    return () => {
-      renderedChart.destroy();
-    };
-  }, [nodeRef, chartOptions]);
-
-  return;
-};

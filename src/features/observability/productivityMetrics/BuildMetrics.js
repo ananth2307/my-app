@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import * as d3 from "d3";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import { failedCross, successCheck } from "../../../assets/images";
 
 const BuildMterics = (props) => {
@@ -13,7 +13,7 @@ const BuildMterics = (props) => {
   const buildMetricsData = [];
   let totalViolations = 0;
   let totalLines = 0;
-  tmpBuildMetricsData.length > 0 &&
+  !isEmpty(tmpBuildMetricsData) &&
     tmpBuildMetricsData.map((dt) => {
       if (dt.hasOwnProperty("month") && dt?.status) {
         let violations = 0;

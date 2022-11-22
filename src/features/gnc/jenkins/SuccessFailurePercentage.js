@@ -1,18 +1,17 @@
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import React, { memo } from "react";
 import { Doughnut } from "react-chartjs-2";
 
 const SuccessFailurePercentage = (props) => {
   const sucessFailureData = get(props, "jenkinsData.successFailureData", {});
   let width = get(props,"chartContainerRefs.current[1].offsetWidth", 1)
-  console.log(props);
   let successData = 0;
   let failureData = 0;
-  sucessFailureData.length > 0 &&
+  !isEmpty(sucessFailureData) &&
     sucessFailureData.map((data) => {
       if (data.hasOwnProperty("SUCCESS")) successData += data.SUCCESS;
     });
-  sucessFailureData.length > 0 &&
+    !isEmpty(sucessFailureData) &&
     sucessFailureData.map((data) => {
       if (data.hasOwnProperty("FAILURE")) failureData += data.FAILURE;
     });
