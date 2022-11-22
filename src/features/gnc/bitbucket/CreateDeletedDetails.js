@@ -4,32 +4,6 @@ import DataTable from '../../../app/common-components/DataTable'
 
 const CreateDeletedDetails = (props) => {
   const createDeleteData = get(props,'bitBucketData.createDeleteDetailsData')
-//   let tempData = {
-//     "project": [
-//         {
-//             "deleted": 131,
-//             "created": 136
-//         }
-//     ],
-//     "repository": [
-//         {
-//             "deleted": 15,
-//             "created": 28
-//         }
-//     ],
-//     "user": [
-//         {
-//             "deleted": 3,
-//             "created": 7
-//         }
-//     ],
-//     "group": [
-//         {
-//             "deleted": 7,
-//             "created": 1
-//         }
-//     ]
-// }
 const Headers = [
   {
   text:' ',
