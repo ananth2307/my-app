@@ -50,16 +50,11 @@ const ProductivityMetricsLanding = () => {
         toDt: initialEndDate,
       };
       const buildMetricsPayload = {
-        applications: [
-          "ACT",
-          "CODE8",
-          "DAAS",
-          "DOME",
-          "AIFT",
-          "MAT",
-          "PII",
-          "PROMOKART",
-        ],
+        applications:  isInitialLoad
+        ? getSelectedOptionsValue(appList)
+        : getSelectedOptionsValue(
+            get(observability, "filterData.selectedApplications", [])
+          ),
         fromDt: initialStartDate/1000,
         toDt: initialEndDate/1000,
       };

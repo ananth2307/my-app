@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import { responsivefy } from "../../../app/utilities/helpers";
 import * as d3 from "d3";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
@@ -14,7 +14,7 @@ const StaticCodeAnalysis = (props) => {
     []
   );
   let staticCodedata = [];
-  tmpstaticCodedata &&
+  !isEmpty(tmpstaticCodedata) &&
     Object.keys(tmpstaticCodedata).map((key) => {
       key !== "totalIssues" &&
         staticCodedata.push({

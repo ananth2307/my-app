@@ -1,6 +1,7 @@
-import { get, omit } from "lodash";
+import { get, isEmpty } from "lodash";
 import React, { memo } from "react";
 import { Line } from "react-chartjs-2";
+import Chart from 'chart.js/auto';
 
 const BuildTrend = (props) => {
   const buildTrendData = get(props, "jenkinsData.buildTrendData", {});
@@ -10,16 +11,14 @@ const BuildTrend = (props) => {
   let successData = [];
   let failureData = [];
 
-  SUCCESS &&
-    SUCCESS.length > 0 &&
+ !isEmpty(SUCCESS) &&
     SUCCESS.map((datas) => {
       Object.keys(datas).map((key) => {
         dates.push(key);
         successData.push(datas[key]);
       });
     });
-  FAILURE &&
-    FAILURE.length > 0 &&
+    !isEmpty(FAILURE) &&
     FAILURE.map((datas) => {
       Object.keys(datas).map((key) => {
         failureData.push(datas[key]);
@@ -45,12 +44,7 @@ const BuildTrend = (props) => {
     ],
   };
   return (
-    <div
-      class="graphblock"
-      style={{ position: "relative", height: "32vh", width: width }}
-    >
-      <Line data={data} />
-    </div>
+      <Line class='buildtrend' data={data}/>
   );
 };
 

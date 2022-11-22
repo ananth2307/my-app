@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import React, { memo } from "react";
 import { Bar } from "react-chartjs-2";
 
@@ -7,11 +7,11 @@ const SuccessFailureRatio = (props) => {
   let width = get(props,"chartContainerRefs.current[3].offsetWidth", 1)
   let successData = 0;
   let failureData = 0;
-  sucessFailureData.length > 0 &&
+   !isEmpty(sucessFailureData) &&
     sucessFailureData.map((data) => {
       if (data.hasOwnProperty("success ratio")) successData += data['success ratio'];
     });
-  sucessFailureData.length > 0 &&
+    !isEmpty(sucessFailureData) &&
     sucessFailureData.map((data) => {
       if (data.hasOwnProperty("failure ratio")) failureData += data['failure ratio'];
     });

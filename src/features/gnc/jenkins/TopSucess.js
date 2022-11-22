@@ -1,6 +1,5 @@
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import React, { memo } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
@@ -16,7 +15,7 @@ const TopSucess = (props) => {
     []
   );
   const sucessListItems =
-    topSuccessData.length > 0 &&
+    !isEmpty(topSuccessData)&&
     topSuccessData.map((list) => {
       return Object.keys(list).map((key, k) => {
         return (
@@ -72,9 +71,9 @@ const TopSucess = (props) => {
   };
   return (
     <>
-      <Link to={"#"} class="viewlink" onClick={openDrillDown}>
+      <a class="viewlink" onClick={openDrillDown}>
         View All
-      </Link>
+      </a>
       <table id="top5SuccessDetails" class="table">
         <thead>
           <tr>

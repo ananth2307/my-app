@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import { responsivefy } from "../../../app/utilities/helpers";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
@@ -15,7 +15,7 @@ const TopAssignees = (props) => {
   const topAssigneeColor = ["#7bd2de", "#81A71A", "#fec830"];
   const topAssigneeData = [];
   let topCount = 0;
-  if (topAssigneetempData.length > 0) {
+  if (!isEmpty(topAssigneetempData)) {
     let { TopValues } = topAssigneetempData[topAssigneetempData.length - 1];
     let convertedData = JSON.parse(TopValues);
     Object.keys(convertedData).map((key) => {

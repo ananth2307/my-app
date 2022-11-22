@@ -1,43 +1,17 @@
 import React, { memo } from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { get, groupBy } from "lodash";
+import { get, groupBy, isEmpty } from "lodash";
 import { responsivefy } from "../../../app/utilities/helpers";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 
 const LevelOfCollaboration = (props) => {
-  
   const dispatch = useDispatch();
-//   let LevelOfCollabData = [{
-//     "month": "Nov 22",
-//     "features": 19,
-//     "story": 12,
-//     "debt": 3,
-//     "enablers": 9,
-//     "prodFix": 2,
-//     "risk": 4,
-//     "changeRequest": 0,
-//     "bugs": 11,
-//     "task": 0,
-//     "epic": 0
-// },{
-//   "month": "Oct 22",
-//   "features":39,
-//   "story": 32,
-//   "debt": 3,
-//   "enablers": 9,
-//   "prodFix": 2,
-//   "risk": 4,
-//   "changeRequest": 0,
-//   "bugs": 11,
-//   "task": 0,
-//   "epic": 0
-// }];
-let LevelOfCollabData = get(props, "peopleMetricsData.collaboration", []);
+  let LevelOfCollabData = get(props, "peopleMetricsData.collaboration", []);
   let collaborationdata = [];
   let monthNum = 0;
-  LevelOfCollabData.length > 0 &&
+  !isEmpty(LevelOfCollabData) &&
     LevelOfCollabData.map((dt) => {
       monthNum += 1;
       for (let [key, value] of Object.entries(dt)) {
@@ -93,7 +67,6 @@ let LevelOfCollabData = get(props, "peopleMetricsData.collaboration", []);
           values: groupedData[dt],
         });
       });
-      
 
       let color = d3
         .scaleOrdinal()

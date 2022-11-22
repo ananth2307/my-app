@@ -6,7 +6,7 @@ export const observabilityApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAppList: build.query({
       query: ({ user = "kevin" }) => ({
-        url: `http://localhost:7111/api/v1/cmdb/${user}/Operation`,
+        url: `${OBSERVABILITY_BASE_URL}/cmdb/${user}/Operation`,
       }),
       transformResponse: (appList) =>
         appList?.map((app) => {
@@ -245,6 +245,91 @@ export const observabilityApi = api.injectEndpoints({
     getTopSuccessFailure: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/gnc/SFTopCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    // BitBucket
+    getMostActiveRepo: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/BRepoCommitCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getMostPullRequest: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/mostPullRequestCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getTotalCommit: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/totalCommitCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getTotalClone: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/totalCloneCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getTotalPullRequest: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/totalPullRequestCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getCommitTrend: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/commitTrend`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getCreateDeleteDetails: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/P_R_U_G_CD`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getPullRequestCount: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/pullRequestCount`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getPullRequestTrend: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/pullRequestTrend`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getLoginLogoutDetails: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/B_loginLogoutTrend`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getTopRepoDownloads: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/topRepoDownload`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getTopMostCommitRepo: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/gnc/topMostCommitRepo`,
         method: "POST",
         body: postBody,
       }),

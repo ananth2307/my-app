@@ -120,6 +120,7 @@ const Tools = () => {
           onEdit={onEditData}
           onDelete={onDeleteData}
           currentPage={state.page}
+          isPagination={true}
         />
       </div>
     </>

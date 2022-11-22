@@ -3,7 +3,7 @@ import React, { memo } from "react";
 
 const JobsNodeDetails = (props) => {
   const jobsData = get(props,'jenkinsData.jobNodeData.JobDetaills',{});
-  const nodeData = get(props,'jenkinsData.jobNodeData.JobDetaills',{});
+  const nodeData = get(props,'jenkinsData.jobNodeData.NodeDetails',{});
   return (
     <>
       <div class="container">

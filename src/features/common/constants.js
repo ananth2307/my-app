@@ -29,3 +29,6 @@ export const  sortingArr = [
   "Testing",
   "Done",
 ];
+export const ChartLineColor1 = "rgb(75, 192, 192)"
+export const loginColor = "#035558";
+export const logoutColor = "#B80413";
