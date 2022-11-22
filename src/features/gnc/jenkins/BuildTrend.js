@@ -45,12 +45,12 @@ const BuildTrend = (props) => {
     ],
   };
   return (
-    <div
-      class="graphblock"
-      style={{ position: "relative", height: "32vh", width: width }}
-    >
-      <Line data={data} />
-    </div>
+    // <div
+    //   class="buildtrend"
+    //   style={{ position: "relative", height: "32vh", width: "58vw" }}
+    // >
+      <Line class='buildtrend' data={data} style={{ position: "relative", height: "23vh", width: width }}/>
+    // </div>
   );
 };
 

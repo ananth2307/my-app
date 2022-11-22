@@ -188,9 +188,10 @@ const Filter = (props) => {
           </div>
         </div>
       </div>
-      <div class="clfltr">
+      {/* <div class="clfltr">
         A filter has been applied to the data. <a href="#">Clear Filter</a>
       </div>
+    </> */}
     </>
   );
 };

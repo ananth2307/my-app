@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import { JenkinsContainer } from "./common/constants";
+import { JenkinsContainer } from "../common/constants";
 import { useState, useEffect } from "react";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { getDefaultSelectedDate } from "../../common/helpers";
@@ -46,7 +46,7 @@ const JenkinsLanding = (props) => {
       getJobDetaills(defaultPayload),
       getTopSuccessFailure(topCountPayload),
     ]);
-    const jeninsData = {
+    const jenkinsData = {
       buildTrendData: get(JenkinsPromiseData, "[0].data", {}),
       successFailureData: get(JenkinsPromiseData, "[1].data", []),
       jobNodeData: {
@@ -59,7 +59,7 @@ const JenkinsLanding = (props) => {
       ...state,
       jenkinsData: {
         ...state.jenkinsData,
-        ...jeninsData,
+        ...jenkinsData,
       },
     }));
   }, [state.jenkinsData]);
