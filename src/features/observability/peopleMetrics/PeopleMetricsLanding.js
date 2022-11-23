@@ -33,16 +33,6 @@ const PeopleMetrics = (props) => {
   let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
   initialStartDate = new Date(initialStartDate).getTime();
   initialEndDate = new Date(initialEndDate).getTime();
-  const tmpAppcodes = [
-    "ACT",
-    "CODE8",
-    "DAAS",
-    "DOME",
-    "AIFT",
-    "MAT",
-    "PII",
-    "PROMOKART"
-];
 
   const getPeopleMetrics = useCallback(
     async (isInitialLoad = false) => {
@@ -107,6 +97,7 @@ const PeopleMetrics = (props) => {
       <div className="dashboardwrap colswrap all-works">
         <div className="row">
           {PeopleMetricChartContainers?.map((chartType, index) => {
+            console.log('chartType',chartType.component)
             return (
               <ChartContainer
                 key={chartType}

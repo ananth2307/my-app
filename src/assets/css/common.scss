@@ -4763,12 +4763,9 @@ h5.sllogo-active {
 div[role=progressbar] {
      
     animation: growProgressBar 3s 1 forwards;
+    text-align: left;
     width: var(--size);
     height: var(--size);
-    border-radius: 100%;
-    display: grid;
-        place-items: center;
-    align-content: center;
     background: radial-gradient(farthest-corner, white 62%, transparent 0 90%, white 0), conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), var(--bg) 0);
     /*background: radial-gradient(closest-side, white 80%, transparent 0 90%, white 0), conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), var(--bg) 0);*/
     font-size: calc(var(--size) / 5);
@@ -4782,10 +4779,10 @@ div[role=progressbar] {
     font-weight: 600;
 }
 .process-circle p span { color: #c7c4c4;}
-div[role=progressbar]::before {
-  counter-reset: percentage var(--value);
-  content: counter(percentage) "%";
-}
+// div[role=progressbar]::before {
+//   counter-reset: percentage var(--value);
+//   content: counter(percentage) "%";
+// }
 
 @media (-webkit-min-device-pixel-ratio: 1.25), 
 (min-resolution: 120dpi){ 

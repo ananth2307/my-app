@@ -132,6 +132,13 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getCommentsDdOne: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/comments/ddone`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     //productivity Metrics
     getStaticCodeAnalysis: build.mutation({
       query: (postedBy = {}) => ({
@@ -334,9 +341,74 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
-    getCommentsDdOne: build.mutation({
+    //DevopsMetrics
+    //plan
+    getplanActiveSprints: build.mutation({
       query: (postBody = {}) => ({
-        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/peopleMetric/comments/ddone`,
+        url: `${OBSERVABILITY_BASE_URL}/home/activeSprint/dates`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getplanActiveSprintIssue: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprintIssueTypes`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getplanActiveSprintPriority: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/userStories/priority`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getActiveSprintProgress: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/userStories/status`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getProjectMetrics: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/projectMetrics`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getPlanIssueMetrics: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/issueMetrics`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getPlanCollaboration: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/level/collaboration`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getProjectStatus: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/project/status`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getSprintVelocity: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprintVelocity`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getMonthlyRelease: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/plannedRelease`,
         method: "POST",
         body: postBody,
       }),

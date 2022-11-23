@@ -61,6 +61,31 @@ import("../opsMetrics/ChangeMangement/ChangeRequestPerRisk")
 const MeanTimetoChange  = React.lazy(() =>
 import("../opsMetrics/ChangeMangement/MeanTimetoChange")
 );
+// DevOps Metrics
+const PlanLanding = React.lazy(()=>
+import("../devopsMetrics/plan/PlanLanding")
+)
+// plan
+const ActiveSprints = React.lazy(()=>
+import("../devopsMetrics/plan/ActiveSprints"));
+const ActiveSprintIssue = React.lazy(()=>
+import('../devopsMetrics/plan/ActiveSprintIssue'));
+const ActiveSprintPriority = React.lazy(()=>
+import('../devopsMetrics/plan/ActiveSprintPriority'));
+const ActiveSprintProgress = React.lazy(()=>
+import('../devopsMetrics/plan/ActiveSprintProgress'));
+const ProjectMetrics = React.lazy(()=>
+import('../devopsMetrics/plan/ProjectMetrics'));
+const PlanIssueMetrics = React.lazy(()=>
+import('../devopsMetrics/plan/IssueMetrics'));
+const PlanLevelOfCollaboration = React.lazy(()=>
+import('../devopsMetrics/plan/LevelOfCollaboration'));
+const ProjectStatus = React.lazy(()=>
+import('../devopsMetrics/plan/ProjectStatus'));
+const SprintVelocity = React.lazy(()=>
+import('../devopsMetrics/plan/SprintVelocity'));
+const MonthlyRelease = React.lazy(()=>
+import('../devopsMetrics/plan/MonthlyRelease'));
 //Flow Metrics
 export const FlowMetricChartContainers = [
   {
@@ -475,3 +500,109 @@ export const OpsChangeMangement = [
     chart: (props) => <MeanTimetoChange {...props} />,
   },
 ];
+//DevOps Metrics 
+export const panels = [
+  {
+      key: 1,
+      title: "Plan",
+      name: "Plan",
+      body: <PlanLanding />,
+  },
+  {
+      key: 2,
+      title: "Code",
+      name: "Code",
+      body: ""
+  },
+  {
+      key: 3,
+      title: "Build",
+      name: "Build",
+      body: ""
+  },
+  {
+      key: 4,
+      title: "Scan",
+      name: "Scan",
+      body: ""
+  },
+  {
+      key: 5,
+      title: "Deploy",
+      name: "Deploy",
+      body: ""
+  }
+]
+//Plan
+export const PlanContainer1 =[
+  {
+    key: 1,
+    title: "Active sprints",
+    chart: (props) => <ActiveSprints {...props} />,
+    customClass:'col-md-12'
+  }
+]
+export const PlanContainer2 =[
+  {
+    key: 1,
+    title: "Active sprint: Issue types",
+    chart: (props) => <ActiveSprintIssue {...props} />,
+    customPanelClass:'panel-inner_class set_fix',
+    chartContainerClass:'chartContainerClass'
+  },
+  {
+    key: 2,
+    title: "Active sprint: Priority",
+    chart: (props) => <ActiveSprintPriority {...props} />,
+    customPanelClass:'panel-inner_class col-md-12 row set_fix'
+  },
+  {
+    key: 3,
+    title: "Active sprint: Progress",
+    chart: (props) => <ActiveSprintProgress {...props} />,
+    customPanelClass:'panel-inner_class set_fix',
+    chartContainerClass:'chartContainerClass'
+  },
+  {
+    key: 4,
+    title: "Project metrics",
+    chart: (props) => <ProjectMetrics {...props} />,
+    customPanelClass:'panel-inner_class set_fix',
+    customClass:'col-md-6'
+  },
+  {
+    key: 5,
+    title: "Issue metrics",
+    chart: (props) => <PlanIssueMetrics {...props} />,
+    customPanelClass:'panel-inner_class set_fix',
+    customClass:'col-md-6'
+  },
+  {
+    key: 6,
+    title: "Level of collaboration by comments",
+    chart: (props) => <PlanLevelOfCollaboration {...props} />,
+    customPanelClass:'panel-inner_class set_fix_bar',
+    customClass:'col-md-6'
+  },
+  {
+    key: 7,
+    title: "Project status",
+    chart: (props) => <ProjectStatus {...props} />,
+    customPanelClass:'panel-inner_class set_fix_bar',
+    customClass:'col-md-6'
+  },
+  {
+    key: 8,
+    title: "Sprint velocity",
+    chart: (props) => <SprintVelocity {...props} />,
+    customPanelClass:'panel-inner_class set_fix_bar',
+    customClass:'col-md-6'
+  },
+  {
+    key: 9,
+    title: "Monthly release",
+    chart: (props) => <MonthlyRelease {...props} />,
+    customPanelClass:'panel-inner_class set_fix_bar',
+    customClass:'col-md-6'
+  }
+]

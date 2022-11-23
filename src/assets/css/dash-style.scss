@@ -272,9 +272,8 @@ body.nav-toggle .navigation:before {
   margin-bottom: 15px !important;
 }
 .ps-legend {
-  position: absolute;
-  top: 6vw;
-  right: 2vw;
+  display: flex;
+  flex-direction: column;
   font-size: 0.9vw;
 }
 .ps-legend.spl-case {
@@ -294,8 +293,6 @@ body.nav-toggle .navigation:before {
 
 .legend-val {
   color: #030303;
-  position: absolute;
-  right: 0;
 }
 .b-ring {
   background-color: #55d8fe;
@@ -2098,9 +2095,7 @@ span.min-chat-pre {
       font-size: 1.5vw;
     }*/
   .ps-legend {
-    top: 7vw;
-    right: 2vw;
-    font-size: 1.2vw;
+    
   }
   .ps-legend#pmlegen {
     top: -1vw !important;

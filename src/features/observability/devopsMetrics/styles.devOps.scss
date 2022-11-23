@@ -20,9 +20,7 @@
     padding: 5px 15px 15px 15px;
     background: #f2f4f2;
   }
-  .row {
-    flex-flow: row;
-  }
+  
   .panel-heading {
     color: #4e4e4e;
     font-weight: bolder;
@@ -46,5 +44,12 @@
   .panel-inner_class label {
     color: #030303;
     font-weight: 500;
+  }
+  .chartContainerClass{
+    height: 15rem;
+    // width: 100%;
+    // display: flex;
+    // justify-content: space-between;
+    // flex-direction: row;
   }
 }
