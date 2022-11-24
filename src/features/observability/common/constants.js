@@ -298,7 +298,7 @@ export const PeopleMetricChartContainers = [
     customHeader: () => (
       <div class="fltrhead">
         <h4>Project Champions</h4>
-        <a href="" class="viewlink">
+        <a class="viewlink">
           View All
         </a>
       </div>

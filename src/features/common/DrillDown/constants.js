@@ -30,4 +30,32 @@ export const dDDefaultLevelOne = [
     title: "Prod-Fix",
   },
 ];
+export const dDDefaultLevelOne1 = [
+  {
+    name: "Blocker",
+    className: "dark-blueline",
+    title: "Blocker",
+  },
+  {
+    name: "Critical",
+    className: "blueline",
+    title: "Critical",
+  },
+  {
+    name: "High",
+    className: "pinkline",
+    title: "High",
+  },
+  {
+    name: "Medium",
+    className: "purpleline",
+    title: "Medium",
+  },
+  {
+    name: "Low",
+    className: "yellowline",
+    title: "Low",
+  },
+];
+
 

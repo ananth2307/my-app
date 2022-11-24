@@ -46,8 +46,12 @@ const ProductivityMetricsLanding = () => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        startDt: isInitialLoad
+        ? initialStartDate
+        : get(observability, "filterData.selectedDate.startDate"),
+        toDt: isInitialLoad
+        ? initialEndDate
+        : get(observability, "filterData.selectedDate.endDate"),
       };
       const buildMetricsPayload = {
         applications:  isInitialLoad

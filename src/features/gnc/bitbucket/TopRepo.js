@@ -28,12 +28,14 @@ const TopRepo = () => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "TOP REPO DOWNLOAD DETAILS",
       })
     );
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "TOP REPO DOWNLOAD DETAILS",
         // selectedData: await getSelectedData(),
       })

@@ -48,8 +48,12 @@ const PeopleMetrics = (props) => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        startDt: isInitialLoad
+        ? initialStartDate
+        : get(observability, "filterData.selectedDate.startDate"),
+        toDt: isInitialLoad
+        ? initialEndDate
+        : get(observability, "filterData.selectedDate.endDate"),
       };
       const TopAssigneePayload = {
         applications:isInitialLoad
@@ -97,7 +101,6 @@ const PeopleMetrics = (props) => {
       <div className="dashboardwrap colswrap all-works">
         <div className="row">
           {PeopleMetricChartContainers?.map((chartType, index) => {
-            console.log('chartType',chartType.component)
             return (
               <ChartContainer
                 key={chartType}
