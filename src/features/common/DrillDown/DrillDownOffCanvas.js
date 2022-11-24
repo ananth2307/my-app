@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
-import { dDDefaultLevelOne } from "./constants";
+import { dDDefaultLevelOne,dDDefaultLevelOne1 } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
 import { get } from "lodash";
@@ -62,10 +62,13 @@ const DrillDownOffCanvas = (props) => {
                   : "distribute-wrap flowacti-block"
               }`}
             >
-              {offcanvasState?.dropDownMenuOptions &&
+              {!offcanvasState?.isDropDownhide && !selectedData.customDrilldownHeaders ?
                 dDDefaultLevelOne.map((level) => (
                   <DdDefaultLevelOne level={level} {...props} />
-                ))}
+                )):dDDefaultLevelOne1.map((level) => (
+                  <DdDefaultLevelOne level={level} {...props} />
+                ))
+                 }
             </div>
             <div class="flow-descriptions-block flowpredi-des ">
               <DdDefaultSummary
@@ -75,7 +78,7 @@ const DrillDownOffCanvas = (props) => {
                     ? OpenIssueSummaryList
                     : selectedData.DdFlowPredictCustomSummary
                     ? predictabilityPlannedSummary
-                    : offcanvasState?.dropDownMenuOptions
+                    : !offcanvasState?.isDropDownhide
                     ? get(selectedData[selectedLevelOne], "summaryList", [])
                     : get(selectedData, "summaryList", [])
                 }

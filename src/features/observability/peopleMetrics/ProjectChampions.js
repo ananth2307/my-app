@@ -1,56 +1,49 @@
 import React, { memo } from "react";
 import { goldMedal } from "../../../assets/images";
-import { get } from "lodash";
-
+import { get, isEmpty } from "lodash";
+import { projectChampionData } from "../../../mockData/PeopleMetrics/ProjectChampions";
 const ProjectChampions = (props) => {
-  let topAssigneetempData = get(props, "peopleMetricsData.topAssignee", []);
+  const projectChampions = get(projectChampionData, "project champions", []);
+  let projectChampionsData = [];
+  let linkRef = document.getElementsByClassName("viewlink");
+  const openDrillDown = () => {          
+    console.log('Drilldown clicked')
+  };
+  if (!isEmpty(linkRef)) {
+    for (var i = 0; i < linkRef.length; i++) {
+      linkRef[i].addEventListener("click", openDrillDown);
+    }
+  }
+  !isEmpty(projectChampions) &&
+    projectChampions
+      .map((items) => items)
+      .map((items) => {
+        Object.keys(items).map((key) => {
+          projectChampionsData.push(items[key]);
+          projectChampionsData.sort((a, b) => b.commitCount - a.commitCount);
+        });
+      });
+  const topThreeChampions = projectChampionsData.splice(0, 3);
   return (
     <div class="cham-block">
-      <div class="chamrow" id="championsDiv">
-        <div class="chamwrap">
-          <div class="cham-med">
-            <img src={goldMedal} />
+      {!isEmpty(topThreeChampions) &&
+        topThreeChampions.map((champ) => (
+          <div class="chamrow">
+            <div class="chamwrap">
+              <div class="cham-med">
+                <img src={goldMedal} alt="goldMedal" />
+              </div>
+              <div class="cham-head">
+                <h3>{champ.authorName}</h3>
+                <h4>{champ.applicationName}</h4>
+              </div>
+            </div>
+            <div class="cham-des">
+              <p>Average lines of code per week</p>
+              <div class="cham-num">{champ.commitCount}</div>
+            </div>
           </div>
-          <div class="cham-head">
-            <h3>Shriraam</h3>
-            <h4>JAVA</h4>
-          </div>
-        </div>
-        <div class="cham-des">
-          <p>Average lines of code per week</p>
-          <div class="cham-num">3805</div>
-        </div>
-      </div>
-      <div class="chamrow">
-        <div class="chamwrap">
-          <div class="cham-med">
-            <img src={goldMedal} />
-          </div>
-          <div class="cham-head">
-            <h3>Kevin</h3>
-            <h4>JAVA</h4>
-          </div>
-        </div>
-        <div class="cham-des">
-          <p>Average lines of code per week</p>
-          <div class="cham-num">2112</div>
-        </div>
-      </div>
-      <div class="chamrow">
-        <div class="chamwrap">
-          <div class="cham-med">
-            <img src={goldMedal} />
-          </div>
-          <div class="cham-head">
-            <h3>Lisha</h3>
-            <h4>JAVA</h4>
-          </div>
-        </div>
-        <div class="cham-des">
-          <p>Average lines of code per week</p>
-          <div class="cham-num">1234</div>
-        </div>
-      </div>
+        ))}
     </div>
   );
 };

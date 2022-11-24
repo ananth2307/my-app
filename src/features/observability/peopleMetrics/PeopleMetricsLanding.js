@@ -33,16 +33,6 @@ const PeopleMetrics = (props) => {
   let { initialStartDate , initialEndDate } = getDefaultSelectedDate();
   initialStartDate = new Date(initialStartDate).getTime();
   initialEndDate = new Date(initialEndDate).getTime();
-  const tmpAppcodes = [
-    "ACT",
-    "CODE8",
-    "DAAS",
-    "DOME",
-    "AIFT",
-    "MAT",
-    "PII",
-    "PROMOKART"
-];
 
   const getPeopleMetrics = useCallback(
     async (isInitialLoad = false) => {
@@ -58,8 +48,12 @@ const PeopleMetrics = (props) => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        startDt: isInitialLoad
+        ? initialStartDate
+        : get(observability, "filterData.selectedDate.startDate"),
+        toDt: isInitialLoad
+        ? initialEndDate
+        : get(observability, "filterData.selectedDate.endDate"),
       };
       const TopAssigneePayload = {
         applications:isInitialLoad

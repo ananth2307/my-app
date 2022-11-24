@@ -47,12 +47,14 @@ const TopFailure = (props) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "FAILURE DETAILS",
       })
     );
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "FAILURE DETAILS",
         selectedData: await getSelectedData(),
       })

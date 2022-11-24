@@ -1,5 +1,5 @@
-
 import Plan from "./Plan";
+
 export const panels = [
     {
         key: 1,

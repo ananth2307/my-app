@@ -1009,3 +1009,20 @@ right: 1.8%;
 .actnav {
     grid-template-columns: 75% 25%;
 }
+.followup-btn {
+  font-size: var(--font16);
+  line-height: 1;
+  font-weight: var(--regular);
+  display: inline-block;
+  background-color: var(--primary);
+  color: var(--white);
+  border-radius: 6px;
+  padding: 10px 18px;
+  width: 130px;
+  border: 1px solid var(--primary);
+  -webkit-transition: all .4s linear;
+  -moz-transition: all .4s linear;
+  -o-transition: all .4s linear;
+  -ms-transition: all .4s linear;
+  transition: all .4s linear;
+}

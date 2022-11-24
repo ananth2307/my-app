@@ -29,11 +29,13 @@ const TopCommit = () => {
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
         title: "TOP REPO DOWNLOAD DETAILS",
+        isDropDownhide:true,
       })
     );
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "TOP REPO DOWNLOAD DETAILS",
         // selectedData: await getSelectedData(),
       })

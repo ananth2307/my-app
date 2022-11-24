@@ -58,12 +58,14 @@ const TopSucess = (props) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "SUCCESS DETAILS",
       })
     );
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide:true,
         title: "SUCCESS DETAILS",
         selectedData: await getSelectedData(),
       })

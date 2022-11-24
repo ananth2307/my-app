@@ -42,14 +42,12 @@ const IncidentMangementLanding = () => {
           : getSelectedOptionsById(
               get(observability, "filterData.selectedApplications", [])
             ),
-        projects: getSelectedOptionsValue(
-          get(observability, "filterData.selectedProjects", [])
-        ),
-        sprintName: getSelectedOptionsValue(
-          get(observability, "filterData.selectedSprints", [])
-        ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        fromDt: isInitialLoad
+        ? initialStartDate
+        : get(observability, "filterData.selectedDate.startDate"),
+        toDt: isInitialLoad
+        ? initialEndDate
+        : get(observability, "filterData.selectedDate.endDate")
       };
 
 

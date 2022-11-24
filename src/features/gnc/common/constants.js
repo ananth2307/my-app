@@ -91,7 +91,7 @@ export const BitBuketTrendContainer1 = [
   export const BitBuketTrendContainer2 = [
   {
     key: 1,
-    title: "PULL REQUEST COUNT",
+    title: "PULL REQUEST TREND",
     chart: (props) => <PullRequestCount {...props} />,
     navContainerClass: "flowdisnav",
     customClass:'col-lg-5 col-md-5 filtercol'
