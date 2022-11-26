@@ -83,7 +83,7 @@ const PeopleMetrics = (props) => {
         peopleMetricsData: { ...state.peopleMetricsData, ...peopleMetricsData },
       }));
     },
-    [state.peopleMetricsData]
+    [state.peopleMetricsData, observability.filterData]
   );
   useEffect(() => {
     getAppList({})

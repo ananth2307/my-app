@@ -85,7 +85,7 @@ const ProductivityMetricsLanding = () => {
         },
       }));
     },
-    [state.productivityMetricsData]
+    [state.productivityMetricsData, observability.filterData]
   );
   useEffect(() => {
     getAppList({})
