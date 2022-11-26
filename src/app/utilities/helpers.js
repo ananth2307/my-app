@@ -5,7 +5,9 @@ export const getSelectedOptionsValue = (options=[]) => {
   return map(options, "value");
 };
 export const getSelectedOptionsById = (options=[]) => {
-  return map(options, "id");
+  const stringArray = map(options, "id")
+  return stringArray.map(item => item.toString());
+  // return map(options, "id")
 }; 
 export const filterOptions = (optionsProps, searchText, setState) => {
   setState(

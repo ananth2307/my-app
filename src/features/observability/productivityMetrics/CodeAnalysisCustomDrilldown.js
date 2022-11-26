@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
 import { Bar } from "react-chartjs-2";
-import { ChartLineColor1 } from "../constants";
-const CustomDrilldown = (props) => {
+import { ChartLineColor1 } from "../../common/constants";
+const CodeAnalysisCustomDrilldown = (props) => {
   const commonSliceState = useSelector((state) => state.common);
   const selectedData = get(commonSliceState, "offcanvasState.selectedData", []);
   const { days, codeAnalysisLineData, codeAnalysisViolationsData } =
@@ -41,4 +41,4 @@ const CustomDrilldown = (props) => {
   };
   return <Bar data={data} options={options} />;
 };
-export default CustomDrilldown;
+export default CodeAnalysisCustomDrilldown;

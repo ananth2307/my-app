@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
@@ -6,7 +6,6 @@ import { dDDefaultLevelOne,dDDefaultLevelOne1 } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
 import { get } from "lodash";
-import CustomDrilldown from "./CustomDrilldown";
 
 const DrillDownOffCanvas = (props) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
@@ -52,7 +51,7 @@ const DrillDownOffCanvas = (props) => {
           </div>
         )}
         {selectedData?.customDrillDownCanvas ? (
-          <CustomDrilldown />
+          selectedData?.customDrillDownCanvas()
         ) : (
           <>
             <div
@@ -62,10 +61,10 @@ const DrillDownOffCanvas = (props) => {
                   : "distribute-wrap flowacti-block"
               }`}
             >
-              {!offcanvasState?.isDropDownhide && !selectedData.customDrilldownHeaders ?
+              {!offcanvasState?.isDropDownhide?
                 dDDefaultLevelOne.map((level) => (
                   <DdDefaultLevelOne level={level} {...props} />
-                )):dDDefaultLevelOne1.map((level) => (
+                )): selectedData.customDrilldownHeaders && dDDefaultLevelOne1.map((level) => (
                   <DdDefaultLevelOne level={level} {...props} />
                 ))
                  }

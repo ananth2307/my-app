@@ -74,6 +74,7 @@ const StaticCodeAnalysis = (props) => {
   const ref = useD3(
     (svg) => {
       let data = staticCodedata;
+      svg.html("");
       if (data.length) {
         let width = get(props, "chartContainerRefs.current[0].offsetWidth", 0);
         let height = 0.75 * width; //this is the double because are showing just the half of the pie
@@ -157,8 +158,7 @@ const StaticCodeAnalysis = (props) => {
 
         //.text(function(d, i) { return data[i].label + " " + d.value + "%" });
       }
-    },
-    [staticCodedata]
+    },[staticCodedata]
   );
   return (
     <>
