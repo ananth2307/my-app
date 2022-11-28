@@ -23,6 +23,7 @@ import successCheck from './success-check.png';
 import failedCross from './faild-cross.png';
 import homeFilter from "./homefilter.png"
 import appIcon from './app.png';
+import sprintIcon from "./sprint.png";
 
 export {
     checkboxTick,
@@ -47,6 +48,8 @@ export {
     settings,
     downCaret,
     goldMedal,
+    //Devops Metrics
     homeFilter,
     appIcon,
+    sprintIcon,
 }
