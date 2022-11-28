@@ -1,59 +1,59 @@
 export const dDDefaultLevelOne = [
   {
     name: "features",
-    className: "dark-blueline",
+    className: "flowbox dark-blueline dark-blueline",
     title: "Features",
   },
   {
     name: "defects",
-    className: "blueline",
+    className: "flowbox dark-blueline blueline",
     title: "Defects",
   },
   {
     name: "risk",
-    className: "pinkline",
+    className: "flowbox dark-blueline pinkline",
     title: "Risks",
   },
   {
     name: "enablers",
-    className: "purpleline",
+    className: "flowbox dark-blueline purpleline",
     title: "Enablers",
   },
   {
     name: "debt",
-    className: "orangeline",
+    className: "flowbox dark-blueline orangeline",
     title: "Debt",
   },
   {
     name: "prodFix",
-    className: "yellowline",
+    className: "flowbox dark-blueline yellowline",
     title: "Prod-Fix",
   },
 ];
 export const dDDefaultLevelOne1 = [
   {
     name: "Blocker",
-    className: "dark-blueline",
+    className: "flowbox dark-blueline dark-blueline",
     title: "Blocker",
   },
   {
     name: "Critical",
-    className: "blueline",
+    className: "flowbox dark-blueline blueline",
     title: "Critical",
   },
   {
     name: "High",
-    className: "pinkline",
+    className: "flowbox dark-blueline pinkline",
     title: "High",
   },
   {
     name: "Medium",
-    className: "purpleline",
+    className: "flowbox dark-blueline purpleline",
     title: "Medium",
   },
   {
     name: "Low",
-    className: "yellowline",
+    className: "flowbox dark-blueline yellowline",
     title: "Low",
   },
 ];

@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import * as d3 from "d3";
 import { failedCross, successCheck } from "../../../assets/images";
+import { mockDeploymentData } from "../../../mockData/ProductivityMetrics/DeploymentMetrics";
 
 const DeploymentMetrics = (props) => {
   const data = [
@@ -151,13 +152,13 @@ const DeploymentMetrics = (props) => {
                 </div>
                 <div class="srate-des">
                   <div class="sdestxt">
-                    <img src={successCheck} />
+                    <img src={successCheck} alt='sucess' />
                     <p>
                       Success <span>82</span>
                     </p>
                   </div>
                   <div class="sdestxt">
-                    <img src={failedCross} />
+                    <img src={failedCross} alt='failed'/>
                     <p>
                       Failed <span>37</span>
                     </p>
@@ -179,13 +180,13 @@ const DeploymentMetrics = (props) => {
                 </div>
                 <div class="srate-des">
                   <div class="sdestxt">
-                    <img src={successCheck} />
+                    <img src={successCheck} alt='success'/>
                     <p>
                       Success <span>88</span>
                     </p>
                   </div>
                   <div class="sdestxt">
-                    <img src={failedCross} />
+                    <img src={failedCross} alt='failed'/>
                     <p>
                       Failed <span>42</span>
                     </p>
@@ -207,13 +208,13 @@ const DeploymentMetrics = (props) => {
                 </div>
                 <div class="srate-des">
                   <div class="sdestxt">
-                    <img src={successCheck} />
+                    <img src={successCheck} alt='success'/>
                     <p>
                       Success <span>89</span>
                     </p>
                   </div>
                   <div class="sdestxt">
-                    <img src={failedCross} />
+                    <img src={failedCross} alt='failed'/>
                     <p>
                       Failed <span>38</span>
                     </p>
@@ -222,7 +223,7 @@ const DeploymentMetrics = (props) => {
               </div>
               <div class="srate-mtr">Success Rate: 70%</div>
               <div class="srtae-graph">
-                <div class="sitdeploymentmetrics3" id="sitdeploymentmetrics3">
+                <div class="sitdeploymentmetrics3">
                   {" "}
                   <svg ref={ref}></svg>
                 </div>

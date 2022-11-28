@@ -7,6 +7,7 @@ import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 import { getMonth } from "../../common/constants";
 import { getSelectedOptionsValue } from "../../../app/utilities/helpers";
+import CodeAnalysisCustomDrilldown from "./CodeAnalysisCustomDrilldown";
 const CodeAnalysis = (props) => {
   const dispatch = useDispatch();
   const { observability } = useSelector((state) => state);
@@ -80,7 +81,7 @@ const CodeAnalysis = (props) => {
     });
     selectedData.codeAnalysisLineData = codeAnalysisLineData;
     selectedData.codeAnalysisViolationsData = codeAnalysisViolationsData;
-    selectedData.customDrillDownCanvas = true;
+    selectedData.customDrillDownCanvas = () => ( <CodeAnalysisCustomDrilldown/>);
     return selectedData;
   };
   const handleDdMenuChange = async (selectedValue) => {
@@ -103,7 +104,7 @@ const CodeAnalysis = (props) => {
         value: month,
       })),
       selectedData:{
-        customDrillDownCanvas:true
+        customDrillDownCanvas: ( ) => { }
       }
     }));
     dispatch(
@@ -127,6 +128,7 @@ const CodeAnalysis = (props) => {
   };
   const ref = useD3(
     (svg) => {
+      svg.html("");
       let data = codeAnalysisData;
       let width = get(props, "chartContainerRefs.current[1].offsetWidth", 1);
       let height = 0.75 * width;

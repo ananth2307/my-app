@@ -191,10 +191,31 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getMTBI: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/incidentManagement/filter/MTBI`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getIncidentMTTR: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/incidentManagement/filter/incidentMTTR`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     //ChangeManagement
     getChangeRequest: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/changeManagement/filter/noOfChangeRequest`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getRootCause: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/changeManagement/getByRootCause/${postBody.type}`,
         method: "POST",
         body: postBody,
       }),

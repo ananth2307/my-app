@@ -9,6 +9,7 @@ import { DrillDownOffCanvas } from "../../common";
 import Filter from "../../common/Filter";
 import ChartContainer from "../common/ChartContainer";
 import { ProductMetricChartContainers } from "../common/constants";
+import 'chart.js/auto'
 
 const ProductivityMetricsLanding = () => {
   const [state, setstate] = useState({
@@ -59,8 +60,12 @@ const ProductivityMetricsLanding = () => {
         : getSelectedOptionsValue(
             get(observability, "filterData.selectedApplications", [])
           ),
-        fromDt: initialStartDate/1000,
-        toDt: initialEndDate/1000,
+          fromDt: isInitialLoad
+          ? initialStartDate/1000
+          : Math.round(get(observability, "filterData.selectedDate.startDate")/1000),
+          toDt: isInitialLoad
+          ? initialEndDate/1000
+          : Math.round(get(observability, "filterData.selectedDate.endDate")/1000)
       };
 
       let producivityMetricsPromiseData = await Promise.all([

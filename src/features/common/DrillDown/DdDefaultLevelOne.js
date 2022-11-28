@@ -10,17 +10,26 @@ const DdDefaultLevelOne = (props) => {
   const drillDownSelectionState = useSelector(
     (state) => state?.common?.drillDownSelectionState
   );
+  const count = get(
+    offcanvasState,
+    `selectedData.${props.level.name}.count`,
+    0
+  );
   const onSelectLvlOne = () => {
-    if (selectedData.DdLevelOneBoxClick) {
+    selectedData.DdLevelOneBoxClick &&
       selectedData.customSummaryListCall(props.level.name, offcanvasState);
-    }
+
     dispatch(setSelectedLevelOne(props.level.name));
   };
 
   return (
     <div
-      className={`flowbox dark-blueline ${props.level.className} ${
-        drillDownSelectionState?.selectedLevelOne === props?.level?.name
+      className={`${props.level.className} ${
+        selectedData.opsMetricsCustomDrillDown
+          ? count > 0
+            ? "vaild"
+            : "disabled"
+          : drillDownSelectionState?.selectedLevelOne === props?.level?.name
           ? "active"
           : ""
       }`}
@@ -34,9 +43,7 @@ const DdDefaultLevelOne = (props) => {
           props.level.title
         )
       ) : (
-        <h2 class="fdcount">
-          {get(offcanvasState, `selectedData.${props.level.name}.count`, 0)}
-        </h2>
+        <h2 class="fdcount">{count}</h2>
       )}
     </div>
   );
