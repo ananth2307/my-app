@@ -8,7 +8,26 @@ export const getDefaultSelectedDate = () => ({
   initialStartDate,
   initialEndDate,
 });
+export const getDefaultIncidentClass = (label) =>{
+  const classNames = {
 
+    Performance:'managecol dark-blue-border',
+    Availability:'managecol blue-border',
+    Network:'managecol pink-border',
+    Others:'managecol purple-border',
+    Critical:'managecol pink-border',
+    Major:'managecol dark-blue-border',
+    Minor:'managecol blue-border',
+    Normal:'managecol dark-blue-border',
+    Standard:'managecol blue-border',
+    Emergency:'managecol pink-border',
+    Low:'managecol blue-border',
+    Medium:'managecol dark-blue-border',
+    High:'managecol purple-border',
+    "Very High":'managecol pink-border'
+  }
+  return  classNames[label]
+}
 export const getMetricTypeMappedCount = (type = {}, mapping) => {
   let count = 0;
   Object.keys(type).map((key) => {

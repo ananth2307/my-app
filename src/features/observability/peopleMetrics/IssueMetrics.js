@@ -20,7 +20,7 @@ const IssueMetrics = (props) => {
     observabilityApi.useGetIssueMetricsDdOneMutation();
 
   let issueMetricsData = get(props, "peopleMetricsData.issueMetrics", []);
-  var filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
+  let filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
   let { total } = pick(issueMetricsData, ["total"]);
   let data = filteredIssueMetricsData
     ? Object.keys(filteredIssueMetricsData).map((key) => ({

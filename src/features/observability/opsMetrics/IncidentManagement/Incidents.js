@@ -7,6 +7,7 @@ import { setIsOffCanvasOpen } from "../../../../app/commonSlice";
 import OpsMetricsCustomDrillDown from "../OpsMetricsCustomDrillDown";
 import { getSelectedOptionsById } from "../../../../app/utilities/helpers";
 import { observabilityApi } from "../../../../app/services/observabilityApi";
+import { getDefaultIncidentClass } from "../../../common/helpers";
 
 const Incidents = (props) => {
   const dispatch = useDispatch();
@@ -17,33 +18,12 @@ const Incidents = (props) => {
   !isEmpty(tmpIncidentData) &&
     tmpIncidentData.map((items) => {
       const { incidentType: label, incidents } = items;
-      if (label === "Performance")
+      const className = getDefaultIncidentClass(label)
         IncidentsData.push({
           label,
           incidents,
           value: incidents.length,
-          className: "managecol dark-blue-border",
-        });
-      else if (label === "Availability")
-        IncidentsData.push({
-          label,
-          incidents,
-          value: incidents.length,
-          className: "managecol blue-border",
-        });
-      else if (label === "Network")
-        IncidentsData.push({
-          label,
-          incidents,
-          value: incidents.length,
-          className: "managecol pink-border",
-        });
-      else if (label === "Others")
-        IncidentsData.push({
-          label,
-          incidents,
-          value: incidents.length,
-          className: "managecol purple-border",
+          className
         });
     });
   IncidentsData.push({
@@ -58,6 +38,7 @@ const Incidents = (props) => {
       customDrillDownCanvas() {
         return (
           <OpsMetricsCustomDrillDown
+          totalTitle={'TOTAL INCIDENTS'}
             boxTitle={"NO. OF INCIDENTS (PER ROOT CAUSE)"}
             summaryTitle={"INCIDENT LIST"}
           />
@@ -78,7 +59,7 @@ const Incidents = (props) => {
       };
       const MTBIdata = await getMTBI(defaultPayload);
       let SelectedBoxData = {};
-      SelectedBoxData.MTBIdata = {
+      SelectedBoxData.meanTimeData = {
         ...MTBIdata.data.filter((date) => date.incidentType === label)[0],
       };
       IncidentsData.map((data) => {
@@ -93,13 +74,13 @@ const Incidents = (props) => {
               : 1;
             if (SelectedBoxData[key].summaryList) {
               SelectedBoxData[key].summaryList.push({
-                id: items.incidentNo,
+                issueId: items.incidentNo,
                 summary: items.incidentDescription,
               });
             } else {
               SelectedBoxData[key].summaryList = [
                 {
-                  id: items.incidentNo,
+                  issueId: items.incidentNo,
                   summary: items.incidentDescription,
                 },
               ];
@@ -107,12 +88,6 @@ const Incidents = (props) => {
           });
         }
       });
-      SelectedBoxData.customSummaryList = (singleSummary) => (
-        <li>
-          <div class="fw-20">{singleSummary.id}</div>
-          <div class="fw-50">{singleSummary.summary}</div>
-        </li>
-      );
       dispatch(
         setIsOffCanvasOpen({
           title: props.title,

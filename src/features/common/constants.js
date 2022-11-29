@@ -32,3 +32,37 @@ export const  sortingArr = [
 export const ChartLineColor1 = "rgb(75, 192, 192)"
 export const loginColor = "#035558";
 export const logoutColor = "#B80413";
+export const IncidentLabels =
+[
+  {
+  label:'Performance',
+  open:false
+},
+{
+  label:'Availability',
+  open:false
+},
+{
+  label:'Network',
+  open:false
+},
+{
+  label:'Others',
+  open:false
+}
+]
+export const ChangeLabels =
+[
+  {
+  label:'Normal',
+  open:false
+},
+{
+  label:'Standard',
+  open:false
+},
+{
+  label:'Emergency',
+  open:false
+}
+]

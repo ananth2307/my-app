@@ -5,6 +5,7 @@ import { get, isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../../app/commonSlice";
 import OpsMetricsCustomDrillDown from "../OpsMetricsCustomDrillDown";
+import { getDefaultIncidentClass } from "../../../common/helpers";
 const IncidentsPerCategory = (props) => {
   const dispatch = useDispatch();
   let tmpIncidentsCategoryData = get(
@@ -16,26 +17,12 @@ const IncidentsPerCategory = (props) => {
   !isEmpty(tmpIncidentsCategoryData) &&
     tmpIncidentsCategoryData.map((items) => {
       const { category: label, categoryList } = items;
-      if (label === "Critical")
+      const className = getDefaultIncidentClass(label)
         categoryData.push({
           label,
           categoryList,
           value: categoryList.length,
-          className: "managecol pink-border",
-        });
-      else if (label === "Major")
-        categoryData.push({
-          label,
-          categoryList,
-          value: categoryList.length,
-          className: "managecol dark-blue-border",
-        });
-      else if (label === "Minor")
-        categoryData.push({
-          label,
-          categoryList,
-          value: categoryList.length,
-          className: "managecol blue-border",
+          className
         });
     });
   categoryData.push({
@@ -51,6 +38,7 @@ const IncidentsPerCategory = (props) => {
       customDrillDownCanvas() {
         return (
           <OpsMetricsCustomDrillDown
+          totalTitle={'TOTAL INCIDENTS'}
             boxTitle={"NO. OF INCIDENTS (PER ROOT CAUSE)"}
             summaryTitle={"INCIDENT LIST"}
           />
@@ -75,13 +63,13 @@ const IncidentsPerCategory = (props) => {
               : 1;
             if (SelectedBoxData[key].summaryList) {
               SelectedBoxData[key].summaryList.push({
-                id: items.incidentNo,
+                issueId: items.incidentNo,
                 summary: items.incidentDescription,
               });
             } else {
               SelectedBoxData[key].summaryList = [
                 {
-                  id: items.incidentNo,
+                  issueId: items.incidentNo,
                   summary: items.incidentDescription,
                 },
               ];
@@ -89,12 +77,6 @@ const IncidentsPerCategory = (props) => {
           });
         }
       });
-      SelectedBoxData.customSummaryList = (singleSummary) => (
-        <li>
-          <div class="fw-20">{singleSummary.id}</div>
-          <div class="fw-50">{singleSummary.summary}</div>
-        </li>
-      );
       dispatch(
         setIsOffCanvasOpen({
           title: props.title,

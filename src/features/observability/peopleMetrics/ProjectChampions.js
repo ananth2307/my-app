@@ -10,7 +10,7 @@ const ProjectChampions = (props) => {
     console.log('Drilldown clicked')
   };
   if (!isEmpty(linkRef)) {
-    for (var i = 0; i < linkRef.length; i++) {
+    for (let i = 0; i < linkRef.length; i++) {
       linkRef[i].addEventListener("click", openDrillDown);
     }
   }

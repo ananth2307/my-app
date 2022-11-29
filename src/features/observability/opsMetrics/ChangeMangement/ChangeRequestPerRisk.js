@@ -1,16 +1,107 @@
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import React, { memo } from 'react'
 import { useD3 } from '../../../../hooks/useD3';
 import * as d3 from "d3";
+import { useDispatch } from "react-redux";
+import { setIsOffCanvasOpen } from "../../../../app/commonSlice";
+import OpsMetricsCustomDrillDown from "../OpsMetricsCustomDrillDown";
+import { getDefaultIncidentClass } from "../../../common/helpers";
 
 const ChangeRequestPerRisk= (props) => {
-  const tmpData = [
-    { label: 'Low', value: 2 },
-    { label: 'Medium', value: 40 },
-    { label: 'High', value: 5 },
-    { label: 'Very High', value: 3 }
-];
+    const dispatch = useDispatch();
+    const tmpChangeRequestRisk = get(
+      props,
+      "ChangeMangementData.changeRequestPerRiskData",
+      []
+    );
+    let ChangeRequestPerRisk = []
+    !isEmpty(tmpChangeRequestRisk) &&
+    tmpChangeRequestRisk.map((items) => {
+      const { risk: label, changeRiskList } = items;
+      const className = getDefaultIncidentClass(label)
+      ChangeRequestPerRisk.push({
+          label,
+          changeRiskList,
+          value: changeRiskList.length,
+          className
+        });
+    });
+    ChangeRequestPerRisk.push({
+        total: ChangeRequestPerRisk.reduce(
+          (accumulator, currentValue) => accumulator + currentValue.value,
+          0
+        ),
+      });
+      const getSelectedData = () => {
+        let selectedData = {
+          driiDownTopHeaderBoxData: ChangeRequestPerRisk,
+          isMTBIhide: true,
+          customDrillDownCanvas() {
+            return (
+              <OpsMetricsCustomDrillDown
+               totalTitle = {'TOTAL CHANGE REQUESTS'}
+                boxTitle={"NO. OF CHANGE REQUESTS (PER ROOT CAUSE)"}
+                summaryTitle={"CHANGE LIST"}
+              />
+            );
+          },
+          opsMetricsCustomDrillDown: true,
+          customSummaryHeader() {
+            return "";
+          },
+        };
+        selectedData.customSummaryListCall = (label) => {
+          let SelectedBoxData = {};
+          ChangeRequestPerRisk.map((data) => {
+            if (data.label === label) {
+              data.changeRiskList.map((items) => {
+                let key = items.relatedIssueType;
+                SelectedBoxData[key] = SelectedBoxData[key]
+                  ? SelectedBoxData[key]
+                  : {};
+                SelectedBoxData[key].count = SelectedBoxData[key].count
+                  ? SelectedBoxData[key].count + 1
+                  : 1;
+                if (SelectedBoxData[key].summaryList) {
+                  SelectedBoxData[key].summaryList.push({
+                    issueId: items.changeRequestNo,
+                    summary: items.description,
+                  });
+                } else {
+                  SelectedBoxData[key].summaryList = [
+                    {
+                      issueId: items.changeRequestNo,
+                      summary: items.description,
+                    },
+                  ];
+                }
+              });
+            }
+          });
+          dispatch(
+            setIsOffCanvasOpen({
+              title: props.title,
+              isDrilldownOpen: true,
+              selectedData: {
+                ...selectedData,
+                ...SelectedBoxData,
+              },
+            })
+          );
+        };
+        return selectedData;
+      };
+      const openDrillDown = () => {
+        dispatch(
+          setIsOffCanvasOpen({
+            title: props.title,
+            isDrilldownOpen: true,
+            selectedData: getSelectedData(),
+          })
+        );
+      };
   const ref = useD3(svg => {
+    svg.html('')
     let width = get(props,"chartContainerRefs.current[2].offsetWidth",1)
     let height = 350; //this is the double because are showing just the half of the pie
     let radius = 130;
@@ -19,7 +110,7 @@ const ChangeRequestPerRisk= (props) => {
     let color = d3.scaleOrdinal()
         .range(['#98bddf', '#ffc830', '#ff9250', '#fc543a']);
 
-    let data = tmpData
+    let data = ChangeRequestPerRisk
 
 
     let tau = 2 * Math.PI;
@@ -58,7 +149,8 @@ const ChangeRequestPerRisk= (props) => {
         .data(pie) //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
         .enter() //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
         .append('svg:g') //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-        .attr('class', 'slice'); //allow us to style things in the slices (like text)
+        .attr('class', 'slice')
+        .on('click',()=>(openDrillDown())); //allow us to style things in the slices (like text)
 
     arcs
         .append('svg:path')
@@ -87,7 +179,8 @@ const ChangeRequestPerRisk= (props) => {
         })
         .text(function(d, i) {
             return data[i].value;
-        }); //get the label from our original data array
+        }) //get the label from our original data array
+        .on('click',()=>(openDrillDown()));
 
 
     arcs
@@ -110,9 +203,10 @@ const ChangeRequestPerRisk= (props) => {
         })
         .text(function(d, i) {
             return data[i].label;
-        }); //get the label from our original data array
+        }) //get the label from our original data array
+        .on('click',()=>(openDrillDown()));
 
-},[tmpData]) 
+},[ChangeRequestPerRisk]) 
   return (
     <svg ref={ref}/>
   )

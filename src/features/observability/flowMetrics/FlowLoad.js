@@ -133,8 +133,8 @@ const FlowLoad = (props) => {
         return str.length > n ? str.substr(0, n - 1) + "..." : str;
       }
 
-      var wrap = function () {
-        var self = d3.select(this),
+      let wrap = function () {
+        let self = d3.select(this),
           textLength = self.node().getComputedTextLength(),
           text = self.text();
         while (textLength > 50 && text.length > 0) {
@@ -144,7 +144,7 @@ const FlowLoad = (props) => {
         }
       };
 
-      var colorCircle = function (name) {
+      let colorCircle = function (name) {
         let colors = [
           "#167ad6",
           "#ff8000",
@@ -165,15 +165,15 @@ const FlowLoad = (props) => {
         }
       };
 
-      var datasetfull = chartData;
-      var tasksum = 0;
-      var maxwidtha = 0;
+      let datasetfull = chartData;
+      let tasksum = 0;
+      let maxwidtha = 0;
 
-      for (var r = 0; r < datasetfull.length; r++) {
+      for (let r = 0; r < datasetfull.length; r++) {
         tasksum = tasksum + parseInt(datasetfull[r].count);
       }
 
-      for (var r = 0; r < datasetfull.length; r++) {
+      for (let r = 0; r < datasetfull.length; r++) {
         datasetfull[r].widtha = (datasetfull[r].count / tasksum) * 700;
 
         if (datasetfull[r].widtha > 220) {
@@ -190,16 +190,16 @@ const FlowLoad = (props) => {
       }
 
       for (let i = 0; i < datasetfull.length; i++) {
-        var dataset = datasetfull[i];
+        let dataset = datasetfull[i];
 
-        var width = dataset.widtha;
-        var height = dataset.widtha;
+        let width = dataset.widtha;
+        let height = dataset.widtha;
         //Size of the circle pack layout
-        var diameter = Math.min(width * 0.9, height * 0.9);
+        let diameter = Math.min(width * 0.9, height * 0.9);
 
-        var bubble = d3.pack().size([diameter, diameter]).padding(12);
+        let bubble = d3.pack().size([diameter, diameter]).padding(12);
 
-        var svg = svg1
+        let svg = svg1
           .append("svg")
           .attr("style", "overflow:visible")
           .attr("width", diameter)
@@ -244,22 +244,22 @@ const FlowLoad = (props) => {
           .style("font-size", 16)
           .text(truncate(dataset.name, 10));
 
-        var nodes = d3.hierarchy(dataset).sum(function (d) {
+        let nodes = d3.hierarchy(dataset).sum(function (d) {
           return d.count;
         });
 
-        var vNodes = nodes.descendants();
+        let vNodes = nodes.descendants();
 
         bubble(nodes);
 
-        var vSlices = svg
+        let vSlices = svg
           .selectAll("circle")
           .data(vNodes)
           .enter()
           .append("circle")
           .attr("transform", "translate(" + 0 + "," + 50 + ")");
 
-        var leaf = svg.selectAll("circle").data(vNodes);
+        let leaf = svg.selectAll("circle").data(vNodes);
 
         // Draw on screen
         vSlices

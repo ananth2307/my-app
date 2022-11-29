@@ -199,11 +199,11 @@ const FlowEfficiency = (props) => {
         .append("svg:g") //make a group to hold our pie chart
         .attr("transform", "translate(" + 0 + ", -" + 100 + ")"); //move the center of the pie chart from 0, 0 to radius, radius
 
-      var divwidth = 415;
+      let divwidth = 415;
 
-      var vist = null;
+      let vist = null;
 
-      for (var ij = 0; ij < maindata.length; ij++) {
+      for (let ij = 0; ij < maindata.length; ij++) {
         if (ij <= 2) {
           vist = svg
             .select("g")
@@ -224,7 +224,7 @@ const FlowEfficiency = (props) => {
             .attr("transform", "translate(" + (ij - 2) * 80 + "," + 250 + ")");
 
           /*
-          var svg = d3
+          let svg = d3
           .select('.donut')
           .append('svg') //create the SVG element inside the <body>
           .attr('width', divwidth/3 + 10) //set the width and height of our visualization (these will be attributes of the <svg> tag
@@ -237,15 +237,15 @@ const FlowEfficiency = (props) => {
         }
 
         let data = maindata[ij];
-        var sprint = data.name;
+        let sprint = data.name;
         let width = divwidth / 3 - 30;
-        var middle_text = data.middle;
-        var name = truncate(data.name, 8);
+        let middle_text = data.middle;
+        let name = truncate(data.name, 8);
         let height = 70; //this is the double because are showing just the half of the pie
-        var radius = Math.min(width, height) / 2;
-        var labelr = radius + 25; // radius for label anchor
+        let radius = Math.min(width, height) / 2;
+        let labelr = radius + 25; // radius for label anchor
         //array of colors for the pie (in the same order as the dataset)
-        var color = d3.scaleOrdinal().range(["#B08AEC", "#EBDC7A", "#eaeaea"]);
+        let color = d3.scaleOrdinal().range(["#B08AEC", "#EBDC7A", "#eaeaea"]);
 
         vist.data([data.details]); //associate our data with the document
         //.attr('width', 200) //set the width and height of our visualization (these will be attributes of the <svg> tag
@@ -253,17 +253,17 @@ const FlowEfficiency = (props) => {
         //.append('svg'); //make a group to hold our pie chart
         //.attr('transform', 'translate(' + (200) + ',' + 100 + ')'); //move the center of the pie chart from 0, 0 to radius, radius
 
-        var arc = d3
+        let arc = d3
           .arc() //this will create <path> elements for us using arc data
           .innerRadius(radius - 7)
           .outerRadius(radius - 4); // full height semi pie
         //.innerRadius(0);
-        var outerArc = d3
+        let outerArc = d3
           .arc()
           .innerRadius(radius * 1.2)
           .outerRadius(radius * 1.2);
 
-        var pie = d3
+        let pie = d3
           .pie() //this will create arc data for us given a list of values
           .startAngle(0 * (Math.PI / 135))
           .endAngle(270 * (Math.PI / 135))
@@ -273,7 +273,7 @@ const FlowEfficiency = (props) => {
             return d.value;
           }); //we must tell it out to access the value of each element in our data array
 
-        var arcs = vist
+        let arcs = vist
           .selectAll("g.slice") //this selects all <g> elements with class slice (there aren't any yet)
           .data(pie) //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
           .enter() //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
@@ -298,8 +298,8 @@ const FlowEfficiency = (props) => {
           .attr("class", "labels") //add a label to each slice
           .attr("fill", "#000")
           .attr("transform", function (d) {
-            var pos = outerArc.centroid(d);
-            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            let pos = outerArc.centroid(d);
+            let midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
             return "translate(" + pos + ")";
           })
           .attr("text-anchor", "middle") //center the text on it's origin

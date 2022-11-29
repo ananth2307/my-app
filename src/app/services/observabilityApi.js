@@ -241,6 +241,13 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getMeanTimeChangeType:build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/changeManagement/filter/meanTime/type`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     //Jenkins
     getBuildTrend: build.mutation({
       query: (postBody = {}) => ({
