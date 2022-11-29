@@ -14,11 +14,18 @@ const DdDefaultSummary = (props) => {
     <>
       <div className="stories-list">
         <div class="row">
-          <div class="col-md-6">
-            <h5>
-              {summaryTitle ? summaryTitle : selectedLevelOne.toUpperCase()}
-            </h5>
-          </div>
+          {typeof summaryTitle === "object" ? (
+            <div class="meantime-head">
+              <div class="intype">{summaryTitle.left} </div>
+              <div class="mtr">{summaryTitle.right} </div>
+            </div>
+          ) : (
+            <div class="col-md-6">
+              <h5>
+                {summaryTitle ? summaryTitle : selectedLevelOne.toUpperCase()}
+              </h5>
+            </div>
+          )}
           {selectedData.rightSummaryHeader
             ? selectedData.rightSummaryHeader(selectedData, selectedLevelOne)
             : ""}

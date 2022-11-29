@@ -31,12 +31,12 @@ const TopAssignees = (props) => {
     ];
     let divs = [".contributors", ".contributors2", ".contributors3"];
 
-    var groupSpacing = 0;
+    let groupSpacing = 0;
 
-    for (var m = 0; m < 3; m++) {
-      var datax = data[m];
+    for (let m = 0; m < 3; m++) {
+      let datax = data[m];
 
-      var svg = d3
+      let svg = d3
         .select(divs[m])
         .html("")
         .append("svg")
@@ -51,15 +51,15 @@ const TopAssignees = (props) => {
 
       //g = svg.append("g");
 
-      var x0 = d3.scaleBand().rangeRound([0, width]).paddingInner(0.6);
+      let x0 = d3.scaleBand().rangeRound([0, width]).paddingInner(0.6);
 
-      var x1 = d3.scaleBand().padding(0.05);
+      let x1 = d3.scaleBand().padding(0.05);
 
-      var y = d3.scaleLinear().rangeRound([height, 0]);
+      let y = d3.scaleLinear().rangeRound([height, 0]);
 
-      var z = d3.scaleOrdinal().range(["#c7de86", "#ec6665"]);
+      let z = d3.scaleOrdinal().range(["#c7de86", "#ec6665"]);
 
-      var keys = Object.keys(datax[0]).slice(1);
+      let keys = Object.keys(datax[0]).slice(1);
 
       console.log(keys);
 

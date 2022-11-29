@@ -4,12 +4,12 @@ import { useSelector } from "react-redux";
 import DdDefaultLevelOne from "../../common/DrillDown/DdDefaultLevelOne";
 import DdDefaultSummary from "../../common/DrillDown/DdDefaultSummary";
 import { dDDefaultLevelOne } from "../common/constants";
+import MeanTimeCustomDrillDown from "./MeanTimeCustomDrillDown";
 import MeanTimeDrill from "./MeanTimeDrill";
 
-const OpsMetricsCustomDrillDown = ({ boxTitle, summaryTitle }) => {
+const OpsMetricsCustomDrillDown = ({ boxTitle, summaryTitle,totalTitle }) => {
   const commonSliceState = useSelector((state) => state.common);
   const selectedData = get(commonSliceState, "offcanvasState.selectedData", []);
-  const MTBIdata = get(selectedData, "MTBIdata", {});
   const topBoxHeaders = get(selectedData, "driiDownTopHeaderBoxData", []);
   const selectedLevelOne = get(
     commonSliceState,
@@ -19,16 +19,16 @@ const OpsMetricsCustomDrillDown = ({ boxTitle, summaryTitle }) => {
   const [state, setstate] = useState({
     activeHeader: "",
   });
-  const onSelectLvlOne = (e) => {
+  const onSelectLvlOne = (label) => {
     selectedData.customSummaryListCall &&
-      selectedData.customSummaryListCall(e.target.innerHTML);
-    setstate({ activeHeader: e.target.innerHTML });
+      selectedData.customSummaryListCall(label);
+    setstate({ activeHeader: label });
   };
   return (
     <>
       <div class="managerow">
         <div class="manage-fst-col">
-          <h4>Total Incidents</h4>
+          <h4>{totalTitle}</h4>
           <h2>{findLast(topBoxHeaders)?.total}</h2>
         </div>
         {topBoxHeaders.map((items) => (
@@ -36,14 +36,16 @@ const OpsMetricsCustomDrillDown = ({ boxTitle, summaryTitle }) => {
             class={`${items.className} ${
               state.activeHeader === items.label ? "active" : ""
             }`}
+            onClick={() => onSelectLvlOne(items.label)}
             key={items.label}
           >
-            <h4 onClick={(e) => onSelectLvlOne(e)}>{items.label}</h4>
+            <h4>{items.label}</h4>
             <h2>{items.value}</h2>
           </div>
         ))}
       </div>
-      {selectedData.isMTBIhide ? " " : <MeanTimeDrill MTBIdata={MTBIdata} />}
+      {selectedData.isMTBIhide ? " " : <MeanTimeDrill
+      meanTimeData={get(selectedData, "meanTimeData", [])} />}
       <div class="incidnt-wrap">
         <h3 class="txt-upper">{boxTitle}</h3>
         <div class="incidnt-numbox">

@@ -150,11 +150,11 @@ const TopAssignees = (props) => {
   const ref = useD3(
     (svg) => {
       let width = get(props, "chartContainerRefs.current[2].offsetWidth", 0);
-      var height = width * 0.75; //this is the double because are showing just the half of the pie
-      var radius = Math.min(width, height) / 2;
-      //var labelr = radius + 30; // radius for label anchor
+      let height = width * 0.75; //this is the double because are showing just the half of the pie
+      let radius = Math.min(width, height) / 2;
+      //let labelr = radius + 30; // radius for label anchor
       //array of colors for the pie (in the same order as the dataset)
-      var color = d3
+      let color = d3
         .scaleOrdinal()
         .range(["#522e8e", "#522e8e", "#522e8e", "#522e8e"]);
 
@@ -169,18 +169,18 @@ const TopAssignees = (props) => {
       const cxBase = (width - 20) / 3;
       const cxOffset = cxBase / 3 + 40;
 
-      //var tau = 2 * Math.PI;
+      //let tau = 2 * Math.PI;
 
-      var count = 0;
+      let count = 0;
 
-      for (var t = 0; t < data.length; t++) {
-        var obj = data[t];
+      for (let t = 0; t < data.length; t++) {
+        let obj = data[t];
         count = count + obj.value;
-        /*var option = "<option value='"+data[t].fullName+"'>"+data[t].label+"</option>";
+        /*let option = "<option value='"+data[t].fullName+"'>"+data[t].label+"</option>";
               $("#assignee_drop").append(option);*/
       }
-      for (var t = 0; t < data.length; t++) {
-        var obj = data[t];
+      for (let t = 0; t < data.length; t++) {
+        let obj = data[t];
         obj.perc = (obj.value * 100) / count;
         if (obj.perc == "NaN") {
           obj.perc = 0;
@@ -190,7 +190,7 @@ const TopAssignees = (props) => {
         if (obj.perc < 15) obj.perc = 15;
       }
 
-      var vis = svg //create the SVG element inside the <body>
+      let vis = svg //create the SVG element inside the <body>
         .data([data]) //associate our data with the document
         .attr("width", width) //set the width and height of our visualization (these will be attributes of the <svg> tag
         .attr("height", height)
@@ -199,13 +199,13 @@ const TopAssignees = (props) => {
 
       // This function will iterate your data
       data.map(function (props, index) {
-        var cx = cxBase * index + cxOffset;
+        let cx = cxBase * index + cxOffset;
 
-        var elem = vis.selectAll("div").data(data);
+        let elem = vis.selectAll("div").data(data);
 
-        var elemEnter = elem.enter().append("g");
+        let elemEnter = elem.enter().append("g");
 
-        var circles = elemEnter
+        let circles = elemEnter
           .append("circle")
           .attr("cx", cx)
           .attr("cy", (height * 2) / 3)

@@ -2,10 +2,10 @@ import React, { memo } from "react";
 import { Bar } from "react-chartjs-2";
 
 const SprintVelocity = (props) => {
-  var plannedDS = [10, 20,];
-  var completed = [10, 40,];
-  var unPlanedDS = [0, 0, 0, 0, 0];
-  var numberWithCommas = function(x) {
+  let plannedDS = [10, 20,];
+  let completed = [10, 40,];
+  let unPlanedDS = [0, 0, 0, 0, 0];
+  let numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
   const data = {

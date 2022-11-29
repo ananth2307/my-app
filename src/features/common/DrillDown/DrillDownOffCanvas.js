@@ -2,7 +2,7 @@ import React from "react";
 import CustomOffCanvas from "../../../app/common-components/CustomOffCanvas";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
-import { dDDefaultLevelOne,dDDefaultLevelOne1 } from "./constants";
+import { dDDefaultLevelOne, dDDefaultLevelOne1 } from "./constants";
 import DdDefaultLevelOne from "./DdDefaultLevelOne";
 import DdDefaultSummary from "./DdDefaultSummary";
 import { get } from "lodash";
@@ -61,13 +61,14 @@ const DrillDownOffCanvas = (props) => {
                   : "distribute-wrap flowacti-block"
               }`}
             >
-              {!offcanvasState?.isDropDownhide?
-                dDDefaultLevelOne.map((level) => (
-                  <DdDefaultLevelOne level={level} {...props} />
-                )): selectedData.customDrilldownHeaders && dDDefaultLevelOne1.map((level) => (
-                  <DdDefaultLevelOne level={level} {...props} />
-                ))
-                 }
+              {!offcanvasState?.isDropDownhide
+                ? dDDefaultLevelOne.map((level) => (
+                    <DdDefaultLevelOne level={level} {...props} />
+                  ))
+                : selectedData.customDrilldownHeaders &&
+                  dDDefaultLevelOne1.map((level) => (
+                    <DdDefaultLevelOne level={level} {...props} />
+                  ))}
             </div>
             <div class="flow-descriptions-block flowpredi-des ">
               <DdDefaultSummary
@@ -77,7 +78,8 @@ const DrillDownOffCanvas = (props) => {
                     ? OpenIssueSummaryList
                     : selectedData.DdFlowPredictCustomSummary
                     ? predictabilityPlannedSummary
-                    : !offcanvasState?.isDropDownhide
+                    : !offcanvasState?.isDropDownhide ||
+                      selectedData.customDrilldownHeaders
                     ? get(selectedData[selectedLevelOne], "summaryList", [])
                     : get(selectedData, "summaryList", [])
                 }

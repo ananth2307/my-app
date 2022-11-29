@@ -10,6 +10,7 @@ import {
 import { setIsOffCanvasOpen } from "../../../../app/commonSlice";
 import OpsMetricsCustomDrillDown from "../OpsMetricsCustomDrillDown";
 import { observabilityApi } from "../../../../app/services/observabilityApi";
+import { getDefaultIncidentClass } from "../../../common/helpers";
 
 const ChangeRequest = (props) => {
   const dispatch = useDispatch();
@@ -24,26 +25,12 @@ const ChangeRequest = (props) => {
   !isEmpty(tmpCategoryData) &&
     tmpCategoryData.map((items) => {
       const { type: label, changeReqList } = items;
-      if (label === "Normal")
+      const className = getDefaultIncidentClass(label)
         categoryData.push({
           label,
           changeReqList,
           value: changeReqList.length,
-          className: "managecol dark-blue-border",
-        });
-      else if (label === "Standard")
-        categoryData.push({
-          label,
-          changeReqList,
-          value: changeReqList.length,
-          className: "managecol blue-border",
-        });
-      else if (label === "Emergency")
-        categoryData.push({
-          label,
-          changeReqList,
-          value: changeReqList.length,
-          className: "managecol pink-border",
+          className
         });
     });
   categoryData.push({
@@ -59,6 +46,7 @@ const ChangeRequest = (props) => {
       customDrillDownCanvas() {
         return (
           <OpsMetricsCustomDrillDown
+            totalTitle = {'TOTAL CHANGE REQUESTS'}
             boxTitle={"NO. OF CHANGE REQUESTS (PER ROOT CAUSE)"}
             summaryTitle={"CHANGE LIST"}
           />
@@ -92,13 +80,13 @@ const ChangeRequest = (props) => {
               : 1;
             if (SelectedBoxData[key].summaryList) {
               SelectedBoxData[key].summaryList.push({
-                id: items.changeRequestNo,
+                issueId: items.changeRequestNo,
                 summary: items.description,
               });
             } else {
               SelectedBoxData[key].summaryList = [
                 {
-                  id: items.changeRequestNo,
+                  issueId: items.changeRequestNo,
                   summary: items.description,
                 },
               ];
@@ -106,12 +94,6 @@ const ChangeRequest = (props) => {
           });
         }
       });
-      SelectedBoxData.customSummaryList = (singleSummary) => (
-        <li>
-          <div class="fw-20">{singleSummary.id}</div>
-          <div class="fw-50">{singleSummary.summary}</div>
-        </li>
-      );
       dispatch(
         setIsOffCanvasOpen({
           title: props.title,
@@ -140,6 +122,7 @@ const ChangeRequest = (props) => {
       let width = get(props, "chartContainerRefs.current[0].offsetWidth", 1);
       let middle_text_2 = "TOTAL CHANGE";
       let middle_text_3 = "REQUESTS";
+      let middle_text = 0;
       let height = width * 0.6; //this is the double because are showing just the half of the pie
       let radius = Math.min(width, height) / 2;
       let labelr = radius + 30; // radius for label anchor
@@ -147,7 +130,7 @@ const ChangeRequest = (props) => {
       let color = d3.scaleOrdinal().range(["#157bd6", "#7ad2de", "#ec6665"]);
 
       let data = cloneDeep(categoryData);
-      let middle_text = data.pop().total;
+      middle_text = data.pop().total;
 
       let vis = svg //create the SVG element inside the <body>
         .data([data]) //associate our data with the document

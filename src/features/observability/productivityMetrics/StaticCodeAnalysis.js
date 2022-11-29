@@ -37,7 +37,7 @@ const StaticCodeAnalysis = (props) => {
         <div class="fw-5">Sl.No</div>
         <div class="fw-20">Summary</div>
         <div class="fw-20">Commit Details</div>
-        <div class="fw-10">Assignee</div> 
+        <div class="fw-10">Assignee</div>
         <div class="fw-10">Status</div>
         <div class="fw-10">Est.Time(in mins)</div>
         <div class="fw-10">Actual Time(in mins)</div>
@@ -53,7 +53,9 @@ const StaticCodeAnalysis = (props) => {
             <div class="fw-10">{singleSummary?.status}</div>
             <div class="fw-10">{singleSummary?.estimatedTime}</div>
             <div class="fw-10">{singleSummary?.ActualTime} </div>
-            <button  type="submit" onclick="followUp();" class="followup-btn">Follow Up</button>
+            <button type="submit" onclick="followUp();" class="followup-btn">
+              Follow Up
+            </button>
           </li>
         </>
       );
@@ -66,6 +68,7 @@ const StaticCodeAnalysis = (props) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide: true,
         title: props.title,
         selectedData: getSelectedData(),
       })
@@ -74,6 +77,10 @@ const StaticCodeAnalysis = (props) => {
   const ref = useD3(
     (svg) => {
       let data = staticCodedata;
+      let total = data.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.value,
+        0
+      );
       svg.html("");
       if (data.length) {
         let width = get(props, "chartContainerRefs.current[0].offsetWidth", 0);
@@ -153,12 +160,12 @@ const StaticCodeAnalysis = (props) => {
           })
           .attr("font-size", "13")
           .text(function (d, i) {
-            return d.value + "%";
-          });
-
-        //.text(function(d, i) { return data[i].label + " " + d.value + "%" });
+            return Math.floor((d.value / total) * 100) + "%";
+          })
+          .on("click", (e, d) => openDrillDown(d));
       }
-    },[staticCodedata]
+    },
+    [staticCodedata]
   );
   return (
     <>

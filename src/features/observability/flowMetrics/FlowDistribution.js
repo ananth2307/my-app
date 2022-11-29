@@ -141,17 +141,17 @@ const FlowDistribution = (props) => {
           .append("g")
           .attr("transform", "translate(" + 60 + "," + 10 + ")");
 
-        var y = d3
+        let y = d3
           .scaleBand() // x = d3.scaleBand()
           .rangeRound([0, divheight - 0.25 * divheight]) // .rangeRound([0, width])
           .paddingInner(0.7)
           .align(0.2);
 
-        var x = d3
+        let x = d3
           .scaleLinear() // y = d3.scaleLinear()
           .rangeRound([25, divwidth * 0.68]); // .rangeRound([height, 0]);
 
-        var z = d3
+        let z = d3
           .scaleOrdinal()
           .range([
             "#4E9BE1",
@@ -164,10 +164,10 @@ const FlowDistribution = (props) => {
 
         let json_data = data;
 
-        var columns = Object.keys(json_data[0]);
+        let columns = Object.keys(json_data[0]);
 
-        var keys = columns.slice(1);
-        var max = d3.max(json_data, function (d) {
+        let keys = columns.slice(1);
+        let max = d3.max(json_data, function (d) {
           return d.total;
         });
         json_data = json_data.map((it) => {
@@ -212,7 +212,7 @@ const FlowDistribution = (props) => {
           }) //.attr("height", function(d) { return y(d[0]) - y(d[1]); })
           .attr("height", y.bandwidth()); //.attr("width", x.bandwidth());
 
-        var yaxis = g
+        let yaxis = g
           .append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(0,0)")
