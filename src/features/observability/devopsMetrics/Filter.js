@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaCalendar } from "react-icons/fa";
 import CustomDateRangePicker from "../../../app/common-components/DateRangePicker/DateRangePicker";
 import { getDefaultSelectedDate } from "../../common/helpers";
-import { homeFilter, appIcon } from "../../../assets/images";
+import { homeFilter, appIcon, sprintIcon } from "../../../assets/images";
 import moment from "moment";
 import CustomSelect from "../../../app/common-components/select";
 import { setFilterData } from "../observabilitySlice";
@@ -55,6 +55,35 @@ const Filter = (props) => {
       projList: projList ? [...projList] : [],
       sprintList: sprintList ? [...sprintList] : [],
     }));
+  };
+
+  //Get Sprint List based on App and Project selection
+  const handleSelectedProjChange = async (selectedProjects = []) => {
+    dispatch(
+      setFilterData(get(observability, "filterData"), { selectedProjects })
+    );
+    if (props.isShowSprintList) {
+      const { data: sprintList } = await getSprintList({
+        appCodes: getSelectedOptionsValue(
+          get(observability, "filterData.selectedApplications", [])
+        ),
+        projects: getSelectedOptionsValue(selectedProjects),
+        sprintName: [],
+        startDt: get(observability, "filterData.selectedDate.startDate"),
+        toDt: get(observability, "filterData.selectedDate.endDate"),
+      });
+      //maintaining sprintList in local state, dont see a reason to put this in redux
+      setState((state) => ({
+        ...state,
+        sprintList: sprintList ? [...sprintList] : sprintList,
+      }));
+    }
+  };
+
+  const handleSelectedSprintChange = async (selectedSprints = []) => {
+    dispatch(
+      setFilterData(get(observability, "filterData"), { selectedSprints })
+    );
   };
 
   //Set initial date in the date picker
@@ -112,6 +141,36 @@ const Filter = (props) => {
             closeMenuOnSelect={false}
             onChange={(selectedApplications) =>
               handleSelectedAppChange(selectedApplications)
+            }
+          />
+        </div>
+        <div class="col-md-2 sprintName_select">
+          <img src={sprintIcon} class="dash_icon dash_img" />
+          <CustomSelect
+            options={state?.projList ? state?.projList : []}
+            isMulti={true}
+            hideSelectedOptions={false}
+            isCheckboxSelect={true}
+            placeholder="Select Project"
+            isSearchable={true}
+            closeMenuOnSelect={false}
+            onChange={(selectedProjects) =>
+              handleSelectedProjChange(selectedProjects)
+            }
+          />
+        </div>
+        <div class="col-md-2 project_select">
+          <i class="pe pe-7s-notebook dash_icon"></i>
+          <CustomSelect
+            options={state?.sprintList ? state.sprintList : []}
+            isMulti={true}
+            hideSelectedOptions={false}
+            isCheckboxSelect={true}
+            placeholder="Select Sprint"
+            isSearchable={true}
+            closeMenuOnSelect={false}
+            onChange={(selectedSprints) =>
+              handleSelectedSprintChange(selectedSprints)
             }
           />
         </div>

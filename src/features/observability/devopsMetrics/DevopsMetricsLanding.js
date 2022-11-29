@@ -11,7 +11,7 @@ const DevopsMetrics = () => {
   // Chart.register(CategoryScale,LinearScale,BarElement,ArcElement,PointElement,LineElement,Legend);
 
   return (
-    <div className="row">
+    <div className="row devops-metrics-container">
       <div className="col-md-12 p-0">
         <Filter />
         {panels.map((panel) => (
