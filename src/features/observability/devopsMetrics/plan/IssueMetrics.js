@@ -1,92 +1,62 @@
+import { get } from "lodash";
 import React, { memo } from "react";
+import ProgressBar from "../../../../app/common-components/ProgressBar";
+import { getPercentage } from "../../../../app/utilities/helpers";
 
 const IssueMetrics = (props) => {
+  let activeSprintPriorityData = get(
+    props,
+    "planData.issueMetricsData",
+    {}
+  );
+  const progressBarData = [
+    {
+      label: "Blocker",
+      value: 0,
+      bgColor: "#ff0404",
+    },
+    {
+      label: "Critical",
+      value: 0,
+      bgColor: "#ff8000",
+    },
+    {
+      label: "High",
+      value: 0,
+      bgColor: "#ff8373",
+    },
+    {
+      label: "Medium",
+      value: 0,
+      bgColor: "#e5d349",
+    },
+    {
+      label: "Low",
+      value: 0,
+      bgColor: "#5eadc3",
+    },
+  ];
+  progressBarData.map((progressData) => {
+    Object.keys(activeSprintPriorityData).map((key) => {
+      if (progressData.label.toLowerCase() === key.toLowerCase()) {
+        progressData.value = getPercentage(
+          activeSprintPriorityData[key],
+          activeSprintPriorityData.total
+        );
+      }
+    });
+  });
   return (
-    <div id="priority" class="col-md-12 p-0 us-propanal pascroll">
-      <span class="progress-name">Blocker</span>
-      <span class="pull-right progress-name" id="uspBlocker">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Blocker">
-        <div
-          class="progress-bar"
-          id="us-scale-3"
-          data-toggle="tooltip"
-          title="4"
-          style={{width:'90%'}}
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          data-original-title=""
-        ></div>
-      </div>
-      <span class="progress-name">Critical</span>
-      <span class="pull-right progress-name" id="uspCritical">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Critical">
-        <div
-          class="progress-bar"
-          id="us-scale-1"
-          data-toggle="tooltip"
-          title=""
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <span class="progress-name">High</span>
-      <span class="pull-right progress-name" id="uspHigh">
-        0 %
-      </span>
-      <div class="progress us-progress" value="High">
-        <div
-          class="progress-bar"
-          id="us-scale-4"
-          data-toggle="tooltip"
-          title=""
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <span class="progress-name">Medium</span>
-      <span class="pull-right progress-name" id="uspMedium">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Medium">
-        <div
-          class="progress-bar"
-          id="us-scale-2"
-          data-toggle="tooltip"
-          title="89"
-          role="progressbar"
-          style={{width:'54%'}}
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <span class="progress-name">Low</span>
-      <span class="pull-right progress-name" id="uspLow">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Low">
-        <div
-          class="progress-bar"
-          id="us-scale-5"
-          data-toggle="tooltip"
-          title=""
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-    </div>
+    <div class="col-md-12 p-0 us-propanal pascroll">
+    {progressBarData.map((item, idx) => (
+      <ProgressBar
+        key={idx}
+        bgcolor={item.bgColor}
+        completed={item.value}
+        label={item.label}
+      />
+    ))}
+  </div>
   );
 };
 

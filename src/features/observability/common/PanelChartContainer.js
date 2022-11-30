@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-const PanelContainer = (props) => {
+const PanelChartContainer = (props) => {
   const chartContainerRefs = useRef([]);
   return (
     <div class={`${props.customClass ? props.customClass : "col-md-4"}`}>
@@ -22,4 +22,4 @@ const PanelContainer = (props) => {
   );
 };
 
-export default PanelContainer;
+export default PanelChartContainer;

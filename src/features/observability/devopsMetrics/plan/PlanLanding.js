@@ -1,13 +1,13 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { PlanContainer1, PlanContainer2 } from "../../common/constants";
-import PanelContainer from "../../common/PanelContainer";
+import PanelChartContainer from "../../common/PanelChartContainer";
 import { useSelector } from "react-redux";
 import { observabilityApi } from "../../../../app/services/observabilityApi";
 import { getSelectedOptionsValue } from "../../../../app/utilities/helpers";
-import { getDefaultSelectedDate } from "../../../common/helpers";
 import { get } from "lodash";
-import { Chart } from "chart.js";
+import 'chart.js/auto'
 const PlanLanding = (props) => {
+  const panelState = useSelector((state) => state.observability?.panelState);
   const [state, setState] = useState({
     planData: {
       activeSprintData: {},
@@ -25,7 +25,6 @@ const PlanLanding = (props) => {
   });
 
   const { observability } = useSelector((state) => state);
-  const [getAppList] = observabilityApi.useLazyGetAppListQuery({});
   const [getPlanActiveSprint] =
     observabilityApi.useGetplanActiveSprintsMutation();
   const [getActiveSprintIssue] =
@@ -42,17 +41,11 @@ const PlanLanding = (props) => {
   const [getProjectStatus] = observabilityApi.useGetProjectStatusMutation();
   const [getSprintVelocity] = observabilityApi.useGetSprintVelocityMutation();
   const [getMonthlyRelease] = observabilityApi.useGetMonthlyReleaseMutation();
-  let appList = [];
-  let { initialStartDate, initialEndDate } = getDefaultSelectedDate();
-  initialStartDate = new Date(initialStartDate).getTime();
-  initialEndDate = new Date(initialEndDate).getTime();
 
   const getPlanData = useCallback(
-    async (isInitialLoad = false) => {
+    async () => {
       const defaultPayload = {
-        appCodes: isInitialLoad
-          ? getSelectedOptionsValue(appList)
-          : getSelectedOptionsValue(
+        appCodes:getSelectedOptionsValue(
               get(observability, "filterData.selectedApplications", [])
             ),
         projects: getSelectedOptionsValue(
@@ -61,23 +54,14 @@ const PlanLanding = (props) => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
-      };
-      const TopAssigneePayload = {
-        applications: isInitialLoad
-          ? getSelectedOptionsValue(appList)
-          : getSelectedOptionsValue(
-              get(observability, "filterData.selectedApplications", [])
-            ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        startDt: get(observability, "filterData.selectedDate.startDate"),
+        toDt:get(observability, "filterData.selectedDate.endDate"),
       };
       let planPromiseData = await Promise.all([
         getPlanActiveSprint(defaultPayload),
         getActiveSprintIssue(defaultPayload),
         getActiveSprintPriority(defaultPayload),
-        getActiveSprintProgress(TopAssigneePayload),
+        getActiveSprintProgress(defaultPayload),
         getProjectMetrics(defaultPayload),
         getPlanIssueMetrics(defaultPayload),
         getPlanCollaboration(defaultPayload),
@@ -104,36 +88,31 @@ const PlanLanding = (props) => {
         planData: { ...state.planData, ...planData },
       }));
     },
-    [state.planData]
+    [state.planData,observability.filterData]
   );
   useEffect(() => {
-    getAppList({})
-      .unwrap()
-      .then((appListResp) => {
-        appList = appListResp;
-        getPlanData(true);
-      });
-  }, []);
+    get(panelState, `isPlanOpen`,false) && getPlanData();
+  }, [observability.filterData,panelState]);
   return PlanContainer1.map((chartType, index) => (
     <>
-      <PanelContainer
+      <PanelChartContainer
         key={chartType}
         index={index}
         {...chartType}
         planData={state.planData}
       >
         {chartType.component}
-      </PanelContainer>
+      </PanelChartContainer>
       <div class="col-md-12 p-0 row">
         {PlanContainer2.map((chartType, index) => (
-          <PanelContainer
+          <PanelChartContainer
             key={chartType}
             index={index}
             {...chartType}
             planData={state.planData}
           >
             {chartType.component}
-          </PanelContainer>
+          </PanelChartContainer>
         ))}
       </div>
     </>

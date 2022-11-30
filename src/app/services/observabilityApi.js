@@ -413,6 +413,13 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getplanIssueMetricsDrill: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprint/planIssueMetricsDetails`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     getPlanCollaboration: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/level/collaboration`,

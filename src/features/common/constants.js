@@ -10,7 +10,7 @@
 //   Debt: "debt",
 //   prodFix: "prodFix",
 // };
-export const getMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+export const getMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export const metricTypesMapping = {
   features: ["Task", "Subtask", "Epic", "Story"],
   enablers: ["Change Request", "Enablers"],

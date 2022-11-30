@@ -57,6 +57,7 @@ const LevelOfCollaboration = (props) => {
   };
   const ref = useD3(
     (svg) => {
+      svg.html("")
       let width = get(props, "chartContainerRefs.current[1].offsetWidth", 0);
       let data = collaborationdata;
       const groupedData = groupBy(data, "type");
