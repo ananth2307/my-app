@@ -448,6 +448,52 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    //code
+    getCodeTopContributors: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/commit`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getCodeProjectChampions: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/projectChampions`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    // Build
+    getDevopsBuild:build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/buildMetrics`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    // Scan 
+    getScanLineOfCode:build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/analysis/against/linesOfCodes`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getScanStaticCodeAnalysis:build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/staticCodeAnalysis`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    //Deployment
+    getDevopsDeployment:build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/deploy`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
   }),
   overrideExisting: true,
 });

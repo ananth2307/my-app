@@ -66,3 +66,13 @@ export const ChangeLabels =
   open:false
 }
 ]
+export const chartColors = [
+  { success: "rgb(71,145,255)", failed: "rgb(242,172,4)" },
+  { success: "rgb(2,188,119)", failed: "rgb(255,84,84)" },
+  { success: "rgb(209,80,255)", failed: "rgb(80,255,255)" },
+  { success: "rgb(209,225,6)", failed: "rgb(225,6,211)" },
+  { success: "rgb(71,45,255)", failed: "rgb(242,67,4)" },
+  { success: "rgb(123,145,112)", failed: "rgb(45,172,234)" },
+  { success: "rgb(255,145,54)", failed: "rgb(26,172,214)" },
+  { success: "rgb(123,234,59)", failed: "rgb(212,234,48)" },
+];

@@ -96,6 +96,34 @@ const SprintVelocity = React.lazy(() =>
 const MonthlyRelease = React.lazy(() =>
   import("../devopsMetrics/plan/MonthlyRelease")
 );
+//code Data
+const CodeLanding = React.lazy(() =>
+  import("../devopsMetrics/Code/CodeLanding")
+);
+const CodeTopContributors = React.lazy(() =>
+  import("../devopsMetrics/Code/TopContributors")
+);
+const CodeProjeectChampions = React.lazy(() =>
+  import("../devopsMetrics/Code/ProjectChampions")
+);
+// Build
+const DevopsBuildLanding = React.lazy(() =>
+  import("../devopsMetrics/Build/BuildLanding")
+);
+// Scan
+const ScanLanding = React.lazy(() =>
+  import("../devopsMetrics/Scan/ScanLanding")
+);
+const ScanCodeAnalysis = React.lazy(() =>
+  import("../devopsMetrics/Scan/CodeAnalysis")
+);
+const ScanStaticCodeAnalysis = React.lazy(() =>
+  import("../devopsMetrics/Scan/StaticCodeAnalysis")
+);
+//Deploy
+const DevopsDeployment = React.lazy(() =>
+  import("../devopsMetrics/Deploy/DeployLanding")
+);
 //Flow Metrics
 export const FlowMetricChartContainers = [
   {
@@ -521,25 +549,25 @@ export const panels = [
     key: 2,
     title: "Code",
     name: "Code",
-    body: "",
+    body: <CodeLanding />,
   },
   {
     key: 3,
     title: "Build",
     name: "Build",
-    body: "",
+    body: <DevopsBuildLanding />,
   },
   {
     key: 4,
     title: "Scan",
     name: "Scan",
-    body: "",
+    body: <ScanLanding />,
   },
   {
     key: 5,
     title: "Deploy",
     name: "Deploy",
-    body: "",
+    body: <DevopsDeployment />,
   },
 ];
 //Plan
@@ -618,37 +646,65 @@ export const PlanContainer2 = [
 export const dDDefaultLevelOne = [
   {
     name: "Design",
-    className:'num-box dark-blueline',
+    className: "num-box dark-blueline",
     title: "Design",
   },
   {
     name: "Testing",
-    className:'num-box dark-blueline',
+    className: "num-box dark-blueline",
     title: "Testing",
   },
   {
     name: "Code Quality",
-    className:'num-box dark-blueline',
+    className: "num-box dark-blueline",
     title: "Code Quality",
   },
   {
     name: "Deployment",
-    className:'num-box dark-blueline',
+    className: "num-box dark-blueline",
     title: "Deployment",
   },
   {
-      name: "Functional",
-      className:'num-box dark-blueline',
-      title: "Functional",
-    },
-    {
-      name: "Infrastructure",
-      className:'num-box dark-blueline',
-      title: "Infrastructure",
-    },
-    {
-      name: "Others",
-      className:'num-box dark-blueline',
-      title: "Others",
-    },
+    name: "Functional",
+    className: "num-box dark-blueline",
+    title: "Functional",
+  },
+  {
+    name: "Infrastructure",
+    className: "num-box dark-blueline",
+    title: "Infrastructure",
+  },
+  {
+    name: "Others",
+    className: "num-box dark-blueline",
+    title: "Others",
+  },
+];
+export const codeContainer = [
+  {
+    key: 1,
+    title: "Top contributors",
+    chart: (props) => <CodeTopContributors {...props} />,
+    customClass: "carousel slide",
+  },
+  {
+    key: 2,
+    title: "Project champions",
+    chart: (props) => <CodeProjeectChampions {...props} />,
+    customClass: "carousel slide",
+  },
+];
+export const scanContainer = [
+  {
+    key: 1,
+    title: "Code analysis against lines of code",
+    chart: (props) => <ScanCodeAnalysis {...props} />,
+    customClass: "col-md-8",
+  },
+  {
+    key: 2,
+    title: "Static code analysis",
+    chart: (props) => <ScanStaticCodeAnalysis {...props} />,
+    customClass: "col-md-4",
+  },
 ];
