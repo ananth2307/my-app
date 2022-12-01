@@ -149,6 +149,7 @@ const TopAssignees = (props) => {
   };
   const ref = useD3(
     (svg) => {
+      svg.html("")
       let width = get(props, "chartContainerRefs.current[2].offsetWidth", 0);
       let height = width * 0.75; //this is the double because are showing just the half of the pie
       let radius = Math.min(width, height) / 2;

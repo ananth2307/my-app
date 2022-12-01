@@ -3,6 +3,7 @@ import React, { memo } from "react";
 import { Doughnut } from "react-chartjs-2";
 
 const ProjectMetrics = (props) => {
+  let ProgressMetrics = get(props, "planData.projectMetricsData", {});
   let width = get(props, "chartContainerRefs.current[1].offsetWidth", 0);
   const data = {
     labels: ["Features", "Defects", "Risks", "Enablers", "Debt", "Prod-Fix"],
@@ -19,86 +20,69 @@ const ProjectMetrics = (props) => {
           "#e9d96d",
           "#fcbb4b",
         ],
-        data: [10, 20, 30, 40, 50, 60],
+        data: [
+          ProgressMetrics.features,
+          ProgressMetrics.issues,
+          ProgressMetrics.risk,
+          ProgressMetrics.enablers,
+          ProgressMetrics.debt,
+          ProgressMetrics.prodFix,
+        ],
       },
     ],
   };
+  data.datasets[0].centerValue = ProgressMetrics.members || 0;
+  const drawInnerText = (chart) => {
+    let ctx = chart.ctx;
+    let { centerValue } = chart.config._config.data.datasets[0];
+    ctx.restore();
+    ctx.font = 15 + "Avenir";
+    ctx.textBaseline = "middle";
+    let text = `${centerValue} Members`;
+    let textX = Math.round((chart.width - ctx.measureText(text).width) / 2);
+    let textY = chart.height / 2 + chart.legend.height / 2;
+    ctx.fillText(text, textX, textY);
+    ctx.save();
+  };
   const options = {
-    title:{
-        display:true,
-        text:'Chart.js Line Chart - Custom Tooltips'
-    },
-    tooltips: {
-        enabled: true,
-        mode: 'index',
-        position: 'nearest',
-        //Set the name of the custom function here
-        title: function (tooltipItem, data) {
-          //get the concerned dataset
-          let dataset = data.datasets[tooltipItem.datasetIndex];
-          //calculate the total of this data set
-          let total = dataset.data.reduce(function (
-            previousValue,
-            currentValue,
-            currentIndex,
-            array
-          ) {
-            return previousValue + currentValue;
-          });
-          //get the current items value
-          let currentValue = dataset.data[tooltipItem.index];
-          //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
-          let percentage = Math.floor((currentValue / total) * 100 + 0.5);
-          console.log(data);
-          return data.labels[tooltipItem.index] + ": " + percentage + "%";
-        }
-    }
-}
-    // elements: {
-    //   center: {
-    //     text: "0 Project",
-    //     color: "#030303",
-    //     fontStyle: "Avenir",
-    //   },
-    // },
-    // layout: {
-    //   padding: {
-    //     left: 0,
-    //     right: 120,
-    //     top: 0,
-    //     bottom: 0,
-    //   },
-    // },
-  const plugins = {
-    tooltip: {
-      yAlign: "top",
-      font: {
-        size: 20,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
       },
-      callbacks: {
-        title: function (tooltipItem, data) {
-          //get the concerned dataset
-          let dataset = data.datasets[tooltipItem.datasetIndex];
-          //calculate the total of this data set
-          let total = dataset.data.reduce(function (
-            previousValue,
-            currentValue,
-            currentIndex,
-            array
-          ) {
-            return previousValue + currentValue;
-          });
-          //get the current items value
-          let currentValue = dataset.data[tooltipItem.index];
-          //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
-          let percentage = Math.floor((currentValue / total) * 100 + 0.5);
-          console.log(data);
-          return data.labels[tooltipItem.index] + ": " + percentage + "%";
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = context.label;
+            let currentValue = context.parsed;
+            let total = context.dataset.data.reduce(
+              (acc, current) => acc + current,
+              0
+            );
+            let percentage = Math.floor((currentValue / total) * 100 + 0.5);
+            if (label) {
+              label = label + ": " + percentage + "%";
+            }
+            return label;
+          },
         },
       },
     },
   };
-  return <Doughnut data={data} options={options} style={{ width:width }}/>;
+
+  return (
+    <Doughnut
+      data={data}
+      options={options}
+      plugins={[
+        {
+          beforeDraw: function (chart) {
+            drawInnerText(chart);
+          },
+        },
+      ]}
+    />
+  );
 };
 
 export default memo(ProjectMetrics);

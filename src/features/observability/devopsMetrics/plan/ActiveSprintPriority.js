@@ -1,91 +1,85 @@
+import { get } from "lodash";
 import React, { memo } from "react";
+import { getPercentage, getSelectedOptionsValue } from "../../../../app/utilities/helpers";
+import ProgressBar from "../../../../app/common-components/ProgressBar";
+import { useSelector } from "react-redux";
+import { observabilityApi } from "../../../../app/services/observabilityApi";
 
 const ActiveSprintPriority = (props) => {
+  const { observability } = useSelector((state) => state);
+  const [getplanIssueMetricsDrill] = observabilityApi.useGetplanIssueMetricsDrillMutation({})
+  let activeSprintPriorityData = get(
+    props,
+    "planData.activeSprintPrioritydata",
+    {}
+  );
+  const progressBarData = [
+    {
+      label: "Blocker",
+      value: 0,
+      bgColor: "#ff0404",
+    },
+    {
+      label: "Critical",
+      value: 0,
+      bgColor: "#ff8000",
+    },
+    {
+      label: "High",
+      value: 0,
+      bgColor: "#ff8373",
+    },
+    {
+      label: "Medium",
+      value: 0,
+      bgColor: "#e5d349",
+    },
+    {
+      label: "Low",
+      value: 0,
+      bgColor: "#5eadc3",
+    },
+  ];
+  progressBarData.map((progressData) => {
+    Object.keys(activeSprintPriorityData).map((key) => {
+      if (progressData.label.toLowerCase() === key.toLowerCase()) {
+        progressData.value = getPercentage(
+          activeSprintPriorityData[key],
+          activeSprintPriorityData.total
+        );
+      }
+    });
+  });
+  const planDrill = async (label) => {
+    const drillPayload = {
+      appCodes:  getSelectedOptionsValue(
+          get(observability, "filterData.selectedApplications", [])
+        ),
+    projects: getSelectedOptionsValue(
+      get(observability, "filterData.selectedProjects", [])
+    ),
+    sprintName: getSelectedOptionsValue(
+      get(observability, "filterData.selectedSprints", [])
+    ),
+    startDt:get(observability, "filterData.selectedDate.startDate"),
+    toDt:  get(observability, "filterData.selectedDate.endDate"),
+    progressType:label,
+    type:"Metrics"
+    }
+    const issueMetricsDrillData = await getplanIssueMetricsDrill(drillPayload)
+    console.log(issueMetricsDrillData)
+  }
   return (
-    <div id="priority" class="col-md-12 p-0 us-propanal pascroll">
-      <span class="progress-name">Blocker</span>
-      <span class="pull-right progress-name" id="uspBlocker">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Blocker">
-        <div
-          class="progress-bar"
-          id="us-scale-3"
-          data-toggle="tooltip"
-          title="4"
-          style={{width:'90%'}}
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          data-original-title=""
-        ></div>
-      </div>
-      <span class="progress-name">Critical</span>
-      <span class="pull-right progress-name" id="uspCritical">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Critical">
-        <div
-          class="progress-bar"
-          id="us-scale-1"
-          data-toggle="tooltip"
-          title=""
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <span class="progress-name">High</span>
-      <span class="pull-right progress-name" id="uspHigh">
-        0 %
-      </span>
-      <div class="progress us-progress" value="High">
-        <div
-          class="progress-bar"
-          id="us-scale-4"
-          data-toggle="tooltip"
-          title=""
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <span class="progress-name">Medium</span>
-      <span class="pull-right progress-name" id="uspMedium">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Medium">
-        <div
-          class="progress-bar"
-          id="us-scale-2"
-          data-toggle="tooltip"
-          title="89"
-          role="progressbar"
-          style={{width:'54%'}}
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <span class="progress-name">Low</span>
-      <span class="pull-right progress-name" id="uspLow">
-        0 %
-      </span>
-      <div class="progress us-progress" value="Low">
-        <div
-          class="progress-bar"
-          id="us-scale-5"
-          data-toggle="tooltip"
-          title=""
-          role="progressbar"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
+    <div class="col-md-12 p-0 us-propanal pascroll">
+      {progressBarData.map((item, idx) => (
+        <ProgressBar
+          key={idx}
+          bgcolor={item.bgColor}
+          completed={item.value}
+          label={item.label}
+          onClick={planDrill}
+        />
+      ))}
     </div>
   );
 };

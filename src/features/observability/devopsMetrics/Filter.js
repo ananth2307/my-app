@@ -23,7 +23,30 @@ const Filter = (props) => {
 
   const [getSprintList] = observabilityApi.useGetSprintListMutation();
   const { data: appList } = observabilityApi.useGetAppListQuery({});
-
+  const setDateRange = (selectedDate) => {
+    dispatch(
+      setFilterData(get(observability, "filterData"), {
+        selectedDate: {
+          startDate: new Date(selectedDate.startDate).getTime(),
+          endDate: new Date(selectedDate.endDate).getTime(),
+        },
+      })
+    );
+  }
+  //set initial date in reducer when component mounts
+  useEffect(() => {
+    setDateRange({
+      startDate: initialStartDate,
+      endDate: initialEndDate,
+    });
+    
+  }, []);
+  useEffect(()=>{
+    dispatch(setFilterData(get(observability,'filterData'),{
+      selectedApplications:appList
+    }))
+    
+  },[appList])
   //Get Project and Sprint List based on App selection
   const handleSelectedAppChange = async (selectedApplications = []) => {
     dispatch(
@@ -49,6 +72,7 @@ const Filter = (props) => {
       });
       sprintList = data;
     }
+
     //maintaining projList in local state, dont see a reason to put this in redux
     setState((state) => ({
       ...state,
@@ -79,6 +103,7 @@ const Filter = (props) => {
       }));
     }
   };
+;
 
   const handleSelectedSprintChange = async (selectedSprints = []) => {
     dispatch(
@@ -124,8 +149,8 @@ const Filter = (props) => {
               },
             }}
             selectedDate={(selectedDate) => {
-              //   setDateRange(selectedDate);
-              console.log("Redis", selectedDate);
+              setDateRange(selectedDate);
+              // console.log("Redis", selectedDate);
             }}
           />
         </div>

@@ -14,7 +14,14 @@ export const filterOptions = (optionsProps, searchText, setState) => {
     optionsProps?.filter((option) => option.label?.includes(searchText))
   );
 };
-
+export const getPercentage = (value,total) => {
+  let percentVal = 0;
+  if(value !== 0 && total !== 0) {
+      percentVal = (value/total)*100;
+      percentVal = percentVal.toFixed(2);
+  }
+  return percentVal;
+}
 export const truncate = (input, leng) => {
   if (input.length > leng) {
     return input.substring(0, leng) + "...";

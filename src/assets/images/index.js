@@ -24,7 +24,11 @@ import failedCross from './faild-cross.png';
 import homeFilter from "./homefilter.png"
 import appIcon from './app.png';
 import sprintIcon from "./sprint.png";
-
+import profile from './profile.jpg';
+import commit from './commit.png';
+import twick from './twick.png'
+import pencil from './pencil.png'
+import close from './close.png'
 export {
     checkboxTick,
     logo,
@@ -52,4 +56,10 @@ export {
     homeFilter,
     appIcon,
     sprintIcon,
+    profile,
+    commit,
+    twick,
+    pencil,
+    close
+
 }
