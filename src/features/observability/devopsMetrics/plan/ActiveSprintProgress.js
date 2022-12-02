@@ -1,14 +1,82 @@
 import { get } from "lodash";
-import React, { memo } from "react";
-import { Doughnut } from "react-chartjs-2";
+import React, { memo, useState, useRef } from "react";
+import { Doughnut, getElementAtEvent } from "react-chartjs-2";
+import {
+  getSelectedOptionsValue,
+} from "../../../../app/utilities/helpers";
+import { useSelector } from "react-redux";
+import { observabilityApi } from "../../../../app/services/observabilityApi";
+import DevopsMetricsDrill from "../../../../app/common-components/DevopsMetricsDrill";
 
 const ActiveSprintProgress = (props) => {
+  const [state, setState] = useState({
+    open: false,
+    drillData: {},
+  });
+  const chartRef = useRef();
+
   let activeSprinttmpProgressData = get(
     props,
     "planData.activeSprintProgressData",
     {}
   );
-  let activeSprintProgressData = [
+  const { observability } = useSelector((state) => state);
+
+  const [getActiveSprintProgressDrill] =
+    observabilityApi.useGetActiveSprintProgressDrillMutation({});
+  const onClose = () => {
+    setState((state) => ({
+      ...state,
+      open: !state.open,
+    }));
+  };
+  const planDrill = async (element) => {
+    if (!element.length) return;
+
+    const { index } = element[0];
+    let label = data.labels[index];
+    const drillPayload = {
+      appCodes: getSelectedOptionsValue(
+        get(observability, "filterData.selectedApplications", [])
+      ),
+      projects: getSelectedOptionsValue(
+        get(observability, "filterData.selectedProjects", [])
+      ),
+      sprintName: getSelectedOptionsValue(
+        get(observability, "filterData.selectedSprints", [])
+      ),
+      // startDt:get(observability, "filterData.selectedDate.startDate"),
+      // toDt:  get(observability, "filterData.selectedDate.endDate"),
+      startDt: 1668764376028,
+      toDt: 1669973976030,
+      progressType: label,
+      type: "Progress",
+    };
+    const { data: activeProgressData } = await getActiveSprintProgressDrill(
+      drillPayload
+    );
+    let popDrillData = {
+      label,
+      features:
+        activeProgressData.features +
+        activeProgressData.task +
+        activeProgressData.epic +
+        activeProgressData.story,
+      defects: activeProgressData.bug,
+      risks: activeProgressData.risk,
+      enablers:
+        activeProgressData.enablers + activeProgressData.changeReq,
+      debt: activeProgressData.debt,
+      prodFix: activeProgressData.prodFix,
+    };
+    setState((state) => ({
+      ...state,
+      drillData: popDrillData,
+      open: true,
+    }));
+  };
+
+  const activeSprintProgressData = [
     activeSprinttmpProgressData.inDefined,
     activeSprinttmpProgressData.inDev,
     activeSprinttmpProgressData.inTest,
@@ -16,6 +84,9 @@ const ActiveSprintProgress = (props) => {
   ];
   const options = {
     responsive: true,
+    interaction: {
+      mode: "point",
+    },
     plugins: {
       legend: {
         display: false,
@@ -64,10 +135,18 @@ const ActiveSprintProgress = (props) => {
       },
     ],
   };
+  const onClick = (event) => {
+    const { current: chart } = chartRef;
+    if (!chart) {
+      return;
+    }
+    planDrill(getElementAtEvent(chart, event));
+  };
   data.datasets[0].centerValue = activeSprinttmpProgressData.totStory || 0;
   return (
     <>
       <Doughnut
+        ref={chartRef}
         data={data}
         options={options}
         plugins={[
@@ -77,7 +156,15 @@ const ActiveSprintProgress = (props) => {
             },
           },
         ]}
+        onClick={onClick}
       />
+    {state.open && (
+        <DevopsMetricsDrill
+          className={"modal-plan.modal-priority"}
+          data={state.drillData}
+          onClose={onClose}
+        />
+      )}
     </>
   );
 };

@@ -40,7 +40,9 @@ const BitBucketHeader = (props) => {
             Most Pull Request
           </div>
           <div class="card-body text-center">
-            <span id="mostPullRequest">0</span>
+            <span id="mostPullRequest"> {!isEmpty(mostPullRequstData?.topRepoCount)
+                ? mostPullRequstData?.topRepoCount[0]?.repo
+                : 0}</span>
           </div>
         </div>
       </div>
@@ -68,7 +70,9 @@ const BitBucketHeader = (props) => {
             Total Clone
           </div>
           <div class="card-body text-center">
-            <span id="totalClone">0</span>
+            <span id="totalClone">{!isEmpty(totalCloneData?.repository)
+                ? totalCloneData?.repository[0]?.download
+                : 0}</span>
           </div>
         </div>
       </div>

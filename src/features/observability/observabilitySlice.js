@@ -18,7 +18,6 @@ const observabilitySlice = createSlice({
         state.filterData = action.payload;
       },
       prepare(filterData, changedData) {
-        console.log("reducer",filterData,changedData)
         return { payload: { ...filterData, ...changedData } };
       },
     },

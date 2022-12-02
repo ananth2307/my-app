@@ -1,9 +1,65 @@
 import { get } from "lodash";
-import React, { memo } from "react";
-import { Doughnut } from "react-chartjs-2";
+import React, { memo, useState, useRef } from "react";
+import { Doughnut, getElementAtEvent } from "react-chartjs-2";
+import { getSelectedOptionsValue } from "../../../../app/utilities/helpers";
+import { useSelector } from "react-redux";
+import { observabilityApi } from "../../../../app/services/observabilityApi";
+import DevopsMetricsDrill from "../../../../app/common-components/DevopsMetricsDrill";
 
 const ProjectStatus = (props) => {
   let projectMetrics = get(props, "planData.projectStatusData", {});
+
+  const [state, setState] = useState({
+    open: false,
+    drillData: {},
+  });
+  const chartRef = useRef();
+  const { observability } = useSelector((state) => state);
+
+  const [getProjectStatusDrill] =
+    observabilityApi.useGetProjectStatusDrillMutation({});
+  const onClose = () => {
+    setState((state) => ({
+      ...state,
+      open: !state.open,
+    }));
+  };
+  const planDrill = async (element) => {
+    if (!element.length) return;
+
+    const { index } = element[0];
+    let label = data.labels[index];
+    const drillPayload = {
+      appCodes: getSelectedOptionsValue(
+        get(observability, "filterData.selectedApplications", [])
+      ),
+      projects: getSelectedOptionsValue(
+        get(observability, "filterData.selectedProjects", [])
+      ),
+      sprintName: getSelectedOptionsValue(
+        get(observability, "filterData.selectedSprints", [])
+      ),
+      // startDt:get(observability, "filterData.selectedDate.startDate"),
+      // toDt:  get(observability, "filterData.selectedDate.endDate"),
+      startDt: 1668764376028,
+      toDt: 1669973976030,
+      progressType: label,
+      type: "Status",
+    };
+    const { data: projectStatusData } = await getProjectStatusDrill(
+      drillPayload
+    );
+    let popDrillData = {
+      label,
+      appName:projectStatusData.appName
+    };
+    setState((state) => ({
+      ...state,
+      drillData: popDrillData,
+      open: true,
+    }));
+  };
+
   const data = {
     labels: ["Delayed", "Warning", "On-Track", "Ahead"],
     datasets: [
@@ -34,6 +90,10 @@ const ProjectStatus = (props) => {
   };
   const options = {
     responsive: true,
+    hover: {
+      mode: 'nearest',
+      intersect: false
+      },
     plugins: {
       legend: {
         display: false,
@@ -57,18 +117,37 @@ const ProjectStatus = (props) => {
       },
     },
   };
+  const onClick = (event) => {
+    const { current: chart } = chartRef;
+    if (!chart) {
+      return;
+    }
+    planDrill(getElementAtEvent(chart, event));
+  };
   return (
-    <Doughnut
-      data={data}
-      options={options}
-      plugins={[
-        {
-          beforeDraw: function (chart) {
-            drawInnerText(chart);
+    <>
+      <Doughnut
+      ref={chartRef}
+        data={data}
+        options={options}
+        onClick={onClick}
+        plugins={[
+          {
+            beforeDraw: function (chart) {
+              drawInnerText(chart);
+            },
           },
-        },
-      ]}
-    />
+        ]}
+      />
+      {state.open && (
+        <DevopsMetricsDrill
+          className={"modal-plan.modal-priority"}
+          data={state.drillData}
+          onClose={onClose}
+          projectStatus={true}
+        />
+      )}
+    </>
   );
 };
 

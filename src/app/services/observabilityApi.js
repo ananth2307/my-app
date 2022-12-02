@@ -392,9 +392,23 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getplanActiveSprintPriorityDrill: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprint/planPriorityDetails`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     getActiveSprintProgress: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/userStories/status`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getActiveSprintProgressDrill: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprint/planProgressDetails`,
         method: "POST",
         body: postBody,
       }),
@@ -434,9 +448,23 @@ export const observabilityApi = api.injectEndpoints({
         body: postBody,
       }),
     }),
+    getProjectStatusDrill: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprint/planStatusDetails`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
     getSprintVelocity: build.mutation({
       query: (postBody = {}) => ({
         url: `${OBSERVABILITY_BASE_URL}/home/sprintVelocity`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getSprintVelocityDrill: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/home/sprint/sprintVelocityDetails`,
         method: "POST",
         body: postBody,
       }),

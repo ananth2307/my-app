@@ -13,8 +13,10 @@ import { DrillDownOffCanvas } from "../../common";
 import Filter from "../../common/Filter";
 import ChartContainer from "../../observability/common/ChartContainer";
 import BitBucketHeader from "./BitBucketHeader";
+import { useSelector } from "react-redux";
 
 const BitbucketLanding = (props) => {
+  const { observability } = useSelector((state) => state);
   const [state, setstate] = useState({
     bitBucketData: {
       BitBucketHeaderData: {
@@ -57,14 +59,14 @@ const BitbucketLanding = (props) => {
   initialStartDate = new Date(initialStartDate).getTime();
   initialEndDate = new Date(initialEndDate).getTime();
 
-  const getBitBucketData = useCallback(async () => {
+  const getBitBucketData = useCallback(async (InitialLoad=false) => {
     const defaultPayload = {
-      fromDt: initialStartDate/1000,
-      toDt: initialEndDate/1000,
+      fromDt: InitialLoad ? initialStartDate : get(observability, "filterData.selectedDate.startDate")/1000,
+      toDt:InitialLoad ? initialEndDate : get(observability, "filterData.selectedDate.endDate")/1000
     };
     const topCountPayload = {
-      fromDt: initialStartDate / 1000,
-      toDt: initialEndDate / 1000,
+      fromDt: InitialLoad ? initialStartDate : get(observability, "filterData.selectedDate.startDate")/1000,
+      toDt:InitialLoad ? initialStartDate : get(observability, "filterData.selectedDate.endDate")/1000,
       topCount: true,
     };
     let bitBucketPromiseData = await Promise.all([
@@ -104,9 +106,9 @@ const BitbucketLanding = (props) => {
         ...bitBucketData,
       },
     }));
-  }, [state.bitBucketData]);
+  }, [state.bitBucketData,observability.filterData]);
   useEffect(() => {
-    getBitBucketData();
+    getBitBucketData(true);
   }, []);
   return (
     <>

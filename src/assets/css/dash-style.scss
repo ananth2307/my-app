@@ -3251,24 +3251,25 @@ span.min-chat-pre {
 /*chart popup*/
 
 .modal-plan {
-  position: absolute;
-  top: 12%;
-  right: 6%;
+  position: relative;
+  z-index: 10;
+  bottom:75%;
+  left: 50%;
   background-color: #ffffff;
-  width: 44%;
-  height: 72%;
+  width: 50%;
+  height: auto;
   padding: 2%;
   border: 1px solid #63676f;
   border-radius: 5px;
-  display: none;
+  // display: none;
+
+}
+.modal-plan.modal-priority {
+  position: relative;
+  bottom: 20%;
 }
 
-.modal-plan.modal-priority {
-  top: 16%;
-  right: 5%;
-  height: 60%;
-  width: 40%;
-}
+
 
 .modal-plan.modal-issueMetrics {
   top: 13%;
