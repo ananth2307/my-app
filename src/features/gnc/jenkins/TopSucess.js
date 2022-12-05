@@ -1,8 +1,11 @@
-import { get, isEmpty } from "lodash";
+import { fromPairs, get, isEmpty } from "lodash";
 import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DataTable from "../../../app/common-components/DataTable";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
+import { getSortedArr } from "../../common/helpers";
+import { Headers } from "../utils/constants";
 
 const TopSucess = (props) => {
   const dispatch = useDispatch();
@@ -14,18 +17,7 @@ const TopSucess = (props) => {
     "jenkinsData.topSuccessFailureData.SUCCESS",
     []
   );
-  const sucessListItems =
-    !isEmpty(topSuccessData)&&
-    topSuccessData.map((list) => {
-      return Object.keys(list).map((key, k) => {
-        return (
-          <tr>
-            <td>{key}</td>
-            <td>{list[key]}</td>
-          </tr>
-        );
-      });
-    });
+  let sortedArr = !isEmpty(topSuccessData) ? getSortedArr(topSuccessData.at(0)) : []
   const getSelectedData = async () => {
     const Payload = {
       fromDt: get(observability, "filterData.selectedDate.startDate") / 1000,
@@ -33,8 +25,10 @@ const TopSucess = (props) => {
       topCount: false,
     };
     const response = await getTopSuccessFailure(Payload);
+    const drillSortedArray = getSortedArr(get(response, "data.SUCCESS[0]", []))
+    const tempSortList = [fromPairs(drillSortedArray)]
     const selectedData = {
-      summaryList: get(response, "data.SUCCESS", []),
+      summaryList: tempSortList,
     };
     selectedData.customSummaryHeader = () => (
       <>
@@ -76,15 +70,11 @@ const TopSucess = (props) => {
       <a class="viewlink" onClick={openDrillDown}>
         View All
       </a>
-      <table id="top5SuccessDetails" class="table">
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>{sucessListItems}</tbody>
-      </table>
+      <DataTable
+      headers={Headers}
+      body={sortedArr}
+      isPagination={false}
+      />
     </>
   );
 };

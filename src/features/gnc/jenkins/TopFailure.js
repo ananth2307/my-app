@@ -1,8 +1,11 @@
-import { get, isEmpty } from "lodash";
+import { fromPairs, get, isEmpty } from "lodash";
 import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DataTable from "../../../app/common-components/DataTable";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
 import { observabilityApi } from "../../../app/services/observabilityApi";
+import { Headers } from "../utils/constants";
+import { getSortedArr } from "../../common/helpers";
 
 const TopFailure = (props) => {
   const dispatch = useDispatch();
@@ -14,6 +17,7 @@ const TopFailure = (props) => {
     "jenkinsData.topSuccessFailureData.FAILURE",
     []
   );
+  let sortedArr = !isEmpty(failureData) ? getSortedArr(failureData.at(0)) : [];
   const getSelectedData = async () => {
     const Payload = {
       fromDt: get(observability, "filterData.selectedDate.startDate") / 1000,
@@ -21,8 +25,11 @@ const TopFailure = (props) => {
       topCount: false,
     };
     const response = await getTopSuccessFailure(Payload);
+    const drillSortedArray = getSortedArr(get(response, "data.FAILURE[0]", []));
+    const tempSortList = [fromPairs(drillSortedArray)];
+
     const selectedData = {
-      summaryList: get(response, "data.FAILURE", []),
+      summaryList: tempSortList,
     };
     selectedData.customSummaryHeader = () => (
       <>
@@ -47,45 +54,25 @@ const TopFailure = (props) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
-        isDropDownhide:true,
+        isDropDownhide: true,
         title: "FAILURE DETAILS",
       })
     );
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
-        isDropDownhide:true,
+        isDropDownhide: true,
         title: "FAILURE DETAILS",
         selectedData: await getSelectedData(),
       })
     );
   };
-  const failureListItems =
-    !isEmpty(failureData) &&
-    failureData.map((list) => {
-      return Object.keys(list).map((key, k) => {
-        return (
-          <tr>
-            <td>{key}</td>
-            <td>{list[key]}</td>
-          </tr>
-        );
-      });
-    });
   return (
     <>
       <a class="viewlink" onClick={openDrillDown}>
         View All
       </a>
-      <table id="top5SuccessDetails" class="table">
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>{failureListItems}</tbody>
-      </table>
+      <DataTable headers={Headers} body={sortedArr} isPagination={false} />
     </>
   );
 };

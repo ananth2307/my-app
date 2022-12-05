@@ -113,7 +113,7 @@ const Filter = (props) => {
   return (
     <>
       <div className="actnav dashactnav">
-        <div className={!props?.isApplicationHide ? "actright" : "col-md-6"}>
+        <div className={!props?.isApplicationHide ? "actright" : "col-md-12"}>
           <div className="frmgroup dateinput">
             <CustomDateRangePicker
               initialSettings={{

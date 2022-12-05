@@ -7,6 +7,7 @@ import { get } from "lodash";
 import { DrillDownOffCanvas } from "../../common";
 import Filter from "../../common/Filter";
 import ChartContainer from "../../observability/common/ChartContainer";
+import { useSelector } from "react-redux";
 
 const JenkinsLanding = (props) => {
   const [state, setstate] = useState({
@@ -18,6 +19,7 @@ const JenkinsLanding = (props) => {
     },
     isShowDrillDown: false,
   });
+  const { observability } = useSelector((state) => state);
   const [getBuildTrend] = observabilityApi.useGetBuildTrendMutation();
   const [getSuccessFailCountRatio] =
     observabilityApi.useGetSuccessFailCountRatioMutation();
@@ -29,14 +31,16 @@ const JenkinsLanding = (props) => {
   initialStartDate = new Date(initialStartDate).getTime();
   initialEndDate = new Date(initialEndDate).getTime();
 
-  const getJenkinsData = useCallback(async () => {
+  const getJenkinsData = useCallback(async (InitialLoad=false) => {
+
     const defaultPayload = {
-      fromDt: initialStartDate / 1000,
-      toDt: initialEndDate / 1000,
+      fromDt: InitialLoad ? initialStartDate : get(observability, "filterData.selectedDate.startDate")/1000,
+      toDt:InitialLoad ? initialEndDate : get(observability, "filterData.selectedDate.endDate")/1000
+      // toDt: initialEndDate / 1000,
     };
     const topCountPayload = {
-      fromDt: initialStartDate / 1000,
-      toDt: initialEndDate / 1000,
+      fromDt: InitialLoad ? initialStartDate : get(observability, "filterData.selectedDate.startDate")/1000,
+      toDt:InitialLoad ? initialStartDate : get(observability, "filterData.selectedDate.endDate")/1000,
       topCount: true,
     };
     let JenkinsPromiseData = await Promise.all([
@@ -62,9 +66,9 @@ const JenkinsLanding = (props) => {
         ...jenkinsData,
       },
     }));
-  }, [state.jenkinsData]);
+  }, [state.jenkinsData,observability.filterData]);
   useEffect(() => {
-    getJenkinsData();
+    getJenkinsData(true);
   }, []);
   return (
     <>

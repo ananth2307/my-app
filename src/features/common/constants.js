@@ -76,3 +76,30 @@ export const chartColors = [
   { success: "rgb(255,145,54)", failed: "rgb(26,172,214)" },
   { success: "rgb(123,234,59)", failed: "rgb(212,234,48)" },
 ];
+export const progressBarData = [
+  {
+    label: "Blocker",
+    value: 0,
+    bgColor: "#ff0404",
+  },
+  {
+    label: "Critical",
+    value: 0,
+    bgColor: "#ff8000",
+  },
+  {
+    label: "High",
+    value: 0,
+    bgColor: "#ff8373",
+  },
+  {
+    label: "Medium",
+    value: 0,
+    bgColor: "#e5d349",
+  },
+  {
+    label: "Low",
+    value: 0,
+    bgColor: "#5eadc3",
+  },
+];

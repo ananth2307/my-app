@@ -73,3 +73,7 @@ export const getMetricMatchingStatus = (type, mapping) => {
   }
   return status;
 };
+export const getSortedArr = (arr) => {
+  let keyValuePair = Object.entries(arr)
+  return keyValuePair.sort(([,a],[,b]) => (b-a)) 
+}
