@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="Group_1092" data-name="Group 1092" transform="translate(-0.167)">
+    <g id="Group_1091" data-name="Group 1091">
+      <g id="Rectangle_295" data-name="Rectangle 295" transform="translate(0.167)" fill="none" stroke="#522e8e" stroke-width="1" stroke-dasharray="2 2">
+        <rect width="16" height="16" rx="3" stroke="none"/>
+        <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" fill="none"/>
+      </g>
+    </g>
+    <path id="Icon_ionic-md-add" data-name="Icon ionic-md-add" d="M14.75,11.283H11.283V14.75H10.217V11.283H6.75V10.217h3.467V6.75h1.067v3.467H14.75Z" transform="translate(-2.75 -2.75)" fill="#522e8e"/>
+  </g>
+</svg>

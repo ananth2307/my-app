@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13.444" height="17" viewBox="0 0 13.444 17">
+  <g id="Group_991" data-name="Group 991" transform="translate(-1295 -217.5)">
+    <g id="Group_629" data-name="Group 629" transform="translate(1295.5 218)">
+      <path id="Icon_material-delete" data-name="Icon material-delete" d="M17.278,21H10.167a2.28,2.28,0,0,1-2.278-2.278V7.667H7V4.889h3.4L11.293,4h4.859l.889.889h3.4V7.667h-.889V18.722A2.28,2.28,0,0,1,17.278,21ZM8.889,8.556V18.722A1.279,1.279,0,0,0,10.167,20h7.111a1.279,1.279,0,0,0,1.278-1.278V8.556ZM8,6.667H19.444V5.889H16.626L15.737,5h-4.03l-.889.889H8Z" transform="translate(-7.5 -4.5)" fill="#522e8e"/>
+      <path id="Line_85" data-name="Line 85" d="M.5,9.557h-1V0h1Z" transform="translate(3.422 4.098)" fill="#522e8e"/>
+      <path id="Line_86" data-name="Line 86" d="M.5,9.557h-1V0h1Z" transform="translate(6.222 4.098)" fill="#522e8e"/>
+      <path id="Line_87" data-name="Line 87" d="M.5,9.557h-1V0h1Z" transform="translate(9.022 4.098)" fill="#522e8e"/>
+    </g>
+  </g>
+</svg>

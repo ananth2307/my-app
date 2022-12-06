@@ -29,6 +29,14 @@ import commit from './commit.png';
 import twick from './twick.png'
 import pencil from './pencil.png'
 import close from './close.png'
+import projects from './projects.svg';
+import editIcon from './edit-icon.svg';
+import deletedIcon from './delete-icon.svg';
+import featherFilter from './feather-filter.svg'
+import plusico from './plusico.svg';
+import iconElipsis from './icon-ellipsis-v.svg'
+import fileImport from './file-import.svg'
+import fileExport from './file-export.svg'
 export {
     checkboxTick,
     logo,
@@ -60,6 +68,14 @@ export {
     commit,
     twick,
     pencil,
-    close
-
+    close,
+    // coede effciency
+    projects,
+    editIcon,
+    deletedIcon,
+    featherFilter,
+    iconElipsis,
+    plusico,
+    fileExport,
+    fileImport
 }

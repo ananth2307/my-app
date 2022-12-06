@@ -32,6 +32,7 @@ const Jenkins = React.lazy(() => import("../features/gnc/jenkins/JenkinsLanding"
 const AppConfig = React.lazy(() =>
   import("../features/efficiency/appConfig/AppConfig")
 );
+const AppConfigProjects = React.lazy(()=> import("../features/efficiency/appConfig/Projects"))
 const AccessManagement = React.lazy(() =>
   import("../features/efficiency/accessManagement/AccessManagement")
 );
@@ -212,8 +213,17 @@ export const routes = [
         component: <AuditLog />,
         key: "3.5",
       },
+      {
+        key: "3.6",
+        name:'Project',
+        path: "/project",
+        text:'Project',
+        isNotSideBarNavigation:true,
+        component: <AppConfigProjects />,
+      },
     ],
   },
+ 
   //CODE8 Configuration
   {
     name: "Code8 Configuration",

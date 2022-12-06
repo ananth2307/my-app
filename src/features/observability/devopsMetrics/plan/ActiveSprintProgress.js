@@ -84,6 +84,11 @@ const ActiveSprintProgress = (props) => {
   ];
   const options = {
     responsive: true,
+    onHover: (event,chartElement) => {
+     if(chartElement.length === 1){
+        event.native.target.style.cursor = "pointer"
+     }
+    },
     interaction: {
       mode: "point",
     },

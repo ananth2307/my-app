@@ -10,6 +10,7 @@ import { store } from "./app/store";
 import { Provider } from "react-redux";
 import Container from "./app/common-components/Container";
 import ContainerLoader from "./app/common-components/ContainerLoader";
+import Projects from "./features/efficiency/appConfig/Projects";
 
 function App() {
   const renderRoutes = (allRoutes) => {

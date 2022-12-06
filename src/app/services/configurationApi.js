@@ -7,11 +7,11 @@ export const configurationApi = api.injectEndpoints({
   endpoints: (build) => ({
     getToolsList: build.mutation({
       query: ({page = 0, limit = 10}) => {
-        return `http://localhost:7111/api/v1/tools/listByItemsPerPage/${page}/${limit}`;
+        return `${MODULE_BASE_URL}/tools/listByItemsPerPage/${page}/${limit}`;
       },
     }),
     getToolsListCount: build.query({
-      query: () => `http://localhost:7111/api/v1/tools/count`,
+      query: () => `${MODULE_BASE_URL}/tools/count`,
     }),
   }),
   overrideExisting: true,

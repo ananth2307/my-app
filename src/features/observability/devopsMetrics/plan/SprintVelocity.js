@@ -67,11 +67,11 @@ const SprintVelocity = (props) => {
   };
   const options = {
     responsive: true,
-    hover:{
-      onHover: function(event, chartElement) {
-        event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-    }
-    },
+    onHover: (event,chartElement) => {
+      if(chartElement.length === 1){
+         event.native.target.style.cursor = "pointer"
+      }
+     },
     scales:{
       x:{
         grid:{
