@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../../../app/common-components/DataTable";
 import { effciencyApi } from "../../../app/services/efficiencyApi";
-import { appConfigtableHeaders } from "../constants";
 import "react-responsive-modal/styles.css";
 import Modal from "react-responsive-modal";
 import FilterModal from "./FilterModal";
@@ -21,12 +20,18 @@ import AppConfigHeader from "./AppConfigHeader";
 import NewApplicationConfig from "./NewApplicationConfig";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setAppConfig } from "./efficiencySlice";
+import { get } from "lodash";
 
 const AppConfig = () => {
-  const { data: appList } = effciencyApi.useGetcmdbQuery({});
-  const { data: operationList } = effciencyApi.useGetOperationRoleDetailsQuery(
-    {}
-  );
+  
+  const dispatch = useDispatch()
+  
+  const {efficiency }= useSelector((state) => state)
+
+  const tableData = get(efficiency,'appConfig.tableData',[])
+   
   const [getcmdbCount] = effciencyApi.useLazyGetcmdbCountQuery();
   const [getcmdbList] = effciencyApi.useGetcmdbListMutation();
 
@@ -35,7 +40,6 @@ const AppConfig = () => {
     limit: 10,
     page: 0,
     count: 0,
-    cmdbList: [],
     totalPages: 1,
     modalOpen: false,
     newApplication: false,
@@ -143,8 +147,7 @@ const AppConfig = () => {
       page: state.page,
       limit: state.limit,
     });
-    let tableData = cmdbData.map((list) => {
-    
+    const tableData = cmdbData.map((list) => {
       let gate = list.approvalGate > 0 ? "Yes" : "No";
       return {
         ...list,
@@ -152,8 +155,11 @@ const AppConfig = () => {
 
       };
     });
-    setState({ ...state, cmdbList: tableData });
+    dispatch(
+      setAppConfig(get(efficiency, "appConfig"),{tableData})
+    )
   };
+  // console.log({tableData})
   useEffect(() => {
     getcmdbCount({})
       .unwrap()
@@ -258,9 +264,10 @@ const AppConfig = () => {
           </div>
           <div class="main-content-wrap appwrap">
             <div className="grid-table">
+            
               <DataTable
                 headers={appConfigtableHeaders}
-                body={state.cmdbList}
+                body={tableData}
                 count={state.count}
                 onPageChange={(page) => setState({ ...state, page })}
                 onGetLimit={(limit) => setState({ ...state, limit, page: 0 })}
@@ -269,6 +276,7 @@ const AppConfig = () => {
                 currentPage={state.page}
                 isPagination={true}
               />
+            
             </div>
           </div>
         </>

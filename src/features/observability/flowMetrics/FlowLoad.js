@@ -117,9 +117,9 @@ const FlowLoad = (props) => {
           label: selectedParent,
           value: selectedParent,
         },
-        dropDownMenuOptions: sortingArr.map((item) => ({
-          label: item,
-          value: item,
+        dropDownMenuOptions: chartData.map((item) => ({
+          label: item.name,
+          value: item.name,
         })),
         selectedData: getSelectedData(selectedParentData.children),
         handleDdMenuChange: handleDdMenuChange,

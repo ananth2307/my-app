@@ -15,7 +15,7 @@ const FlowPredictability = (props) => {
   const dispatch = useDispatch();
   const { data: appList } = observabilityApi.useGetAppListQuery({});
   const observability = useSelector((state) => state.observability);
-  const common = useSelector((state) => state.common);
+
   const [getFlowPredicabilityDrill] =
     observabilityApi.useGetFlowPredictabilityDrillMutation();
   const [getFlowPredictSummary] =
@@ -34,7 +34,7 @@ const FlowPredictability = (props) => {
     let plannedSummary = [];
     let unplannedSummary = [];
     Object.keys(tmpSummaryData).map((keys) => {
-      if (keys === "planned summary" || keys === "planned completed summary") {
+      if (keys.replace(" ",'') === "planned summary" || keys.replace(" ",'') === "planned completed summary") {
         for (let [key, value] of Object.entries(tmpSummaryData[keys])) {
           let temp = {};
           if (key !== "CompletedFlag") {
@@ -64,9 +64,11 @@ const FlowPredictability = (props) => {
         }
       }
     });
+    console.log({ plannedSummary,
+      unplannedSummary})
     return {
-      plannedSummary: plannedSummary,
-      unplannedSummary: unplannedSummary,
+      plannedSummary,
+      unplannedSummary,
     };
   };
   const getSelectedData = (drillDownData) => {
@@ -186,9 +188,8 @@ const FlowPredictability = (props) => {
       selectedProp,
       offcanvasState
     ) => {
-      console.log("redis1", selectedProp, offcanvasState);
       const summaryData = await getFlowPredictSummary({
-        sprintNames: [get(common, "offcanvasState.selectedValue.value", "")],
+        sprintNames: [get(offcanvasState, "selectedValue.value", "")],
         plannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`)
           .plannedIssueId,
         unplannedIssueId: get(offcanvasState, `selectedData.${selectedProp}`)

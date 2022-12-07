@@ -1,7 +1,7 @@
 import {   deletedIcon,
     editIcon,
     projects,
-    successCheck,} from "../../assets/images";
+    successCheck,} from "../../assets/images"
 
 export const appConfigtableHeaders = [
     {
@@ -42,8 +42,8 @@ export const appConfigtableHeaders = [
       component: (row) => (
         <div class="noprojects">
           <a
-            onClick="callProject(221,0);"
-            href="javascript:void(0);"
+            onClick="callProject(221,0),"
+            href="javascript:void(0),"
             title="Project"
           >
             <img src={projects} />
@@ -92,4 +92,16 @@ export const appConfigtableHeaders = [
         </div>
       ),
     },
-  ];
+  ]
+  export const formCustomStyle = {
+    fontSize: "14px",
+    lineHeight: 1,
+    fontWeight:400,
+    color: '#9D9D9D',
+    backgroundColor:"#F2F4F2",
+    width: "100%",
+    padding: "10px 14px",
+    borderRadius: "6px",
+    border:0,
+    boxShadow:'none'
+  }

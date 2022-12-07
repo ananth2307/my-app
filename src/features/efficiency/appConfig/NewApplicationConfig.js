@@ -64,7 +64,7 @@ const NewApplicationConfig = () => {
                 class="typeahead_Manager"
                 id="secondaryManager"
                 name="secondaryManager"
-                placeholder="Enter Secondzary Manager"
+                placeholder="Enter Secondary Manager"
                 autocomplete="off"
               />
             </div>

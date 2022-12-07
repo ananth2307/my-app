@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import React, { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -23,8 +24,14 @@ const Projects = (props) => {
   
   const {state} = useLocation()
   const navigate = useNavigate()
+
   const [getcmdbProjectCount] = effciencyApi.useGetcmdbProjectCountMutation()
   const [getcmdbProjectList] = effciencyApi.useGetcmdbProjectListMutation()
+  
+  const [getNewProjectType] = effciencyApi.useLazyGetNewProjectTypeQuery({})
+  const [getNewProjectTool] = effciencyApi.useLazyGetNewProjectToolQuery({})
+
+  
   const Headers = [
     {
       key: 1,
@@ -55,8 +62,21 @@ const Projects = (props) => {
       });
   }, [projectState.page, projectState.limit]);
 
-  const openDrillDown = ({title}) => {
-    dispatch(
+  const getDropDowndata = async() => {
+    let {data:type} = await getNewProjectType()
+    let {data:tools} = await getNewProjectTool()
+    type = !isEmpty(type) && type.map((item) => ({
+     label:item,
+     value:item
+    }))
+    tools = !isEmpty(tools) && tools.map((tool) => ({
+     label:tool,
+     value:tool
+    }))
+    return {type,tools}
+  }
+  const openDrillDown = async ({title},selectedLabels) => {
+      dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
         selectedData: {
@@ -68,9 +88,26 @@ const Projects = (props) => {
         }
       })
     )
+    const {type,tools} = await getDropDowndata()
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        selectedData: {
+          customDrillDownCanvas(){
+           return <ProjectCustomDrillDown
+            title={title}
+           />
+          },
+          type,
+          tools,
+          selected:selectedLabels ? selectedLabels : ""
+        }
+      })
+    )
   }
-  const onEditData = (data) => {
-    openDrillDown({title:"Update Project"})
+  const onEditData = async(data) => {
+   const {tool:selectedTool,type:selectedType, name:projectName} = data
+    openDrillDown({title:"Update Project"},{selectedTool,selectedType,projectName})
   };
 
   const onDeleteData = (data) => {

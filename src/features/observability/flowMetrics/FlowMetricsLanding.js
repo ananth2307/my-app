@@ -42,7 +42,6 @@ const FlowMetrics = () => {
 
   const getFlowMetrics = useCallback(
     async (isInitialLoad = false) => {
-      console.log("redis", get(observability, "filterData.selectedApplications", "failed"));
       const payload = {
         appCodes: get(observability, "filterData.selectedApplications", [])
           .length
@@ -56,54 +55,79 @@ const FlowMetrics = () => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: isInitialLoad
-          ? initialStartDate
-          : get(observability, "filterData.selectedDate.startDate"),
+        fromDt: isInitialLoad
+          ? initialStartDate/1000
+          : get(observability, "filterData.selectedDate.startDate")/1000,
         toDt: isInitialLoad
-          ? initialEndDate
-          : get(observability, "filterData.selectedDate.endDate"),
+          ? initialEndDate/1000
+          : get(observability, "filterData.selectedDate.endDate")/1000,
       };
+      
+      const flowEfficiencyPayload = {
+        issueTypes: [
+            "All"
+        ],
+        applications:isInitialLoad
+        ? getSelectedOptionsValue(appList)
+        : getSelectedOptionsValue(
+            get(observability, "filterData.selectedApplications", [])
+          ),
+        sprintNames: [],
+        projectNames: [],
+        issueIds: [],
+        workFlowStages: [],
+        fromDt: isInitialLoad
+          ? initialStartDate/1000
+          : get(observability, "filterData.selectedDate.startDate")/1000,
+          toDt: isInitialLoad
+          ? initialEndDate/1000
+          : get(observability, "filterData.selectedDate.endDate")/1000,
+    }
 
-      const flowPredictabilityPayload = {
+      let flowMetricsPromiseData = await Promise.all([
+        getFlowDistribution(payload),
+        getFlowVelocity(payload),
+        getFlowEfficiency(flowEfficiencyPayload
+        ),
+        getActiveSprints(payload)
+      ]);
+      const flowPredicatabilityPayload = {
+        issueTypes: [
+            "All"
+        ],
+        applications:isInitialLoad
+        ? getSelectedOptionsValue(appList)
+        : getSelectedOptionsValue(
+            get(observability, "filterData.selectedApplications", [])
+          ),
+          sprintNames: get(flowMetricsPromiseData, "[3].data", []),
+        fromDt: isInitialLoad
+          ? initialStartDate/1000
+          : get(observability, "filterData.selectedDate.startDate")/1000,
+          toDt: isInitialLoad
+          ? initialEndDate/1000
+          : get(observability, "filterData.selectedDate.endDate")/1000,
+    }
+  
+      const flowLoadPayload = {
+        issueTypes: ["All"],
         applications: isInitialLoad
           ? getSelectedOptionsValue(appList)
           : getSelectedOptionsValue(
               get(observability, "filterData.selectedApplications", [])
             ),
-        fromDt: isInitialLoad
-          ? initialStartDate
-          : get(observability, "filterData.selectedDate.startDate"),
-        issueTypes: ["All"],
-        sprintNames: [],
-        toDt: isInitialLoad
-          ? initialEndDate
-          : get(observability, "filterData.selectedDate.endDate"),
-      };
-
-      let flowMetricsPromiseData = await Promise.all([
-        getFlowDistribution(payload),
-        getFlowVelocity(payload),
-        getFlowEfficiency({ ...payload, issueIds: [], issueTypes: ["All"] }),
-        getFlowPredictability(flowPredictabilityPayload),
-        getActiveSprints(payload)
-      ]);
-      const flowLoadPayload = {
-        issueTypes: ["All"],
-        applications: isInitialLoad
-          ? ["ACT", "CODE8", "DAAS", "DOME", "AIFT", "MAT", "PII", "PROMOKART"]
-          : getSelectedOptionsValue(
-              get(observability, "filterData.selectedApplications", [])
-            ),
-        sprintNames: get(flowMetricsPromiseData, "[4].data", []),
+        sprintNames: get(flowMetricsPromiseData, "[3].data", []),
         workFlowStages: [],
       };
       const { data: flowLoadData } = await getFlowLoad(flowLoadPayload);
 
+    const { data: flowPredictabilityData} =  await getFlowPredictability(flowPredicatabilityPayload)
+ 
       const flowMetricsData = {
         flowDistribution: get(flowMetricsPromiseData, "[0].data", []),
         flowVelocity: get(flowMetricsPromiseData, "[1].data", []),
         flowEfficiency: get(flowMetricsPromiseData, "[2].data", []),
-        flowPredictability: get(flowMetricsPromiseData, "[3].data", []),
+        flowPredictability: flowPredictabilityData,
         flowLoad: flowLoadData,
       };
 

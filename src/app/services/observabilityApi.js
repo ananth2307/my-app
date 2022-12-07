@@ -77,14 +77,21 @@ export const observabilityApi = api.injectEndpoints({
     }),
     getFlowEfficiency: build.mutation({
       query: (postBody = {}) => ({
-        url: `http://localhost:7111/api/v1/safeFlowMetrics/flow/flowEfficiency/main`,
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main`,
         method: "POST",
         body: postBody,
       }),
     }),
     getFlowEfficiencyDrill: build.mutation({
       query: (postBody = {}) => ({
-        url: `http://localhost:7111/api/v1/safeFlowMetrics/flow/flowEfficiency/main/drilldown`,
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main/drilldown`,
+        method: "POST",
+        body: postBody,
+      }),
+    }),
+    getFlowEfficiencyDrillSummary: build.mutation({
+      query: (postBody = {}) => ({
+        url: `${OBSERVABILITY_BASE_URL}/safeFlowMetrics/flow/flowEfficiency/main/summary`,
         method: "POST",
         body: postBody,
       }),
