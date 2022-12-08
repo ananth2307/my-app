@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { api } from "./services/baseApiSetup";
 import observabilitySlice from "../features/observability/observabilitySlice";
 import commonSlice from "./commonSlice";
-import efficiencySlice from "../features/efficiency/appConfig/efficiencySlice";
+import efficiencySlice from "../features/efficiency/efficiencySlice";
 
 export const store = configureStore({
   reducer: {

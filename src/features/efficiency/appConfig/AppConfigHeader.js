@@ -9,7 +9,7 @@ import {
     plusico,
   } from "../../../assets/images";
 import FilterModal from './FilterModal';
-import "../effciency.scss"
+import "../efficiency.scss"
 const AppConfigHeader = () => {
     const [state, setstate] = useState({
         open:false

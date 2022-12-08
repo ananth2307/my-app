@@ -1,12 +1,11 @@
-import { dispatch } from "d3";
-import { get, isEmpty } from "lodash";
+import { get, isEmpty, useEffect } from "lodash";
 import React, { memo, useState } from "react";
-import { useSelector } from "react-redux";
-import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
+import CustomModal from "../../../app/common-components/CustomModal";
+import CustomSelection from "../../../app/common-components/customSelect";
 import { effciencyApi } from "../../../app/services/efficiencyApi";
-import { formCustomStyle } from "../constants";
-import { setFilterData, setAppConfig } from "./efficiencySlice";
-
+import { setAppConfig } from "../efficiencySlice";
+import { featherFilter } from "../../../assets/images";
 const FilterModal = () => {
   const [state, setstate] = useState({
     limit: 10,
@@ -15,37 +14,27 @@ const FilterModal = () => {
     applicationNameMenuOpen: false,
     primaryManagerMenuOpen: false,
     secondaryManagerMenuOpen: false,
-    businessUnitMenu: false,
     appCode: "",
     applicationName: "",
     primaryManager: "",
     secondaryManager: "",
     businessUnit: "",
-    authorization: 0,
+    approvalGate: "",
+    modalOpen: false,
   });
+  const dispatch = useDispatch();
 
-  const { data: appList } = effciencyApi.useGetcmdbQuery({});
-  const { data: operationList } = effciencyApi.useGetOperationRoleDetailsQuery(
-    {}
-  );
 
   const { efficiency } = useSelector((state) => state);
-  const [getFilteredCmddCount] = effciencyApi.useGetFilteredCmdbCountMutation();
+
+  const filterData = get(efficiency,'appConfig.filterData')
+
+  const {appNameCode,managerList} = filterData
+
+  
+  const [getFilteredCmdbCount] = effciencyApi.useGetFilteredCmdbCountMutation();
 
   const [getFilteredCmdbList] = effciencyApi.useGetFilteredCmdbListMutation();
-
-  const managerList =
-    !isEmpty(operationList) &&
-    operationList.map((list) => ({
-      label: list.fullName + `[${list.userId}]`,
-      value: list.fullName,
-    }));
-  const appNameCode =
-    !isEmpty(appList) &&
-    appList.map((app) => ({
-      label: app.appName + `[${app.appCode}]`,
-      value: app.appCode,
-    }));
 
   const dropDownState = (input, type) => {
     input && type
@@ -61,15 +50,12 @@ const FilterModal = () => {
 
   const handleOnChange = (name, value) => {
     value =
-      name === "authorization" ? (state.authorization === 0 ? 1 : 0) : value;
+      name === "approvalGate" ? (state.approvalGate === 0 ? 1 : 0) : value;
 
     setstate((state) => ({
       ...state,
       [name]: value,
     }));
-  };
-  const colourStyles = {
-    control: (styles) => ({ ...styles, ...formCustomStyle }),
   };
 
   const handleSubmit = async () => {
@@ -81,7 +67,7 @@ const FilterModal = () => {
       secondaryManager: state.secondaryManager,
     };
 
-    const { data: count } = await getFilteredCmddCount(payload);
+    const { data: count } = await getFilteredCmdbCount(payload);
 
     const filteredList =
       count > 0
@@ -95,89 +81,59 @@ const FilterModal = () => {
         isApprovalGate: gate,
       };
     });
+
     dispatch(
-      setAppConfig(get(efficiency, "appConfig"), {tableData})
+      setAppConfig(get(efficiency, "appConfig"), {
+        tableData,
+      })
     );
+
+    setstate((state) => ({
+      ...state,
+      modalOpen: false,
+    }));
   };
-  return (
+  const modalBody = () => (
     <div class="modal-body">
-      <h4 class="sectitle">Filters</h4>
+      {/* <h4 class="sectitle">Filters</h4> */}
       <div class="fltrwrap" id="filterForm">
         <div class="fltrcol">
           <label class="selectlabel">Application Details</label>
-          <div class="frmgroup">
-            <Select
-              name="appCode"
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              styles={colourStyles}
-              options={appNameCode}
-              onInputChange={(input) => dropDownState(input, "appCode")}
-              onChange={(choice, action) => {
-                handleOnChange(action.name, choice.value);
-              }}
-              menuIsOpen={state.appCodeMenuOpen}
-              placeholder={"Enter Application Code"}
-            />
-          </div>
-          <div class="frmgroup">
-            <Select
-              name="applicationName"
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              styles={colourStyles}
-              options={appNameCode}
-              onInputChange={(input) => dropDownState(input, "applicationName")}
-              onChange={(choice, action) => {
-                handleOnChange(action.name, choice.value);
-              }}
-              menuIsOpen={state.applicationNameMenuOpen}
-              placeholder={"Enter Application Name"}
-            />
-          </div>
+          <CustomSelection
+            name="appCode"
+            options={appNameCode}
+            onInputChange={{ dropDownState, selectedField: "appCode" }}
+            onChange={handleOnChange}
+            menuIsOpen={state.appCodeMenuOpen}
+            placeholder={"Enter Application Code"}
+          />
+          <CustomSelection
+            name="applicationName"
+            options={appNameCode}
+            onInputChange={{ dropDownState, selectedField: "applicationName" }}
+            onChange={handleOnChange}
+            menuIsOpen={state.applicationNameMenuOpen}
+            placeholder={"Enter Application Name"}
+          />
         </div>
         <div class="fltrcol">
           <label class="selectlabel">Manager Details</label>
-          <div class="frmgroup">
-            <Select
-              name="primaryManager"
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              styles={colourStyles}
-              options={managerList}
-              onInputChange={(input) => dropDownState(input, "primaryManager")}
-              onChange={(choice, action) => {
-                handleOnChange(action.name, choice.value);
-              }}
-              menuIsOpen={state.primaryManagerMenuOpen}
-              placeholder={"Enter Primary Manager"}
-            />
-          </div>
-          <div class="frmgroup">
-            <Select
-              name="secondaryManager"
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              styles={colourStyles}
-              options={managerList}
-              onInputChange={(input) =>
-                dropDownState(input, "secondaryManager")
-              }
-              onChange={(choice, action) => {
-                handleOnChange(action.name, choice.value);
-              }}
-              menuIsOpen={state.secondaryManagerMenuOpen}
-              placeholder={"Enter Secondary Manager"}
-            />
-          </div>
+          <CustomSelection
+            name="primaryManager"
+            options={managerList}
+            onInputChange={{ dropDownState, selectedField: "primaryManager" }}
+            onChange={handleOnChange}
+            menuIsOpen={state.primaryManagerMenuOpen}
+            placeholder={"Enter Primary Manager"}
+          />
+          <CustomSelection
+            name="secondaryManager"
+            options={managerList}
+            onInputChange={{ dropDownState, selectedField: "secondaryManager" }}
+            onChange={handleOnChange}
+            menuIsOpen={state.secondaryManagerMenuOpen}
+            placeholder={"Enter Secondary Manager"}
+          />
         </div>
         <div class="fltrcol">
           <label class="selectlabel">Group Details</label>
@@ -195,7 +151,7 @@ const FilterModal = () => {
         </div>
         <div class="form-check">
           <input
-            name="authorization"
+            name="approvalGate"
             class="form-check-input"
             type="checkbox"
             id="checkbox2"
@@ -208,25 +164,52 @@ const FilterModal = () => {
           </label>
         </div>
       </div>
-      <div class="btnwrap">
-        <button
-          data-bs-dismiss="modal"
-          aria-label="Close"
-          onclick="filterReset();"
-          class="default-btn"
-        >
-          Clear
-        </button>
-        <button
-          data-bs-dismiss="modal"
-          aria-label="Close"
-          onClick={handleSubmit}
-          class="primary-btn"
-        >
+      {/* <div class="btnwrap">
+        <button class="default-btn">Clear</button>
+        <button onClick={handleSubmit} class="primary-btn">
           Apply
         </button>
-      </div>
+      </div> */}
     </div>
+  );
+
+  const handleClose = () => {
+    setstate((state) => ({
+      ...state,
+      modalOpen: false,
+    }));
+  };
+
+  const handleShow = () => {
+    setstate((state) => ({
+      ...state,
+      modalOpen: true,
+    }));
+  };
+  return (
+    <>
+      <CustomModal
+        modalOpen={state.modalOpen}
+        modalHide={handleClose}
+        modalTitle={"Filters"}
+        PrimaryButton={"Apply"}
+        SecondaryButton={"Clear"}
+        modalBody={modalBody}
+        primaryBtnFunc={handleSubmit}
+        secondaryBtnFunc={handleClose}
+        modalCustomClass={"filter-modal"}
+      />
+      <div class="actleft">
+        <div class="appfilternav">
+          <a onClick={handleShow}>
+            <span>
+              <img src={featherFilter} alt="filter.png" />
+            </span>{" "}
+            Filter
+          </a>
+        </div>
+      </div>
+    </>
   );
 };
 

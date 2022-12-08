@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../../../app/common-components/DataTable";
 import { effciencyApi } from "../../../app/services/efficiencyApi";
-import "react-responsive-modal/styles.css";
-import Modal from "react-responsive-modal";
 import FilterModal from "./FilterModal";
-import "../effciency.scss";
+import "../efficiency.scss";
 import {
-  featherFilter,
   fileExport,
   fileImport,
   iconElipsis,
@@ -16,24 +13,26 @@ import {
   successCheck,
   deletedIcon,
 } from "../../../assets/images";
-import AppConfigHeader from "./AppConfigHeader";
-import NewApplicationConfig from "./NewApplicationConfig";
+import ApplicationConfig from "./ApplicationConfig";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setAppConfig } from "./efficiencySlice";
-import { get } from "lodash";
+import { setAppConfig } from "../efficiencySlice";
+import { get, isEmpty } from "lodash";
 
 const AppConfig = () => {
-  
-  const dispatch = useDispatch()
-  
-  const {efficiency }= useSelector((state) => state)
+  const dispatch = useDispatch();
 
-  const tableData = get(efficiency,'appConfig.tableData',[])
-   
+  const { efficiency } = useSelector((state) => state);
+
+  const tableData = get(efficiency, "appConfig.tableData", []);
+
   const [getcmdbCount] = effciencyApi.useLazyGetcmdbCountQuery();
-  const [getcmdbList] = effciencyApi.useGetcmdbListMutation();
+  const [getcmdbList] = effciencyApi.useLazyGetcmdbListQuery();
+
+  const { data: appList } = effciencyApi.useGetcmdbQuery();
+  const { data: operationList } =
+    effciencyApi.useGetOperationRoleDetailsQuery();
 
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -41,8 +40,7 @@ const AppConfig = () => {
     page: 0,
     count: 0,
     totalPages: 1,
-    modalOpen: false,
-    newApplication: false,
+    applicationConfig: false,
   });
 
   const appConfigtableHeaders = [
@@ -85,7 +83,7 @@ const AppConfig = () => {
         <div class="noprojects">
           <a
             href=""
-            onClick={() =>navigate("/project",{state:{id:row.id}})}
+            onClick={() => navigate("/project", { state: { id: row.id } })}
             title="Project"
           >
             <img src={projects} />
@@ -135,14 +133,20 @@ const AppConfig = () => {
       ),
     },
   ];
-  const onModal = () => {
-    setState((state) => ({
-      ...state,
-      modalOpen: !state.modalOpen,
-    }));
-  };
 
   const getCmdbList = async () => {
+    const managerList =
+      !isEmpty(operationList) &&
+      operationList.map((list) => ({
+        label: list.fullName + `[${list.userId}]`,
+        value: list.fullName,
+      }));
+    const appNameCode = !isEmpty(operationList) && 
+      appList.map((app) => ({
+        label: app.appName + `[${app.appCode}]`,
+        value: app.appCode,
+      }));
+
     const { data: cmdbData } = await getcmdbList({
       page: state.page,
       limit: state.limit,
@@ -152,20 +156,24 @@ const AppConfig = () => {
       return {
         ...list,
         isApprovalGate: gate,
-
       };
     });
-    dispatch(
-      setAppConfig(get(efficiency, "appConfig"),{tableData})
-    )
+
+    setTimeout(() => {
+      dispatch(
+        setAppConfig(get(efficiency, "appConfig"), {
+          tableData,
+          filterData: { appNameCode, managerList },
+        })
+      );
+    }, 1000);
   };
-  // console.log({tableData})
   useEffect(() => {
     getcmdbCount({})
       .unwrap()
       .then((count) => {
         setState({ ...state, count });
-        getCmdbList();
+        getCmdbList({ page: state.page, limit: state.limit });
       });
   }, [state.page, state.limit]);
 
@@ -193,37 +201,16 @@ const AppConfig = () => {
 
   return (
     <>
-      {!state.newApplication ? (
+      {!state.applicationConfig ? (
         <>
           <div class="fltractnav">
-            <Modal
-              open={state.modalOpen}
-              onClose={onModal}
-              center
-              classNames={{
-                modal: "filter_modal",
-              }}
-            >
-              <FilterModal />
-            </Modal>
-            <div class="actleft">
-              <div class="appfilternav">
-                <a
-                  onClick={onModal}
-                >
-                  <span>
-                    <img src={featherFilter} />
-                  </span>{" "}
-                  Filter
-                </a>
-              </div>
-            </div>
+            <FilterModal />
             <div class="actright">
               <a
                 onClick={() =>
                   setState((state) => ({
                     ...state,
-                    newApplication: true,
+                    applicationConfig: true,
                   }))
                 }
                 class="border-btn"
@@ -264,7 +251,6 @@ const AppConfig = () => {
           </div>
           <div class="main-content-wrap appwrap">
             <div className="grid-table">
-            
               <DataTable
                 headers={appConfigtableHeaders}
                 body={tableData}
@@ -276,12 +262,11 @@ const AppConfig = () => {
                 currentPage={state.page}
                 isPagination={true}
               />
-            
             </div>
           </div>
         </>
       ) : (
-        <NewApplicationConfig />
+        <ApplicationConfig />
       )}
     </>
   );

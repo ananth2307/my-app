@@ -13,13 +13,13 @@ export const effciencyApi = api.injectEndpoints({
     getcmdbCount:build.query({
       query:() => `${EFFICIENCY_BASE_URL}/cmdb/count`
     }),
-    getcmdbList: build.mutation({
-      query:({page = 0,limit=10}) => `${EFFICIENCY_BASE_URL}/cmdb/list/${page}/${limit}`
+    getcmdbList: build.query({
+      query:({page,limit}) => `${EFFICIENCY_BASE_URL}/cmdb/list/${page}/${limit}`
     }),
-    getcmdbProjectCount: build.mutation({
+    getcmdbProjectCount: build.query({
       query: ({id}) => `${EFFICIENCY_BASE_URL}/cmdb/${id}/projects/count`
     }),
-    getcmdbProjectList: build.mutation({
+    getcmdbProjectList: build.query({
       query:({id,page=0,limit=10}) => `${EFFICIENCY_BASE_URL}/cmdb/${id}/projects/${page}/${limit}`
     }),
     getFilteredCmdbCount: build.mutation({
@@ -42,7 +42,14 @@ export const effciencyApi = api.injectEndpoints({
     getNewProjectTool: build.query({
       query:(type='code') => `${EFFICIENCY_BASE_URL}/toolsPlugin/${type}`
     }),
-
+    addManageProject: build.mutation({
+     query:({payload,id}) =>{
+      return {
+      url:`${EFFICIENCY_BASE_URL}/cmdb/${id}/project/kevin`,
+      method:"POST",
+      body:payload
+     }
+    }})
   }),
   overrideExisting: true,
 });

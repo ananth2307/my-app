@@ -98,7 +98,6 @@ const FlowLoad = (props) => {
   };
 
   const handleDdMenuChange = ( selectedParent ) => {
-    console.log("redis123", selectedParent, chartData)
     const selectedParentData = chartData.filter(
       (dt) => dt.name === selectedParent.value
     )[0];

@@ -236,10 +236,7 @@ const FlowPredictability = (props) => {
   const getDrillDownData = async (selectedSprint) =>
     await getFlowPredicabilityDrill({
       issueTypes: ["All"],
-      applications: get(observability, "filterData.selectedApplications", [])
-        .length
-        ? get(observability, "filterData.selectedApplications", [])
-        : getSelectedOptionsValue(appList),
+      applications: getSelectedOptionsValue(get(observability, "filterData.selectedApplications", [])),
       sprintNames: [selectedSprint],
       projectNames: [],
       issueIds: [],
@@ -284,9 +281,9 @@ const FlowPredictability = (props) => {
       let radius = Math.min(width, height) / 2;
       let labelr = radius + 30; // radius for label anchor
       //array of colors for the pie (in the same order as the dataset)
-      let color = d3
-        .scaleOrdinal()
-        .range(["#522e8e", "#522e8e", "#522e8e", "#522e8e"]);
+      // let color = d3
+      //   .scaleOrdinal()
+      //   .range(["#522e8e", "#522e8e", "#522e8e", "#522e8e"]);
 
       let data = chartData;
 

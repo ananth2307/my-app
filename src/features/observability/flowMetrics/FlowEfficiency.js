@@ -197,7 +197,7 @@ const FlowEfficiency = (props) => {
 
   const handleDdMenuChange = async (selectedSprint) => {
     const drillDownData = await getDrillDownData(selectedSprint.value);
-    dispatch(setSelectedData(getSelectedData(drillDownData.data)));
+    dispatch(setSelectedData(getSelectedData(drillDownData)));
   };
 
   const openDrilllDown = async (selectedSprint) => {

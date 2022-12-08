@@ -1,7 +1,7 @@
 import React from "react";
 
 const Input = (props) => {
-  const {
+  let  {
     label,
     error,
     errorMessage,
@@ -14,26 +14,32 @@ const Input = (props) => {
     labelClassName,
     errorClassName,
     inputClassName,
+    autoComplete,
+    maxLength
   } = props;
+
+  inputClassName = error ? 'errorinput' : inputClassName
 
   return (
     <>
         <div
-          className={`frmgroup validate default-input col-6 ${containerClassName}`}
+          className={`${containerClassName}`}
         >
           <div className={`frmhead ${labelClassName}`}>
-            <label>{label} </label>
+            {label && <label>{label} </label> }
             {error && (
-              <div className={`error${errorClassName}`}>*{errorMessage}</div>
+              <div className={`error ${errorClassName}`}>*{errorMessage}</div>
             )}
           </div>
           <input
             type={type}
             value={value}
-            onChange={onChange}
+            onChange={(e)=> {onChange(e.target.name, e.target.value) }}
             name={name}
             placeholder={placeholder}
             className={`${inputClassName}`}
+            autoComplete={autoComplete}
+            maxLength={maxLength}
           />
         </div>
     </>
