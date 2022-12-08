@@ -98,7 +98,6 @@ const FlowLoad = (props) => {
   };
 
   const handleDdMenuChange = ( selectedParent ) => {
-    console.log("redis123", selectedParent, chartData)
     const selectedParentData = chartData.filter(
       (dt) => dt.name === selectedParent.value
     )[0];
@@ -117,9 +116,9 @@ const FlowLoad = (props) => {
           label: selectedParent,
           value: selectedParent,
         },
-        dropDownMenuOptions: sortingArr.map((item) => ({
-          label: item,
-          value: item,
+        dropDownMenuOptions: chartData.map((item) => ({
+          label: item.name,
+          value: item.name,
         })),
         selectedData: getSelectedData(selectedParentData.children),
         handleDdMenuChange: handleDdMenuChange,

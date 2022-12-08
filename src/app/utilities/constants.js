@@ -63,6 +63,10 @@ export const pageTitleMapper = {
       module: "Code8 Efficiency - ",
       pageTitle: "Audit Log",
     },
+    "/project": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "Project",
+    },
     //Configuration
     "/configuration/settings/tools": {
       module: "Code8 Configuration - ",

@@ -1,18 +1,25 @@
 import React from "react";
 import * as d3 from "d3";
 import { useD3 } from "../../../hooks/useD3";
-import { truncate } from "../../../app/utilities/helpers";
+import {
+  getSelectedOptionsValue,
+  truncate,
+} from "../../../app/utilities/helpers";
 import { cloneDeep, get, isEmpty } from "lodash";
 import { metricTypesMapping } from "../../common/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
 import { getMetricMatchingStatus } from "../../common/helpers";
 import { observabilityApi } from "../../../app/services/observabilityApi";
 
 const FlowEfficiency = (props) => {
   const dispatch = useDispatch();
+
+  const { observability } = useSelector((state) => state);
   const [getFlowEffciencyDrill] =
     observabilityApi.useGetFlowEfficiencyDrillMutation();
+
+  const [getFlowEfficiencyDrillSummary] = observabilityApi.useGetFlowEfficiencyDrillSummaryMutation({})
   let chartData = [];
   let flowEffData = props?.flowMetricsData?.flowEfficiency;
   if (!isEmpty(flowEffData)) {
@@ -39,16 +46,16 @@ const FlowEfficiency = (props) => {
   const formatSummary = (summaryData) => {
     let tmpSummaryData = cloneDeep(summaryData);
     let tempData = [];
-    tmpSummaryData.map((items) => {
-      Object.keys(items).map((key) => {
+   
+      Object.keys(tmpSummaryData).map((key) => {
         tempData.push({
-          issueId: items[key].jiraKey,
-          activeTime: items[key].activeTime.toFixed(1),
-          waitTime: items[key].waitTime.toFixed(1),
-          summary: items[key].summary,
+          issueId: tmpSummaryData[key].jiraKey,
+          activeTime: tmpSummaryData[key].activeTime.toFixed(1),
+          waitTime: tmpSummaryData[key].waitTime.toFixed(1),
+          summary: tmpSummaryData[key].summary,
         });
       });
-    });
+
     return tempData;
   };
   const getSelectedData = (drillDownData) => {
@@ -64,11 +71,12 @@ const FlowEfficiency = (props) => {
           Efficiency: drillDownData[matchedKey].efficiency,
           activeTime: drillDownData[matchedKey].activeTime,
           waitTime: drillDownData[matchedKey].waitTime,
+          issueIds:drillDownData[matchedKey].issueIds
         };
       }
     });
     selectedData.DdLevelOneBoxClick = true;
-    selectedData.drillDownflowWrapClass = 'efficiency-wrap floweffi-block'
+    selectedData.drillDownflowWrapClass = "efficiency-wrap floweffi-block";
     selectedData.customSummaryHeader = () => (
       <>
         <div class="fw-5">Sl.No</div>
@@ -139,12 +147,25 @@ const FlowEfficiency = (props) => {
       selectedProp,
       offcanvasState
     ) => {
-      const summaryData = await getFlowEffciencyDrill({
-        selectedSprintData: get(offcanvasState, "selectedValue.value", ""),
-        issueType: selectedProp,
-      });
+      console.log(offcanvasState)
+
+      const sprintNames = metricTypesMapping[selectedProp]
+      const payload = {
+        issueTypes: sprintNames,
+        applications: getSelectedOptionsValue(
+          get(observability, "filterData.selectedApplications", [])
+        ),
+        sprintNames: [get(offcanvasState,'selectedValue.value','')],
+        projectNames: [],
+        issueIds: selectedData[selectedProp].issueIds,
+        workFlowStages: [],
+        fromDt: get(observability, "filterData.selectedDate.startDate") / 1000,
+        toDt: get(observability, "filterData.selectedDate.endDate") / 1000,
+      };
+      const summaryData = await getFlowEfficiencyDrillSummary(payload);
       const formatedData =
-        summaryData.data.length > 0 ? formatSummary(summaryData.data) : [];
+       !isEmpty(summaryData.data) ? formatSummary(summaryData.data) : [];
+        console.log({formatedData})
       let tempCopy = cloneDeep(offcanvasState);
       let arrCopy = cloneDeep(offcanvasState.selectedData);
       let tempValuCopy = cloneDeep(offcanvasState.selectedData[selectedProp]);
@@ -156,18 +177,31 @@ const FlowEfficiency = (props) => {
     return selectedData;
   };
 
-  const getDrillDownData = async (selectedSprint) => await getFlowEffciencyDrill({
-    selectedSprintData: selectedSprint,
-  });
+  const getDrillDownData = async (selectedSprint) => {
+    const payload = {
+      issueTypes: ["All"],
+      applications: getSelectedOptionsValue(
+        get(observability, "filterData.selectedApplications", [])
+      ),
+      sprintNames: [selectedSprint],
+      projectNames: [],
+      issueIds: [],
+      workFlowStages: [],
+      fromDt: get(observability, "filterData.selectedDate.startDate") / 1000,
+      toDt: get(observability, "filterData.selectedDate.endDate") / 1000,
+    };
+  const response =  await getFlowEffciencyDrill(payload);
 
-  const handleDdMenuChange = async ( selectedSprint ) => {
+    return response.data
+  };
+
+  const handleDdMenuChange = async (selectedSprint) => {
     const drillDownData = await getDrillDownData(selectedSprint.value);
-    dispatch(setSelectedData(getSelectedData(drillDownData.data)))
-  }
+    dispatch(setSelectedData(getSelectedData(drillDownData)));
+  };
 
   const openDrilllDown = async (selectedSprint) => {
     const drillDownData = await getDrillDownData(selectedSprint);
-    console.log("redis on open", drillDownData)
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -180,7 +214,7 @@ const FlowEfficiency = (props) => {
           label: item,
           value: item,
         })),
-        selectedData: getSelectedData(drillDownData.data),
+        selectedData: getSelectedData(drillDownData),
         handleDdMenuChange: handleDdMenuChange,
       })
     );

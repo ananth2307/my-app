@@ -59,6 +59,7 @@ const Container = () => {
                   <div className="dropdown-container">
                     {/* First Level childNavs */}
                     {route?.childNavs?.map((firstChildNav) => (
+                      !firstChildNav.isNotSideBarNavigation &&
                       <>
                         <a
                           href="#"
