@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get } from "lodash";
 
 const observabilitySlice = createSlice({
   name: "observability",
@@ -6,8 +7,10 @@ const observabilitySlice = createSlice({
     filterData: {
       selectedApplications: [],
       selectedProjects: [],
-      selectedSprints: []
+      selectedSprints: [],
+      selectedDate:{}
     },
+    panelState: {},
   },
   reducers: {
     setFilterData: {
@@ -15,12 +18,21 @@ const observabilitySlice = createSlice({
         state.filterData = action.payload;
       },
       prepare(filterData, changedData) {
-        return { payload: { ...filterData, ...changedData } }
-      }
+        return { payload: { ...filterData, ...changedData } };
+      },
+    },
+    setPanelVisibility: {
+      reducer(state, action) {
+        state.panelState[`is${action.payload}Open`] = !get(
+          state,
+          `panelState.is${action.payload}Open`,
+          false
+        );
+      },
     },
   },
 });
 
-export const { setFilterData } = observabilitySlice.actions;
+export const { setFilterData, setPanelVisibility } = observabilitySlice.actions;
 
 export default observabilitySlice.reducer;

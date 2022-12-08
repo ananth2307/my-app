@@ -17,7 +17,7 @@ const ProductivityMetrics = React.lazy(() =>
   import("../features/observability/productivityMetrics/ProductivityMetricsLanding")
 );
 const DevopsMetrics = React.lazy(() =>
-  import("../features/observability/devopsMetrics/DevopsMetrics")
+  import("../features/observability/devopsMetrics/DevopsMetricsLanding")
 );
 const OpsMetricsIncidentManagement = React.lazy(() =>
   import("../features/observability/opsMetrics/IncidentManagement/IncidentMangementLanding")
@@ -26,9 +26,9 @@ const OpsMetricsChangeManagement = React.lazy(() =>
   import("../features/observability/opsMetrics/ChangeMangement/ChangeMangementLanding")
 );
 const Bitbucket = React.lazy(() =>
-  import("../features/gnc/bitbucket/Bitbucket")
+  import("../features/gnc/bitbucket/BitbucketLanding")
 );
-const Jenkins = React.lazy(() => import("../features/gnc/jenkins/Jenkins"));
+const Jenkins = React.lazy(() => import("../features/gnc/jenkins/JenkinsLanding"));
 const AppConfig = React.lazy(() =>
   import("../features/efficiency/appConfig/AppConfig")
 );
@@ -163,7 +163,7 @@ export const routes = [
       {
         name: "Bitbucket",
         text: "Bitbucket",
-        path: "gnc/bitbucket",
+        path: "gnc/bitbucketTrend",
         component: <Bitbucket />,
         key: "2.2",
       },

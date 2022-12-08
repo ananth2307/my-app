@@ -2,9 +2,10 @@ import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import { responsivefy } from "../../../app/utilities/helpers";
 import * as d3 from "d3";
-import { get } from "lodash";
+import { cloneDeep, get, isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { setIsOffCanvasOpen } from "../../../app/commonSlice";
+import { summaryApi } from "../../../mockData/ProductivityMetrics/StaticCodeAnalysis";
 
 const StaticCodeAnalysis = (props) => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const StaticCodeAnalysis = (props) => {
     []
   );
   let staticCodedata = [];
-  tmpstaticCodedata &&
+  !isEmpty(tmpstaticCodedata) &&
     Object.keys(tmpstaticCodedata).map((key) => {
       key !== "totalIssues" &&
         staticCodedata.push({
@@ -22,17 +23,65 @@ const StaticCodeAnalysis = (props) => {
           value: tmpstaticCodedata[key],
         });
     });
+  const getSelectedData = () => {
+    let selectedData = {};
+    let tempStaticData = cloneDeep(summaryApi);
+    Object.keys(tempStaticData).map((key) => {
+      selectedData[key] = {
+        count: tempStaticData[key].length,
+        summaryList: tempStaticData[key],
+      };
+    });
+    selectedData.customSummaryHeader = () => (
+      <>
+        <div class="fw-5">Sl.No</div>
+        <div class="fw-20">Summary</div>
+        <div class="fw-20">Commit Details</div>
+        <div class="fw-10">Assignee</div>
+        <div class="fw-10">Status</div>
+        <div class="fw-10">Est.Time(in mins)</div>
+        <div class="fw-10">Actual Time(in mins)</div>
+      </>
+    );
+    selectedData.customSummaryList = (singleSummary) => {
+      return (
+        <>
+          <li>
+            <div class="fw-20">{singleSummary?.summary}</div>
+            <div class="fw-20">{singleSummary?.CommitDetails}</div>
+            <div class="fw-10">{singleSummary?.assignee}</div>{" "}
+            <div class="fw-10">{singleSummary?.status}</div>
+            <div class="fw-10">{singleSummary?.estimatedTime}</div>
+            <div class="fw-10">{singleSummary?.ActualTime} </div>
+            <button type="submit" onclick="followUp();" class="followup-btn">
+              Follow Up
+            </button>
+          </li>
+        </>
+      );
+    };
+    selectedData.customDrilldownHeaders = true;
+    return selectedData;
+  };
+
   const openDrillDown = (selectedIssue) => {
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
+        isDropDownhide: true,
         title: props.title,
+        selectedData: getSelectedData(),
       })
     );
   };
   const ref = useD3(
     (svg) => {
       let data = staticCodedata;
+      let total = data.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.value,
+        0
+      );
+      svg.html("");
       if (data.length) {
         let width = get(props, "chartContainerRefs.current[0].offsetWidth", 0);
         let height = 0.75 * width; //this is the double because are showing just the half of the pie
@@ -50,8 +99,7 @@ const StaticCodeAnalysis = (props) => {
           .attr("height", height)
           .call(responsivefy)
           .append("svg:g") //make a group to hold our pie chart
-          .on("click", function (d, i) {
-          })
+          .on("click", function (d, i) {})
           .attr("transform", "translate(" + width / 2 + "," + 150 + ")"); //move the center of the pie chart from 0, 0 to radius, radius
 
         let arc = d3
@@ -112,10 +160,9 @@ const StaticCodeAnalysis = (props) => {
           })
           .attr("font-size", "13")
           .text(function (d, i) {
-            return d.value + "%";
-          });
-
-        //.text(function(d, i) { return data[i].label + " " + d.value + "%" });
+            return Math.floor((d.value / total) * 100) + "%";
+          })
+          .on("click", (e, d) => openDrillDown(d));
       }
     },
     [staticCodedata]

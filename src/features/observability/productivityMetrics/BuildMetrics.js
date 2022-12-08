@@ -1,10 +1,15 @@
 import React, { memo } from "react";
 import { useD3 } from "../../../hooks/useD3";
 import * as d3 from "d3";
-import { get } from "lodash";
+import { cloneDeep, get, isEmpty } from "lodash";
 import { failedCross, successCheck } from "../../../assets/images";
+import { useDispatch } from "react-redux";
+import { setIsOffCanvasOpen, setSelectedData } from "../../../app/commonSlice";
+import BuildMetricsCustomDrilldown from "./BuildMetricsCustomDrilldown";
+import { truncate } from "../../../app/utilities/helpers";
 
 const BuildMterics = (props) => {
+  const dispatch = useDispatch();
   const tmpBuildMetricsData = get(
     props,
     "productivityMetricsData.buildMetricsData",
@@ -13,7 +18,7 @@ const BuildMterics = (props) => {
   const buildMetricsData = [];
   let totalViolations = 0;
   let totalLines = 0;
-  tmpBuildMetricsData.length > 0 &&
+  !isEmpty(tmpBuildMetricsData) &&
     tmpBuildMetricsData.map((dt) => {
       if (dt.hasOwnProperty("month") && dt?.status) {
         let violations = 0;
@@ -22,11 +27,11 @@ const BuildMterics = (props) => {
           const { FAILURE, SUCCESS } = items;
           buildMetricsData.push({
             date: dt.month.slice(0, 3),
-            violation: (violations += FAILURE),
-            lines: (lines += SUCCESS),
+            violation: (violations += FAILURE ? FAILURE : 0),
+            lines: (lines += SUCCESS ? SUCCESS : 0),
           });
-          totalViolations += FAILURE;
-          totalLines += SUCCESS;
+          totalViolations += FAILURE ? FAILURE : 0;
+          totalLines += SUCCESS ? SUCCESS : 0;
         });
       }
     });
@@ -35,10 +40,96 @@ const BuildMterics = (props) => {
     failure: totalViolations,
     sucess: totalLines,
     buildCount: buildCount,
-    sucessPercent: ((totalViolations / buildCount) * 100).toFixed(1),
+    sucessPercent: ((totalLines / buildCount) * 100).toFixed(1),
+  };
+  const getSelectedData = (selectedMonth) => {
+    let tempSelectedData = cloneDeep(tmpBuildMetricsData);
+    let dateListItems = [];
+    let totalViolations = 0;
+    let totalLines = 0;
+    tempSelectedData.map((items) => {
+      let sucessData = [];
+      let failureData = [];
+      Object.keys(items).map((key) => {
+        if (key.replace(/[0-9-]/g, "") === selectedMonth) {
+          items[key].map((dateData) => {
+            for (let [keys, value] of Object.entries(dateData)) {
+              value.status === "SUCCESS" && sucessData.push(value);
+              value.status === "FAILURE" && failureData.push(value);
+            }
+          });
+          dateListItems.push({
+            date: key.substring(0, 2),
+            fullDate: key,
+            lines: sucessData.length,
+            violation: failureData.length,
+            sucessData,
+            failureData,
+          });
+          dateListItems = dateListItems.sort(
+            (date1, date2) => date1.date - date2.date
+          );
+          totalLines += sucessData.length;
+          totalViolations += failureData.length;
+        }
+      });
+    });
+    let selectedData = {
+      totalLines,
+      totalViolations,
+      dateListItems,
+      customDrillDownCanvas() {
+        return <BuildMetricsCustomDrilldown />;
+      },
+      summaryToptitle: "Success",
+      summaryBottomtitle: "Failed",
+      customSummaryHeader() {
+        return (
+          <>
+            <div class="fw-5">Sl.No</div>
+            <div class="fw-10">Job Name</div>
+            <div class="fw-50"> Node Name</div>
+            <div class="fw-10"> Start Time</div>
+          </>
+        );
+      },
+      customSummaryList(singleSummary) {
+        const { jobName, nodeName, startTime } = singleSummary;
+        return (
+          <li>
+            <div class="fw-10">{jobName}</div>
+            <div class="fw-50"> {nodeName}</div>
+            <div class="fw-10"> {startTime}</div>
+          </li>
+        );
+      },
+    };
+    return selectedData;
+  };
+  const handleDdMenuChange = (selectedValue) => {
+    dispatch(setSelectedData(getSelectedData(selectedValue.label)));
+  };
+  const openDrillDown = (selectedMonth) => {
+    dispatch(
+      setIsOffCanvasOpen({
+        isDrilldownOpen: true,
+        title: props.title,
+        selectedValue: {
+          label: selectedMonth,
+          value: selectedMonth,
+        },
+        dropDownMenuOptions: buildMetricsData.map((data) => ({
+          label: data.date,
+          value: data.date,
+        })),
+        selectedData: getSelectedData(selectedMonth),
+        handleDdMenuChange: handleDdMenuChange,
+      })
+    );
   };
   const ref = useD3(
     (svg) => {
+      svg.html("");
       let initStackedBarChart = {
         draw: function (config) {
           let me = this;
@@ -100,7 +191,7 @@ const BuildMterics = (props) => {
             .enter()
             .append("g")
             .attr("class", "layer")
-            .on("click", function (d, i) {})
+            // .on("click", (d,i)=> (console.log(d,i)))
             .style("fill", function (d, i) {
               return color(i);
             });
@@ -128,12 +219,13 @@ const BuildMterics = (props) => {
             .attr("height", function (d) {
               return yScale(d[0]) - yScale(d[1]);
             })
-            .attr("width", xScale.bandwidth());
+            .attr("width", xScale.bandwidth())
+            .on("click", (e, d) => openDrillDown(get(d, "data.date", "")));
 
           svg
             .append("g")
             .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + (height + 5) + ")")
+            .attr("transform", "translate(10," + (height + 5) + ")")
             .call(
               d3
                 .axisBottom(x0)
@@ -146,7 +238,7 @@ const BuildMterics = (props) => {
           svg
             .append("g")
             .attr("class", "axis axis--y")
-            .attr("transform", "translate(40,0)")
+            .attr("transform", "translate(40,20)")
             .call(yAxis);
         },
       };
@@ -172,7 +264,8 @@ const BuildMterics = (props) => {
         </div>
         <div class="bldmtr-right" id="successPerc">
           <h3>
-            Success Rate <span>{buildObject?.sucessPercent}%</span>
+            Success Rate{" "}
+            <span>{buildObject ? buildObject.sucessPercent : 0}%</span>
           </h3>
         </div>
       </div>
@@ -187,11 +280,13 @@ const BuildMterics = (props) => {
           <div class="destxt">
             <img src={failedCross} alt="failed-crosss" />
             <p id="failedCount">
-              Failed <span>{buildObject?.failure}</span>
+              Failed <span>{buildObject?.failure || 0}</span>
             </p>
           </div>
         </div>
-        <svg ref={ref}></svg>
+        <div class="buildmetrics">
+          <svg ref={ref}></svg>
+        </div>
       </div>
     </>
   );

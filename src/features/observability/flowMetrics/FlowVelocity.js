@@ -175,7 +175,7 @@ function FlowVelocity(props) {
         height = 257 - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
-      var svg = svg1
+      let svg = svg1
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -184,11 +184,11 @@ function FlowVelocity(props) {
 
       let json_data = chartData;
 
-      var tdays = 0,
+      let tdays = 0,
         tissues = 0,
         daysmax = 0,
         issuesmax = 0;
-      for (var t = 0; t < json_data.length; t++) {
+      for (let t = 0; t < json_data.length; t++) {
         tdays = tdays + json_data[t].days;
         tissues = tissues + json_data[t].issues;
 
@@ -201,7 +201,7 @@ function FlowVelocity(props) {
         }
       }
 
-      for (var t = 0; t < json_data.length; t++) {
+      for (let t = 0; t < json_data.length; t++) {
         json_data[t].daysx = (json_data[t].days / tdays) * 100;
 
         if (json_data[t].daysx > 25) json_data[t].daysx = 25;
@@ -216,7 +216,7 @@ function FlowVelocity(props) {
       }
 
       // X axis
-      var x = d3
+      let x = d3
         .scaleBand()
         .range([0, width])
         .domain(
@@ -234,12 +234,12 @@ function FlowVelocity(props) {
         .style("text-anchor", "middle");
 
       // Add Y axis
-      var y = d3
+      let y = d3
         .scaleLinear()
         .domain([0, daysmax + 10])
         .range([height, 0]);
 
-      var q = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+      let q = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
       svg.append("g").call(d3.axisLeft(y).tickSizeOuter(0).tickSizeInner(0));
 

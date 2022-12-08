@@ -42,6 +42,7 @@ const FlowMetrics = () => {
 
   const getFlowMetrics = useCallback(
     async (isInitialLoad = false) => {
+      console.log("redis", get(observability, "filterData.selectedApplications", "failed"));
       const payload = {
         appCodes: get(observability, "filterData.selectedApplications", [])
           .length
@@ -111,7 +112,7 @@ const FlowMetrics = () => {
         flowMetricsData: { ...state.flowMetricsData, ...flowMetricsData },
       }));
     },
-    [state.flowMetricsData]
+    [state.flowMetricsData, observability.filterData]
   );
   useEffect(() => {
     getAppList({})

@@ -9,6 +9,7 @@ import { DrillDownOffCanvas } from "../../common";
 import Filter from "../../common/Filter";
 import ChartContainer from "../common/ChartContainer";
 import { ProductMetricChartContainers } from "../common/constants";
+import 'chart.js/auto'
 
 const ProductivityMetricsLanding = () => {
   const [state, setstate] = useState({
@@ -46,22 +47,25 @@ const ProductivityMetricsLanding = () => {
         sprintName: getSelectedOptionsValue(
           get(observability, "filterData.selectedSprints", [])
         ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        startDt: isInitialLoad
+        ? initialStartDate
+        : get(observability, "filterData.selectedDate.startDate"),
+        toDt: isInitialLoad
+        ? initialEndDate
+        : get(observability, "filterData.selectedDate.endDate"),
       };
       const buildMetricsPayload = {
-        applications: [
-          "ACT",
-          "CODE8",
-          "DAAS",
-          "DOME",
-          "AIFT",
-          "MAT",
-          "PII",
-          "PROMOKART",
-        ],
-        fromDt: initialStartDate/1000,
-        toDt: initialEndDate/1000,
+        applications:  isInitialLoad
+        ? getSelectedOptionsValue(appList)
+        : getSelectedOptionsValue(
+            get(observability, "filterData.selectedApplications", [])
+          ),
+          fromDt: isInitialLoad
+          ? initialStartDate/1000
+          : Math.round(get(observability, "filterData.selectedDate.startDate")/1000),
+          toDt: isInitialLoad
+          ? initialEndDate/1000
+          : Math.round(get(observability, "filterData.selectedDate.endDate")/1000)
       };
 
       let producivityMetricsPromiseData = await Promise.all([
@@ -86,7 +90,7 @@ const ProductivityMetricsLanding = () => {
         },
       }));
     },
-    [state.productivityMetricsData]
+    [state.productivityMetricsData, observability.filterData]
   );
   useEffect(() => {
     getAppList({})

@@ -7,10 +7,7 @@ import { useSelector } from "react-redux";
 import { observabilityApi } from "../../../../app/services/observabilityApi";
 import { getDefaultSelectedDate } from "../../../common/helpers";
 import { get } from "lodash";
-import {
-  getSelectedOptionsById,
-  getSelectedOptionsValue,
-} from "../../../../app/utilities/helpers";
+import { getSelectedOptionsById } from "../../../../app/utilities/helpers";
 import { DrillDownOffCanvas } from "../../../common";
 
 const ChangeMangementLanding = () => {
@@ -44,14 +41,13 @@ const ChangeMangementLanding = () => {
           : getSelectedOptionsById(
               get(observability, "filterData.selectedApplications", [])
             ),
-        projects: getSelectedOptionsValue(
-          get(observability, "filterData.selectedProjects", [])
-        ),
-        sprintName: getSelectedOptionsValue(
-          get(observability, "filterData.selectedSprints", [])
-        ),
-        startDt: initialStartDate,
-        toDt: initialEndDate,
+        fromDate: isInitialLoad
+          ? initialStartDate
+          : get(observability, "filterData.selectedDate.startDate"),
+        toDate: isInitialLoad
+          ? initialEndDate
+          : get(observability, "filterData.selectedDate.endDate"),
+        type: "",
       };
 
       let changeMangementDataPromiseData = await Promise.all([
@@ -86,7 +82,7 @@ const ChangeMangementLanding = () => {
         },
       }));
     },
-    [state.changeMangementData]
+    [state.changeMangementData, observability.filterData]
   );
   useEffect(() => {
     getAppList({})

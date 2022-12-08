@@ -40,26 +40,89 @@ const DeploymentMetrics = React.lazy(() =>
 //Ops metrics
 //Incident Mangement
 const Incidents = React.lazy(() =>
-import("../opsMetrics/IncidentManagement/Incidents")
+  import("../opsMetrics/IncidentManagement/Incidents")
 );
 const IncidentsPerCategory = React.lazy(() =>
-import("../opsMetrics/IncidentManagement/IncidentsPerCategory")
+  import("../opsMetrics/IncidentManagement/IncidentsPerCategory")
 );
 const MeanTimetoRecovery = React.lazy(() =>
-import("../opsMetrics/IncidentManagement/MeanTimetoRecovery")
+  import("../opsMetrics/IncidentManagement/MeanTimetoRecovery")
 );
 //ChangeMangement
-const ChangeRequest  = React.lazy(() =>
-import("../opsMetrics/ChangeMangement/ChangeRequest")
+const ChangeRequest = React.lazy(() =>
+  import("../opsMetrics/ChangeMangement/ChangeRequest")
 );
-const ChangeRequestPerCategory  = React.lazy(() =>
-import("../opsMetrics/ChangeMangement/ChangeRequestPerCategory")
+const ChangeRequestPerCategory = React.lazy(() =>
+  import("../opsMetrics/ChangeMangement/ChangeRequestPerCategory")
 );
-const ChangeRequestPerRisk  = React.lazy(() =>
-import("../opsMetrics/ChangeMangement/ChangeRequestPerRisk")
+const ChangeRequestPerRisk = React.lazy(() =>
+  import("../opsMetrics/ChangeMangement/ChangeRequestPerRisk")
 );
-const MeanTimetoChange  = React.lazy(() =>
-import("../opsMetrics/ChangeMangement/MeanTimetoChange")
+const MeanTimetoChange = React.lazy(() =>
+  import("../opsMetrics/ChangeMangement/MeanTimetoChange")
+);
+// DevOps Metrics
+const PlanLanding = React.lazy(() =>
+  import("../devopsMetrics/plan/PlanLanding")
+);
+// plan
+const ActiveSprints = React.lazy(() =>
+  import("../devopsMetrics/plan/ActiveSprints")
+);
+const ActiveSprintIssue = React.lazy(() =>
+  import("../devopsMetrics/plan/ActiveSprintIssue")
+);
+const ActiveSprintPriority = React.lazy(() =>
+  import("../devopsMetrics/plan/ActiveSprintPriority")
+);
+const ActiveSprintProgress = React.lazy(() =>
+  import("../devopsMetrics/plan/ActiveSprintProgress")
+);
+const ProjectMetrics = React.lazy(() =>
+  import("../devopsMetrics/plan/ProjectMetrics")
+);
+const PlanIssueMetrics = React.lazy(() =>
+  import("../devopsMetrics/plan/IssueMetrics")
+);
+const PlanLevelOfCollaboration = React.lazy(() =>
+  import("../devopsMetrics/plan/LevelOfCollaboration")
+);
+const ProjectStatus = React.lazy(() =>
+  import("../devopsMetrics/plan/ProjectStatus")
+);
+const SprintVelocity = React.lazy(() =>
+  import("../devopsMetrics/plan/SprintVelocity")
+);
+const MonthlyRelease = React.lazy(() =>
+  import("../devopsMetrics/plan/MonthlyRelease")
+);
+//code Data
+const CodeLanding = React.lazy(() =>
+  import("../devopsMetrics/Code/CodeLanding")
+);
+const CodeTopContributors = React.lazy(() =>
+  import("../devopsMetrics/Code/TopContributors")
+);
+const CodeProjeectChampions = React.lazy(() =>
+  import("../devopsMetrics/Code/ProjectChampions")
+);
+// Build
+const DevopsBuildLanding = React.lazy(() =>
+  import("../devopsMetrics/Build/BuildLanding")
+);
+// Scan
+const ScanLanding = React.lazy(() =>
+  import("../devopsMetrics/Scan/ScanLanding")
+);
+const ScanCodeAnalysis = React.lazy(() =>
+  import("../devopsMetrics/Scan/CodeAnalysis")
+);
+const ScanStaticCodeAnalysis = React.lazy(() =>
+  import("../devopsMetrics/Scan/StaticCodeAnalysis")
+);
+//Deploy
+const DevopsDeployment = React.lazy(() =>
+  import("../devopsMetrics/Deploy/DeployLanding")
 );
 //Flow Metrics
 export const FlowMetricChartContainers = [
@@ -273,9 +336,7 @@ export const PeopleMetricChartContainers = [
     customHeader: () => (
       <div class="fltrhead">
         <h4>Project Champions</h4>
-        <a href="" class="viewlink">
-          View All
-        </a>
+        <a class="viewlink">View All</a>
       </div>
     ),
   },
@@ -307,6 +368,7 @@ export const ProductMetricChartContainers = [
     key: 1,
     title: "STATIC CODE ANALYSIS",
     chart: (props) => <StaticCodeAnalysis {...props} />,
+    chartContainerClass: "stcodeanalys",
     navs: [
       {
         text: "Low",
@@ -334,6 +396,7 @@ export const ProductMetricChartContainers = [
     key: 2,
     title: "CODE ANALYSIS",
     chart: (props) => <CodeAnalysis {...props} />,
+    chartContainerClass: "codeanalysis",
     navs: [
       {
         text: " Lines of code",
@@ -466,12 +529,182 @@ export const OpsChangeMangement = [
         text: "very High",
         color: "red",
       },
-      
     ],
   },
   {
     key: 4,
     title: "MEAN TIME TO CHANGE",
     chart: (props) => <MeanTimetoChange {...props} />,
+  },
+];
+//DevOps Metrics
+export const panels = [
+  {
+    key: 1,
+    title: "Plan",
+    name: "Plan",
+    body: <PlanLanding />,
+  },
+  {
+    key: 2,
+    title: "Code",
+    name: "Code",
+    body: <CodeLanding />,
+  },
+  {
+    key: 3,
+    title: "Build",
+    name: "Build",
+    body: <DevopsBuildLanding />,
+  },
+  {
+    key: 4,
+    title: "Scan",
+    name: "Scan",
+    body: <ScanLanding />,
+  },
+  {
+    key: 5,
+    title: "Deploy",
+    name: "Deploy",
+    body: <DevopsDeployment />,
+  },
+];
+//Plan
+export const PlanContainer1 = [
+  {
+    key: 1,
+    title: "Active sprints",
+    chart: (props) => <ActiveSprints {...props} />,
+    customClass: "col-md-12",
+  },
+];
+export const PlanContainer2 = [
+  {
+    key: 1,
+    title: "Active sprint: Issue types",
+    chart: (props) => <ActiveSprintIssue {...props} />,
+    customPanelClass: "panel-inner_class set_fix",
+    chartContainerClass: "chartContainerClass",
+  },
+  {
+    key: 2,
+    title: "Active sprint: Priority",
+    chart: (props) => <ActiveSprintPriority {...props} />,
+    customPanelClass: "panel-inner_class col-md-12 row set_fix",
+  },
+  {
+    key: 3,
+    title: "Active sprint: Progress",
+    chart: (props) => <ActiveSprintProgress {...props} />,
+    customPanelClass: "panel-inner_class set_fix",
+    chartContainerClass: "chartContainerClass",
+  },
+  {
+    key: 4,
+    title: "Project metrics",
+    chart: (props) => <ProjectMetrics {...props} />,
+    customPanelClass: "panel-inner_class set_fix",
+    customClass: "col-md-6",
+  },
+  {
+    key: 5,
+    title: "Issue metrics",
+    chart: (props) => <PlanIssueMetrics {...props} />,
+    customPanelClass: "panel-inner_class set_fix",
+    customClass: "col-md-6",
+  },
+  {
+    key: 6,
+    title: "Level of collaboration by comments",
+    chart: (props) => <PlanLevelOfCollaboration {...props} />,
+    customPanelClass: "panel-inner_class set_fix_bar",
+    customClass: "col-md-6",
+  },
+  {
+    key: 7,
+    title: "Project status",
+    chart: (props) => <ProjectStatus {...props} />,
+    customPanelClass: "panel-inner_class set_fix_bar",
+    customClass: "col-md-6",
+  },
+  {
+    key: 8,
+    title: "Sprint velocity",
+    chart: (props) => <SprintVelocity {...props} />,
+    customPanelClass: "panel-inner_class set_fix_bar",
+    customClass: "col-md-6",
+  },
+  {
+    key: 9,
+    title: "Monthly release",
+    chart: (props) => <MonthlyRelease {...props} />,
+    customPanelClass: "panel-inner_class set_fix_bar",
+    customClass: "col-md-6",
+  },
+];
+export const dDDefaultLevelOne = [
+  {
+    name: "Design",
+    className: "num-box dark-blueline",
+    title: "Design",
+  },
+  {
+    name: "Testing",
+    className: "num-box dark-blueline",
+    title: "Testing",
+  },
+  {
+    name: "Code Quality",
+    className: "num-box dark-blueline",
+    title: "Code Quality",
+  },
+  {
+    name: "Deployment",
+    className: "num-box dark-blueline",
+    title: "Deployment",
+  },
+  {
+    name: "Functional",
+    className: "num-box dark-blueline",
+    title: "Functional",
+  },
+  {
+    name: "Infrastructure",
+    className: "num-box dark-blueline",
+    title: "Infrastructure",
+  },
+  {
+    name: "Others",
+    className: "num-box dark-blueline",
+    title: "Others",
+  },
+];
+export const codeContainer = [
+  {
+    key: 1,
+    title: "Top contributors",
+    chart: (props) => <CodeTopContributors {...props} />,
+    customClass: "carousel slide",
+  },
+  {
+    key: 2,
+    title: "Project champions",
+    chart: (props) => <CodeProjeectChampions {...props} />,
+    customClass: "carousel slide",
+  },
+];
+export const scanContainer = [
+  {
+    key: 1,
+    title: "Code analysis against lines of code",
+    chart: (props) => <ScanCodeAnalysis {...props} />,
+    customClass: "col-md-8",
+  },
+  {
+    key: 2,
+    title: "Static code analysis",
+    chart: (props) => <ScanStaticCodeAnalysis {...props} />,
+    customClass: "col-md-4",
   },
 ];

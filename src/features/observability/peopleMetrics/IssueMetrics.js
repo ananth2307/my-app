@@ -20,7 +20,7 @@ const IssueMetrics = (props) => {
     observabilityApi.useGetIssueMetricsDdOneMutation();
 
   let issueMetricsData = get(props, "peopleMetricsData.issueMetrics", []);
-  var filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
+  let filteredIssueMetricsData = omit(issueMetricsData, ["total"]);
   let { total } = pick(issueMetricsData, ["total"]);
   let data = filteredIssueMetricsData
     ? Object.keys(filteredIssueMetricsData).map((key) => ({
@@ -52,8 +52,8 @@ const IssueMetrics = (props) => {
         : getSelectedOptionsValue(appList),
       priorities: [selectedIssue],
       sprintNames: [],
-      startDt: get(observability, "filterData.selectedDate.startDate"),
-      toDt: get(observability, "filterData.selectedDate.endDate"),
+      startDt: get(observability, "filterData.selectedDate.startDate")/1000,
+      toDt: Math.round(get(observability, "filterData.selectedDate.endDate")/1000),
     };
     const { data: issueMetricsDdOneData } = await getIssueMetricsDdOne(payload);
     const issuesData = get(issueMetricsDdOneData, "[0].issues");
@@ -99,11 +99,13 @@ const IssueMetrics = (props) => {
     return selectedData;
   };
 
-  const handleDdMenuChange = (selectedSprint) => {
-    dispatch(setSelectedData(getSelectedData(selectedSprint.value)))
+  const handleDdMenuChange = async (selectedSprint) => {
+    const response = await getSelectedData(selectedSprint.value)
+    dispatch(setSelectedData(response))
   }
 
-  const openDrillDown = ({ data: selectedIssue, index }) => {
+  const openDrillDown = async ({ data: selectedIssue, index }) => {
+    selectedIssue.label = selectedIssue.label.charAt(0).toUpperCase()+selectedIssue.label.slice(1)
     dispatch(
       setIsOffCanvasOpen({
         isDrilldownOpen: true,
@@ -119,16 +121,17 @@ const IssueMetrics = (props) => {
           value: selectedIssue.label,
         },
         dropDownMenuOptions: data.map((dt) => ({
-          label: dt.label,
-          value: dt.label,
+          label: dt.label.charAt(0).toUpperCase()+dt.label.slice(1),
+          value: dt.label.charAt(0).toUpperCase()+dt.label.slice(1),
         })),
-        selectedData: getSelectedData(selectedIssue.label),
+        selectedData:  await getSelectedData(selectedIssue.label),
         handleDdMenuChange: handleDdMenuChange
       })
     );
   };
   const ref = useD3(
     (svg) => {
+      svg.html("")
       if (data.length) {
         let width = get(props, "chartContainerRefs.current[0].offsetWidth", 0);
         let height = 0.8 * width; //this is the double because are showing just the half of the pie
