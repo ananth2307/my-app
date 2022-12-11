@@ -8,27 +8,33 @@ import {
 
 const SignIn = React.lazy(() => import("../features/auth/SignIn"));
 const FlowMetrics = React.lazy(() =>
-  import("../features/observability/flowMetrics/FlowMetrics")
+  import("../features/observability/flowMetrics/FlowMetricsLanding")
 );
 const PeopleMetrics = React.lazy(() =>
-  import("../features/observability/peopleMetrics/PeopleMetrics")
+  import("../features/observability/peopleMetrics/PeopleMetricsLanding")
 );
 const ProductivityMetrics = React.lazy(() =>
-  import("../features/observability/productivityMetrics/ProductivityMetrics")
+  import("../features/observability/productivityMetrics/ProductivityMetricsLanding")
 );
 const DevopsMetrics = React.lazy(() =>
-  import("../features/observability/devopsMetrics/DevopsMetrics")
+  import("../features/observability/devopsMetrics/DevopsMetricsLanding")
 );
-const OpsMetrics = React.lazy(() =>
-  import("../features/observability/opsMetrics/OpsMetrics")
+const OpsMetricsIncidentManagement = React.lazy(() =>
+  import("../features/observability/opsMetrics/IncidentManagement/IncidentMangementLanding")
+);
+const OpsMetricsChangeManagement = React.lazy(() =>
+  import("../features/observability/opsMetrics/ChangeMangement/ChangeMangementLanding")
 );
 const Bitbucket = React.lazy(() =>
-  import("../features/gnc/bitbucket/Bitbucket")
+  import("../features/gnc/bitbucket/BitbucketLanding")
 );
-const Jenkins = React.lazy(() => import("../features/gnc/jenkins/Jenkins"));
+const Jenkins = React.lazy(() => import("../features/gnc/jenkins/JenkinsLanding"));
 const AppConfig = React.lazy(() =>
   import("../features/efficiency/appConfig/AppConfig")
 );
+const AppConfigProjects = React.lazy(()=> import("../features/efficiency/appConfig/Projects"))
+
+const OnBoardingTools = React.lazy(()=> import("../features/efficiency/appConfig/OnBoardingTools"))
 const AccessManagement = React.lazy(() =>
   import("../features/efficiency/accessManagement/AccessManagement")
 );
@@ -120,21 +126,21 @@ export const routes = [
         name: "OpsMetrics",
         path: "observability/opsMetrics/incidentManagement",
         customDropContainerClass: "ops",
-        component: <OpsMetrics />,
+        component: <OpsMetricsIncidentManagement />,
         key: "1.5",
         childNavs: [
           {
             text: "Incident Management",
             name: "IncidentManagement",
             path: "observability/opsMetrics/incidentManagement",
-            component: <OpsMetrics />,
+            component: <OpsMetricsIncidentManagement/>,
             key: "1.5.1",
           },
           {
             text: "Change Management",
             name: "ChangeManagement",
             path: "observability/opsMetrics/changeManagement",
-            component: <OpsMetrics />,
+            component: <OpsMetricsChangeManagement/>,
             key: "1.5.1",
           },
         ],
@@ -160,7 +166,7 @@ export const routes = [
       {
         name: "Bitbucket",
         text: "Bitbucket",
-        path: "gnc/bitbucket",
+        path: "gnc/bitbucketTrend",
         component: <Bitbucket />,
         key: "2.2",
       },
@@ -209,8 +215,23 @@ export const routes = [
         component: <AuditLog />,
         key: "3.5",
       },
+      {
+        key: "3.6",
+        name:'Project',
+        path: "/project",
+        isNotSideBarNavigation:true,
+        component: <AppConfigProjects />,
+      },
+      {
+        key: "3.t",
+        name:'Onboarding',
+        path: "/onboarding",
+        isNotSideBarNavigation:true,
+        component: <OnBoardingTools/>,
+      },
     ],
   },
+ 
   //CODE8 Configuration
   {
     name: "Code8 Configuration",

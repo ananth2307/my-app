@@ -26,7 +26,6 @@ const Container = () => {
   const handleChildMenuState = (path, value) => {
     const resetMenuState = mapValues({ ...childMenuState }, () => false);
     setChildMenuState({ ...resetMenuState, [path]: value });
-    console.log("redis", childMenuState);
   };
 
   return (
@@ -60,6 +59,7 @@ const Container = () => {
                   <div className="dropdown-container">
                     {/* First Level childNavs */}
                     {route?.childNavs?.map((firstChildNav) => (
+                      !firstChildNav.isNotSideBarNavigation &&
                       <>
                         <a
                           href="#"

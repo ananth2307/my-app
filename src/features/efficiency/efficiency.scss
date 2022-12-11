@@ -1,0 +1,18 @@
+.filter-modal{
+    width:90vw;
+    max-width: 90vw;
+    border-radius: 10px;
+    margin-left: 7%;
+}
+.form_custom{
+    font-size: var(--font14);
+    line-height: 1;
+    font-weight: var(--regular);
+    color: var(--gray2);
+    background-color: var(--lightbg);
+    width: 100%;
+    padding: 20px 24px;
+    border-radius: 6px;
+    border:0;
+    cursor:'pointer'
+}

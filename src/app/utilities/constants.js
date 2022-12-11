@@ -1,7 +1,11 @@
 export const constants = {
-    // BASE_URL: 'http://103.114.208.38:7775'
-    BASE_URL: 'http://localhost:7050/api/v1'
+  // BASE_URL: "http://ec2-34-210-211-227.us-west-2.compute.amazonaws.com:7771"
+    BASE_URL: 'http://103.114.208.38:7772'
+    // BASE_URL:'http://103.114.208.38:7779/'
+    // BASE_URL: 'http://localhost:7111'
 }
+
+export const DATE_FORMAT = "MM/DD/YYYY";
 
 export const pageTitleMapper = {
     //Observability
@@ -58,6 +62,10 @@ export const pageTitleMapper = {
     "/efficiency/auditLog": {
       module: "Code8 Efficiency - ",
       pageTitle: "Audit Log",
+    },
+    "/project": {
+      module: "Code8 Efficiency - ",
+      pageTitle: "Project",
     },
     //Configuration
     "/configuration/settings/tools": {

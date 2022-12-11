@@ -1,6 +1,12 @@
 @charset "UTF-8";
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+@font-face {
+  font-family: 'D-DIN';
+  src: local('D-DIN'), url(../fonts/d-din/D-DIN.woff) format('woff');
+  font-weight: 400;
+}
+
 * {
   margin: 0;
   padding: 0
@@ -66,7 +72,7 @@
   --extrabold: 800;
   --black900: 900;
 
-  --body-font: 'Barlow', sans-serif;
+  --body-font: D-DIN, sans-serif;
 }
 
 /*------------ Rule css -----------------------------*/
@@ -1067,7 +1073,7 @@ select.selectpicker {
     border: 1px solid var(--secondary-light);
 }
 .form-control:focus {
-    color: var(--gray2);
+    // color: var(--gray2);
     background-color: #fff;
     border-color: var(--secondary-light);
 }

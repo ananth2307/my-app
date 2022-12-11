@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import React, { Suspense, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.css";
 import "./assets/css/common.scss";
 import "./assets/css/internal.scss";
 import "./assets/css/bootstrap_extended.scss";
@@ -10,12 +10,17 @@ import { store } from "./app/store";
 import { Provider } from "react-redux";
 import Container from "./app/common-components/Container";
 import ContainerLoader from "./app/common-components/ContainerLoader";
+import Projects from "./features/efficiency/appConfig/Projects";
 
 function App() {
   const renderRoutes = (allRoutes) => {
-    return allRoutes.map((route) => (
-      route.childNavs ? renderRoutes(route.childNavs) : <Route key={route.key} path={route.path} element={route.component} />
-    ));
+    return allRoutes.map((route) =>
+      route.childNavs ? (
+        renderRoutes(route.childNavs)
+      ) : (
+        <Route key={route.key} path={route.path} element={route.component} />
+      )
+    );
   };
   return (
     <Provider store={store}>
