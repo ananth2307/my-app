@@ -28,7 +28,7 @@ const CustomSelection = (props) => {
         options={options}
         onInputChange={(input) => dropDownState(input, selectedField)}
         onChange={(choice, action) => {
-          onChange(action.name, choice.value);
+          onChange(action.name, choice);
         }}
         menuIsOpen={menuIsOpen}
         placeholder={placeholder}

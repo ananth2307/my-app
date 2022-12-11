@@ -1,4 +1,4 @@
-import { get, isEmpty, useEffect } from "lodash";
+import { get,  } from "lodash";
 import React, { memo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomModal from "../../../app/common-components/CustomModal";
@@ -6,6 +6,10 @@ import CustomSelection from "../../../app/common-components/customSelect";
 import { effciencyApi } from "../../../app/services/efficiencyApi";
 import { setAppConfig } from "../efficiencySlice";
 import { featherFilter } from "../../../assets/images";
+
+
+
+
 const FilterModal = () => {
   const [state, setstate] = useState({
     limit: 10,
@@ -29,6 +33,7 @@ const FilterModal = () => {
 
   const filterData = get(efficiency,'appConfig.filterData')
 
+  
   const {appNameCode,managerList} = filterData
 
   
@@ -48,7 +53,7 @@ const FilterModal = () => {
         }));
   };
 
-  const handleOnChange = (name, value) => {
+  const handleOnChange = (name, {value}) => {
     value =
       name === "approvalGate" ? (state.approvalGate === 0 ? 1 : 0) : value;
 

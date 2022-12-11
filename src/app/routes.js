@@ -33,6 +33,8 @@ const AppConfig = React.lazy(() =>
   import("../features/efficiency/appConfig/AppConfig")
 );
 const AppConfigProjects = React.lazy(()=> import("../features/efficiency/appConfig/Projects"))
+
+const OnBoardingTools = React.lazy(()=> import("../features/efficiency/appConfig/OnBoardingTools"))
 const AccessManagement = React.lazy(() =>
   import("../features/efficiency/accessManagement/AccessManagement")
 );
@@ -217,9 +219,15 @@ export const routes = [
         key: "3.6",
         name:'Project',
         path: "/project",
-        text:'Project',
         isNotSideBarNavigation:true,
         component: <AppConfigProjects />,
+      },
+      {
+        key: "3.t",
+        name:'Onboarding',
+        path: "/onboarding",
+        isNotSideBarNavigation:true,
+        component: <OnBoardingTools/>,
       },
     ],
   },

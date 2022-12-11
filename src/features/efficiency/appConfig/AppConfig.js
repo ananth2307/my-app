@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import DataTable from "../../../app/common-components/DataTable";
 import { effciencyApi } from "../../../app/services/efficiencyApi";
 import FilterModal from "./FilterModal";
@@ -20,6 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAppConfig } from "../efficiencySlice";
 import { get, isEmpty } from "lodash";
 
+
+
+export const AppConfigContext = createContext();
 const AppConfig = () => {
   const dispatch = useDispatch();
 
@@ -27,12 +30,14 @@ const AppConfig = () => {
 
   const tableData = get(efficiency, "appConfig.tableData", []);
 
+  
+
   const [getcmdbCount] = effciencyApi.useLazyGetcmdbCountQuery();
   const [getcmdbList] = effciencyApi.useLazyGetcmdbListQuery();
 
-  const { data: appList } = effciencyApi.useGetcmdbQuery();
-  const { data: operationList } =
-    effciencyApi.useGetOperationRoleDetailsQuery();
+  const [getcmdb] = effciencyApi.useLazyGetcmdbQuery();
+  const [getOperationRoleDetails] =
+    effciencyApi.useLazyGetOperationRoleDetailsQuery();
 
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -41,6 +46,8 @@ const AppConfig = () => {
     count: 0,
     totalPages: 1,
     applicationConfig: false,
+    appConfigTitle: "",
+    isLoading: true,
   });
 
   const appConfigtableHeaders = [
@@ -135,23 +142,30 @@ const AppConfig = () => {
   ];
 
   const getCmdbList = async () => {
+    const promiseData = await Promise.all([
+      getcmdb(),
+      getOperationRoleDetails(),
+      getcmdbList({
+        page: state.page,
+        limit: state.limit,
+      }),
+    ]);
+
     const managerList =
-      !isEmpty(operationList) &&
-      operationList.map((list) => ({
+      !isEmpty(promiseData[1].data) &&
+      promiseData[1].data.map((list) => ({
         label: list.fullName + `[${list.userId}]`,
         value: list.fullName,
+        id: list.userId,
       }));
-    const appNameCode = !isEmpty(operationList) && 
-      appList.map((app) => ({
+    const appNameCode =
+      !isEmpty(promiseData[0].data) &&
+      promiseData[0].data.map((app) => ({
         label: app.appName + `[${app.appCode}]`,
         value: app.appCode,
       }));
 
-    const { data: cmdbData } = await getcmdbList({
-      page: state.page,
-      limit: state.limit,
-    });
-    const tableData = cmdbData.map((list) => {
+    const tableData = promiseData[2].data.map((list) => {
       let gate = list.approvalGate > 0 ? "Yes" : "No";
       return {
         ...list,
@@ -159,15 +173,14 @@ const AppConfig = () => {
       };
     });
 
-    setTimeout(() => {
-      dispatch(
-        setAppConfig(get(efficiency, "appConfig"), {
-          tableData,
-          filterData: { appNameCode, managerList },
-        })
-      );
-    }, 1000);
+    dispatch(
+      setAppConfig(get(efficiency, "appConfig"), {
+        tableData,
+        filterData: { appNameCode, managerList },
+      })
+    );
   };
+
   useEffect(() => {
     getcmdbCount({})
       .unwrap()
@@ -211,6 +224,7 @@ const AppConfig = () => {
                   setState((state) => ({
                     ...state,
                     applicationConfig: true,
+                    appConfigTitle: "New Application Configuration",
                   }))
                 }
                 class="border-btn"
@@ -264,9 +278,11 @@ const AppConfig = () => {
               />
             </div>
           </div>
-        </>
+          </>
       ) : (
-        <ApplicationConfig />
+        <AppConfigContext.Provider value={{state,setState}}>
+          <ApplicationConfig title={state.appConfigTitle} />{" "}
+        </AppConfigContext.Provider>
       )}
     </>
   );
