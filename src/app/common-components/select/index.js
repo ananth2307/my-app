@@ -10,6 +10,7 @@ import DropdownIndicator from "./DropdownIndicator";
 import IndicatorsContainer from "./IndicatorsContainer";
 import CreatableSelect from "react-select/creatable";
 import { get } from "lodash";
+import OutsideClickHandler from "react-outside-click-handler";
 
 const CustomSelect = (props) => {
   const [filteredOptions, setFilteredOptions] = useState([]);
@@ -42,31 +43,40 @@ const CustomSelect = (props) => {
     );
   };
 
-  const toggleMenu = useCallback((status) => {
-    if(status) {
-      setIsMenuOpen(status);
-    } else {
-      setIsMenuOpen((state) => {
-        return !state
-      });
-    }
-  }, [isMenuOpen]);
+  const toggleMenu = useCallback(
+    (status) => {
+      if (status) {
+        setIsMenuOpen(status);
+      } else {
+        setIsMenuOpen((state) => {
+          return !state;
+        });
+      }
+    },
+    [isMenuOpen]
+  );
 
   return (
-    <Select
-      {...props}
-      components={getCustomComponents()} //Overrided reac-select components to match our theme style
-      className="custom-select" //wrapper class name to have css parent selector for scoped styling
-      isClearable={false}
-      // noOptionsMessage={props.noOptionsMessage ? props.noOptionsMessage : "No results"}
-      openMenuOnClick={true}
-      backspaceRemovesValue={false} //keep this false for search input to get enabled otherwise keyboard events are overrided by react-select
-      isSearchable={true}
-      options={filteredOptions}
-      filterOptionsBySearch={getFilteredOptions}
-      menuIsOpen={isMenuOpen}
-      toggleMenu={toggleMenu}
-    />
+    <OutsideClickHandler
+      onOutsideClick={() => {
+        setIsMenuOpen(false);
+      }}
+    >
+      <Select
+        {...props}
+        components={getCustomComponents()} //Overrided reac-select components to match our theme style
+        className="custom-select" //wrapper class name to have css parent selector for scoped styling
+        isClearable={false}
+        // noOptionsMessage={props.noOptionsMessage ? props.noOptionsMessage : "No results"}
+        openMenuOnClick={true}
+        backspaceRemovesValue={false} //keep this false for search input to get enabled otherwise keyboard events are overrided by react-select
+        isSearchable={true}
+        options={filteredOptions}
+        filterOptionsBySearch={getFilteredOptions}
+        menuIsOpen={isMenuOpen}
+        toggleMenu={toggleMenu}
+      />
+    </OutsideClickHandler>
   );
 };
 
