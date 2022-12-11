@@ -9,8 +9,8 @@ import { setAppConfig } from "../efficiencySlice";
 const ProjectCustomDrillDown = ({ title, rowId }) => {
   const offcanvasState = useSelector((state) => state.common?.offcanvasState);
 
-  const [getcmdbProjectCount] = effciencyApi.useGetcmdbProjectCountMutation();
-  const [getcmdbProjectList] = effciencyApi.useGetcmdbProjectListMutation();
+  const [getcmdbProjectCount] = effciencyApi.useLazyGetcmdbCountQuery();
+  const [getcmdbProjectList] = effciencyApi.useLazyGetcmdbProjectListQuery();
 
   const { efficiency } = useSelector((state) => state);
   const projectTableData = get(efficiency, "appConfig.projectTableData", []);

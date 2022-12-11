@@ -105,3 +105,5 @@ export const appConfigtableHeaders = [
     border:0,
     boxShadow:'none'
   }
+
+  export const toolsName = ['Plan','Code','Build','Test','Scan','Package','Deploy']

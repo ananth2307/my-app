@@ -64,7 +64,7 @@ const Projects = (props) => {
           limit: projectState.limit,
         }).then((data) => {
           dispatch(
-            setAppConfig(projectTableData, { projectTableData: data.data })
+            setAppConfig(get(efficiency, "appConfig"), { projectTableData: data.data })
           );
           setState({ ...projectState, count });
         });

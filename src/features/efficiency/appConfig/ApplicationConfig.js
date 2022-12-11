@@ -1,23 +1,38 @@
 import { cloneDeep } from "lodash";
-import React, { memo, useState } from "react";
+import React, { memo, useState, useContext } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import CustomSelection from "../../../app/common-components/customSelect";
 import FormCheck from "../../../app/common-components/form/checkbox";
 import Input from "../../../app/common-components/form/input";
+import { effciencyApi } from "../../../app/services/efficiencyApi";
+import { AppConfigContext } from "./AppConfig";
 
 const ApplicationConfig = (props) => {
   const { filterData } = useSelector((state) => state?.efficiency?.appConfig);
   const { managerList } = filterData;
 
   const { title } = props;
+
+  const [checkAppCode] = effciencyApi.useLazyCheckAppCodeQuery();
+
+  const context = useContext(AppConfigContext);
+
+  const navigate = useNavigate()
+
+  const [postApplicationDetails] =
+    effciencyApi.usePostApplicationDetailsMutation();
   const [state, setState] = useState({
     formFields: {
       appCode: "",
       appName: "",
       primaryManager: "",
+      primaryManagerId: "",
       secondaryManager: "",
+      secondaryManagerId: "",
       businessUnit: "",
       businessHead: "",
+      businessHeadId: "",
       approvalGate: 0,
     },
     appCodeError: false,
@@ -50,11 +65,21 @@ const ApplicationConfig = (props) => {
         }));
   };
 
-  const handleOnChange = (name, value) => {
+  const handleOnChange = (name, { value, id }) => {
+  
     state[`${name}Error`] && setState({ ...state, [`${name}Error`]: false });
 
     value =
       name === "approvalGate" ? (state.approvalGate === 0 ? 1 : 0) : value;
+
+    id &&
+      setState((state) => ({
+        ...state,
+        formFields: {
+          ...state.formFields,
+          [`${name}Id`]: id,
+        },
+      }));
 
     setState((state) => ({
       ...state,
@@ -78,39 +103,87 @@ const ApplicationConfig = (props) => {
         formValidation = false;
       }
     });
-    if (tmpFormFields.primaryManager === tmpFormFields.secondaryManager) {
-      setState({
-        ...state,
-        secondaryManagerError: true,
-        secondaryManagerErrorMessage:
-          "Primary Manager and Secondary Manager should not be same",
-      });
-      formValidation = false;
-    }
     if (
-      tmpFormFields.businessHead === tmpFormFields.secondaryManager ||
-      tmpFormFields.businessHead === tmpFormFields.primaryManager
+      tmpFormFields.primaryManager !== "" &&
+      tmpFormFields.secondaryManager !== "" &&
+      tmpFormFields.businessHead !== ""
     ) {
-      setState({
-        ...state,
-        businessHeadError: true,
-        businessHeadErrorMessage:
-          "Business Head should be unique from Primary Manager and Secondary Manager",
-      });
-      formValidation = false;
+      if (tmpFormFields.primaryManager === tmpFormFields.secondaryManager) {
+        setState({
+          ...state,
+          secondaryManagerError: true,
+          secondaryManagerErrorMessage:
+            "Primary Manager and Secondary Manager should not be same",
+        });
+        formValidation = false;
+      }
+      if (
+        tmpFormFields.businessHead === tmpFormFields.secondaryManager ||
+        tmpFormFields.businessHead === tmpFormFields.primaryManager
+      ) {
+        setState({
+          ...state,
+          businessHeadError: true,
+          businessHeadErrorMessage:
+            "Business Head should be unique from Primary Manager and Secondary Manager",
+        });
+        formValidation = false;
+      }
     }
 
     return formValidation;
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const validation = validateForm();
+    if (validation) {
+      const {
+        appCode,
+        appName,
+        primaryManager,
+        secondaryManager,
+        primaryManagerId,
+        secondaryManagerId,
+        businessUnit,
+        businessHead,
+        businessHeadId,
+        approvalGate,
+      } = state.formFields;
+      const cacheTimeStamp = new Date().getTime();
+      checkAppCode({ appCode, cacheTimeStamp })
+        .then((data) => {
+          if (data?.error?.data === "Already Exists") return "";
+          const payload = {
+            id: "",
+            appCode,
+            appName,
+            primaryManager,
+            secondaryManager,
+            primaryManagerId,
+            businessUnit,
+            businessHead,
+            businessHeadId,
+            secondaryManagerId,
+            approvalGate,
+          };
+          postApplicationDetails(payload)
+            .then((data) => {
+              console.log("data", data);
+            })
+            .catch((error) => {
+              console.log("err", error);
+            });
+        })
+        .catch((error) => {
+          console.log("err", error.data);
+        });
+    }
   };
   return (
     <div class="config-wrap bg-white">
       <h4 class="sectitle updatehead" style={{ display: "none" }}>
         Application
       </h4>
-      <h4 class="sectitle newhead">New Application Configuration</h4>
+      <h4 class="sectitle newhead">{title}</h4>
       <div class="confingform" id="appFrom">
         <div class="confingform-wrap">
           <div class="confingformcol">
@@ -192,7 +265,16 @@ const ApplicationConfig = (props) => {
             bottomTitle={" Is authorization required for all requests?"}
           />
           <div class="btnwrap">
-            <button type="" class="default-btn" onclick="cancel_cmdb();">
+            <button
+              type=""
+              class="default-btn"
+              onClick={() => {
+                context.setState((state) => ({
+                  ...state,
+                  applicationConfig: false,
+                }));
+              }}
+            >
               Cancel
             </button>
             <button type="button" class="default-btn" onClick={handleSubmit}>
@@ -223,7 +305,9 @@ const ApplicationConfig = (props) => {
             </div>
             <button
               type="submit"
-              onclick="callOnboarding_code();"
+              onClick={() => {
+               navigate('/onboarding')
+              }}
               class="primary-btn newhead"
             >
               Proceed to Onboard Tools
